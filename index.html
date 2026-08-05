@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tale of the Tape — UFC Fighter Comparison</title>
+<!-- PostHog Analytics & Session Replay -->
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");for(var n=0;n<o.length;n++)t=t[o[n]];return t}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src="https://cdn.posthog.com/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(var c in s)g("posthog."+c,s[c])},e.capture=function(t,e,o,n){o=o||{},(o.timestamp=new Date)instanceof Date||(o.timestamp=new Date),u=[t,e,o].concat(n||[]),window._queue.push(u)},e.people={},e.people.set=function(t,e){u=["people","set",t,e],window._queue.push(u)},n="capture people.identify people.set identify reset".split(" "),o=0;o<n.length;o++)e[n[o]]=function(t){return function(e,o,n){u=[t,e,o,n],window._queue.push(u)}}(n[o]))}(document,window.posthog||[]);
+  posthog.init('phc_D7YB9smZp6wXS74Fr4T8n2VPSuwBxcYCoQBXpaSUuT4f', {
+    api_host: 'https://app.posthog.com',
+    session_recording: {
+      recordCrossOriginIframes: false
+    },
+    capture_pageview: true
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1179,6 +1190,11 @@ function makePicker(side){
   function choose(f){
     SEL[side]=f; input.value=f.name; box.classList.remove("open"); input.blur();
     renderAll(); syncHash();
+    // Track fighter selection
+    if(window.posthog) posthog.capture('fighter_selected', {
+      fighter_name: f.name,
+      corner: side === 'a' ? 'red' : 'blue'
+    });
   }
   input.addEventListener("focus", ()=> render(search(input.value)));
   input.addEventListener("input", ()=> render(search(input.value)));
@@ -1604,6 +1620,7 @@ function initUI(){
       document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
       document.querySelectorAll(".panel").forEach(x=>x.classList.remove("on"));
       t.classList.add("on"); $("#"+t.dataset.p).classList.add("on");
+      if(window.posthog) posthog.capture('tab_clicked', { tab: t.textContent.trim() });
     };
   });
 
@@ -1611,10 +1628,12 @@ function initUI(){
     const t=SEL.a; PA.set(SEL.b); PB.set(t);
     shown.a=HIST_STEP; shown.b=HIST_STEP;
     renderAll(); syncHash();
+    if(window.posthog) posthog.capture('button_clicked', { button: 'swap_corners' });
   };
   $("#btnClear").onclick=()=>{
     PA.set(null); PB.set(null); shown.a=HIST_STEP; shown.b=HIST_STEP;
     renderAll(); syncHash();
+    if(window.posthog) posthog.capture('button_clicked', { button: 'clear' });
   };
   $("#btnRandom").onclick=()=>{
     // favor currently-ranked fighters most of the time for more realistic dream matchups
@@ -1626,11 +1645,13 @@ function initUI(){
     PA.set(x); PB.set(y);
     shown.a=HIST_STEP; shown.b=HIST_STEP;
     renderAll(); syncHash();
+    if(window.posthog) posthog.capture('button_clicked', { button: 'random_matchup' });
   };
   $("#btnLink").onclick=async ()=>{
     try{ await navigator.clipboard.writeText(location.href); $("#btnLink").textContent="Copied!"; }
     catch(e){ $("#btnLink").textContent="Copy failed"; }
     setTimeout(()=>$("#btnLink").textContent="Copy Link",1400);
+    if(window.posthog) posthog.capture('button_clicked', { button: 'copy_link' });
   };
   $("#btnRankings").onclick=()=>{
     setRankingsOpen(true);
@@ -2243,6 +2264,7 @@ function initCardBuilder(initialHash){
   $("#btnDreamCard").onclick=()=>{
     if(!CARD.sections.length){ applySetup(); }
     openCardView(CARD.sections.some(s=>s.bouts.some(b=>b.a||b.b)) ? CARD_STEP : "setup");
+    if(window.posthog) posthog.capture('button_clicked', { button: 'dream_card' });
   };
   $("#cvClose").onclick=closeCardView;
   $("#cvEdit").onclick=()=>{ CARD_STEP="build"; renderCardView(); window.scrollTo(0,0); };
