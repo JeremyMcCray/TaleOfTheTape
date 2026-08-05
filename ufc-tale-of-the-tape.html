@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tale of the Tape — UFC Fighter Comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090b;
+  --panel:#101216;
+  --panel-2:#15181e;
+  --line:#24272f;
+  --line-soft:#1b1e25;
+  --text:#f2f3f5;
+  --muted:#8d94a3;
+  --red:#d20a0a;
+  --red-hot:#ff2b2b;
+  --blue:#1567d3;
+  --blue-hot:#3d95ff;
+  --gold:#d4af37;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #1a1d24 0%, transparent 60%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Barlow Condensed','Arial Narrow',system-ui,sans-serif;
+  font-size:17px;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+h1,h2,h3,.disp{font-family:'Oswald',Impact,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.04em;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 80px}
+
+/* ---------- header ---------- */
+header.top{
+  padding:26px 0 18px;text-align:center;position:relative;
+  border-bottom:1px solid var(--line-soft);
+  background:linear-gradient(180deg,rgba(210,10,10,.10),transparent);
+}
+header.top h1{font-size:clamp(28px,5.2vw,52px);font-weight:700;letter-spacing:.08em;line-height:1}
+header.top h1 .of{color:var(--red-hot)}
+header.top p{margin:8px 0 0;color:var(--muted);font-size:15px;letter-spacing:.18em;text-transform:uppercase}
+.toolbar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+button.tool{
+  font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:12px;
+  background:var(--panel-2);color:var(--text);border:1px solid var(--line);
+  padding:9px 16px;border-radius:2px;cursor:pointer;transition:.15s;
+}
+button.tool:hover{border-color:var(--red);color:#fff;background:#1c1013}
+button.tool:active{transform:translateY(1px)}
+
+/* ---------- loading ---------- */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .4s}
+#loader .ring{width:54px;height:54px;border:3px solid var(--line);border-top-color:var(--red-hot);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loader .msg{color:var(--muted);letter-spacing:.2em;text-transform:uppercase;font-size:13px;font-family:'Oswald',sans-serif}
+#loader .bar{width:min(340px,70vw);height:3px;background:var(--line);overflow:hidden}
+#loader .bar i{display:block;height:100%;width:0;background:var(--red-hot);transition:width .3s}
+#loader.err .ring{display:none}
+#loader .errbox{display:none;max-width:520px;text-align:center;color:var(--muted);line-height:1.6;font-size:15px}
+#loader.err .errbox{display:block}
+#loader.err .msg{color:var(--red-hot)}
+
+/* ---------- pickers ---------- */
+.pickers{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin:22px 0 6px}
+.picker{position:relative}
+.picker label{display:block;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:6px;color:var(--muted)}
+.picker.red label{color:#ff6a6a}
+.picker.blue label{color:#6aaaff}
+.picker input{
+  width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);
+  padding:13px 14px;font-size:17px;font-family:'Barlow Condensed',sans-serif;border-radius:2px;outline:none;
+}
+.picker.red input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(210,10,10,.15)}
+.picker.blue input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,103,211,.18)}
+.picker input::placeholder{color:#5b6272}
+.vsmini{font-family:'Oswald',sans-serif;font-weight:700;color:#3a3f4b;font-size:22px;padding-top:20px}
+.results{
+  position:absolute;z-index:40;top:100%;left:0;right:0;background:#0d0f13;border:1px solid var(--line);
+  border-top:none;max-height:340px;overflow-y:auto;display:none;box-shadow:0 18px 40px rgba(0,0,0,.6)
+}
+.results.open{display:block}
+.results .row{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--line-soft)}
+.results .row:hover,.results .row.active{background:#1a1d23}
+.results .row .nm{font-weight:600;font-size:17px}
+.results .row .nk{color:var(--gold);font-size:14px;font-style:italic}
+.results .row .meta{margin-left:auto;color:var(--muted);font-size:13px;text-align:right;letter-spacing:.04em}
+.results .empty{padding:14px;color:var(--muted);font-size:15px}
+.dot{width:6px;height:6px;border-radius:50%;background:#3fbf5f;flex:none}
+.dot.off{background:#4a4f5b}
+
+/* ---------- rankings browser ---------- */
+.rankwrap{margin-top:26px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0b0d10)}
+.rankhead{
+  width:100%;padding:16px 18px;border:none;border-bottom:1px solid var(--line-soft);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:none;color:var(--text);cursor:pointer;text-align:left;font-family:inherit;
+}
+.rankhead:hover{background:#12151b}
+.rankhead-txt h2{font-size:20px;letter-spacing:.06em}
+.rankhead-txt p{margin:4px 0 0;color:var(--muted);font-size:13px;letter-spacing:.03em}
+.rankchev{font-size:18px;color:var(--muted);flex:none;transition:transform .25s}
+.rankwrap.open .rankchev{transform:rotate(180deg)}
+.rankwrap.open .rankhead{border-bottom-color:var(--line-soft)}
+.rankwrap:not(.open) .rankhead{border-bottom:none}
+.rankbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.rankinner{overflow:hidden;min-height:0}
+.rankwrap.open .rankbody{grid-template-rows:1fr}
+.divpills{display:flex;gap:6px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line-soft)}
+.divpill{font-family:'Oswald',sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:#12151b;border:1px solid var(--line);color:var(--muted);padding:7px 12px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap}
+.divpill:hover{color:#fff;border-color:#3a3f4b}
+.divpill.on{background:var(--red);border-color:var(--red);color:#fff}
+.divpill.on.p4p{background:var(--gold);border-color:var(--gold);color:#1a1400}
+.ranklist{padding:6px 10px}
+.rkrow{display:grid;grid-template-columns:30px 38px 1fr auto;gap:12px;align-items:center;padding:8px 8px;border-bottom:1px solid var(--line-soft);border-radius:2px;cursor:pointer}
+.rkrow:hover{background:#171a20}
+.rkrow.sel-a{box-shadow:inset 3px 0 0 var(--red-hot);background:rgba(210,10,10,.07)}
+.rkrow.sel-b{box-shadow:inset 3px 0 0 var(--blue-hot);background:rgba(21,103,211,.07)}
+.rkrow.sel-a.sel-b{background:linear-gradient(90deg,rgba(210,10,10,.08),rgba(21,103,211,.08))}
+.rkpos{font-family:'Oswald',sans-serif;font-weight:700;font-size:14.5px;color:#6e7484;text-align:center}
+.rkpos.champ{color:var(--gold)}
+.rkimg{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#0c0e12;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#4a505c;flex:none}
+.rkimg img{width:100%;height:100%;object-fit:cover;object-position:top}
+.rkname{font-size:16.5px;font-weight:600;line-height:1.2}
+.rkname .rknick{color:var(--gold);font-style:italic;font-size:13px;font-weight:400;margin-left:6px}
+.rkmeta{color:var(--muted);font-size:12.5px;display:block;margin-top:1px;letter-spacing:.02em}
+.rkbtns{display:flex;gap:6px}
+.rkbtn{width:29px;height:29px;border-radius:50%;border:1px solid var(--line);background:#12151b;color:var(--muted);font-family:'Oswald',sans-serif;font-weight:700;font-size:11.5px;cursor:pointer;transition:.15s}
+.rkbtn.red:hover,.rkbtn.red.active{background:var(--red);border-color:var(--red);color:#fff}
+.rkbtn.blue:hover,.rkbtn.blue.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.rankfoot{padding:10px 18px;color:#5b6272;font-size:12.5px;border-top:1px solid var(--line-soft)}
+
+/* ---------- matchup note ---------- */
+.matchnote{display:none;padding:12px 18px;background:#0d0f13;border-bottom:1px solid var(--line-soft);color:#c8cedb;font-size:14.5px;line-height:1.6;text-align:center}
+.matchnote b{color:#fff;font-weight:600}
+
+/* ---------- fighter cards ---------- */
+.tape{margin-top:8px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0b0d10)}
+.cards{display:grid;grid-template-columns:1fr 92px 1fr;align-items:stretch}
+.fcard{position:relative;padding:18px 18px 14px;min-height:300px;display:flex;flex-direction:column}
+.fcard.red{background:linear-gradient(160deg,rgba(210,10,10,.20),rgba(210,10,10,.02) 55%,transparent)}
+.fcard.blue{background:linear-gradient(200deg,rgba(21,103,211,.22),rgba(21,103,211,.02) 55%,transparent)}
+.fcard.blue{text-align:right}
+.corner{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase}
+.fcard.red .corner{color:#ff6a6a}
+.fcard.blue .corner{color:#6aaaff}
+.fname{font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(20px,3.1vw,36px);line-height:1.02;text-transform:uppercase;margin-top:4px}
+.fnick{color:var(--gold);font-style:italic;font-size:clamp(14px,1.7vw,19px);min-height:1.2em;letter-spacing:.02em}
+.frec{font-family:'Oswald',sans-serif;font-size:clamp(15px,2vw,22px);margin-top:6px;letter-spacing:.05em}
+.frec small{color:var(--muted);font-size:11px;letter-spacing:.18em;display:block;margin-top:1px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.fcard.blue .badges{justify-content:flex-end}
+.badge{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--line);color:var(--muted);border-radius:2px;background:#0e1014}
+.badge.champ{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
+.badge.rank{border-color:#4a5163;color:#c8cedb}
+.photo{flex:1;display:flex;align-items:flex-end;justify-content:center;min-height:170px;margin-top:6px;position:relative}
+.photo img{max-height:290px;max-width:100%;object-fit:contain;filter:drop-shadow(0 20px 30px rgba(0,0,0,.75))}
+.fcard.blue .photo img{transform:scaleX(-1)}
+.photo .silh{width:150px;height:190px;display:flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:3px;color:#39404e;font-family:'Oswald',sans-serif;font-size:44px;letter-spacing:.06em;background:#0c0e12}
+.vsbar{display:flex;align-items:center;justify-content:center;background:#000;border-left:1px solid var(--line);border-right:1px solid var(--line);position:relative}
+.vsbar span{font-family:'Oswald',sans-serif;font-weight:700;font-size:34px;color:#fff;text-shadow:0 0 22px rgba(255,43,43,.8)}
+.vsbar:before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(210,10,10,.35),transparent)}
+.vsbar span{position:relative}
+
+/* ---------- stat table ---------- */
+.statsec{border-top:1px solid var(--line)}
+.sechead{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-align:center;padding:12px 0 10px;background:#0a0c0f;border-bottom:1px solid var(--line-soft)}
+.srow{display:grid;grid-template-columns:1fr 220px 1fr;align-items:center;border-bottom:1px solid var(--line-soft);min-height:44px}
+.srow:nth-child(odd){background:rgba(255,255,255,.012)}
+.sval{font-family:'Oswald',sans-serif;font-size:clamp(15px,1.9vw,20px);padding:9px 18px;letter-spacing:.03em;position:relative}
+.sval.l{text-align:right}
+.sval.r{text-align:left}
+.sval.win{color:#fff}
+.sval.lose{color:#6e7484}
+.sval.tie{color:#c3c8d2}
+.sval.win.l:after{content:'◀';position:absolute;right:-9px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--red-hot)}
+.sval.win.r:before{content:'▶';position:absolute;left:-9px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--blue-hot)}
+.slabel{text-align:center;font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#767d8d;padding:9px 6px;border-left:1px solid var(--line-soft);border-right:1px solid var(--line-soft)}
+.meter{height:4px;background:#1b1e25;margin:0;display:grid;grid-template-columns:1fr 1fr}
+.meter i{display:block;height:100%}
+.meter i.a{background:var(--red);justify-self:end}
+.meter i.b{background:var(--blue)}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:0;margin-top:26px;border-bottom:1px solid var(--line)}
+.tab{
+  font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  padding:12px 18px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;
+}
+.tab.on{color:#fff;border-bottom-color:var(--red-hot)}
+.tab:hover{color:#dfe3ea}
+.panel{display:none;padding-top:18px}
+.panel.on{display:block}
+
+/* history */
+.hist{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.histcol h3{font-size:15px;letter-spacing:.12em;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.histcol.red h3{color:#ff6a6a}
+.histcol.blue h3{color:#6aaaff}
+.fight{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line-soft)}
+.res{font-family:'Oswald',sans-serif;font-size:13px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:2px;font-weight:600}
+.res.W{background:rgba(63,191,95,.14);color:#4fd672;border:1px solid rgba(63,191,95,.35)}
+.res.L{background:rgba(210,10,10,.14);color:#ff6b6b;border:1px solid rgba(210,10,10,.35)}
+.res.D{background:rgba(212,175,55,.12);color:var(--gold);border:1px solid rgba(212,175,55,.3)}
+.res.N{background:#181b21;color:var(--muted);border:1px solid var(--line)}
+.fight .opp{font-size:17px;font-weight:600;line-height:1.15}
+.fight .sub{color:var(--muted);font-size:13.5px;letter-spacing:.03em}
+.fight .when{color:#6e7484;font-size:13px;text-align:right;white-space:nowrap;font-family:'Oswald',sans-serif;letter-spacing:.04em}
+.fight .title-tag{color:var(--gold);font-size:11px;letter-spacing:.1em;font-family:'Oswald',sans-serif}
+.showmore{margin-top:10px;width:100%}
+.nodata{color:var(--muted);padding:16px 4px;font-size:15px}
+
+/* head to head */
+.h2h-banner{border:1px solid var(--gold);background:rgba(212,175,55,.07);padding:14px 16px;margin-bottom:16px}
+.h2h-banner h3{color:var(--gold);font-size:15px;letter-spacing:.14em}
+.co{display:grid;grid-template-columns:1fr 150px 1fr;gap:0;align-items:center;border-bottom:1px solid var(--line-soft);min-height:46px}
+.co .side{padding:8px 14px;font-size:15px}
+.co .side.l{text-align:right}
+.co .mid{text-align:center;font-family:'Oswald',sans-serif;font-size:14px;padding:8px 4px;border-left:1px solid var(--line-soft);border-right:1px solid var(--line-soft);letter-spacing:.04em}
+.co .tag{font-family:'Oswald',sans-serif;font-size:11px;padding:2px 6px;border-radius:2px;letter-spacing:.08em}
+.tag.W{background:rgba(63,191,95,.15);color:#4fd672}
+.tag.L{background:rgba(210,10,10,.15);color:#ff6b6b}
+.tag.D{background:rgba(212,175,55,.14);color:var(--gold)}
+.tag.N{background:#181b21;color:var(--muted)}
+
+/* breakdown bars */
+.bd{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.bdblock h3{font-size:14px;letter-spacing:.14em;margin-bottom:12px;color:var(--muted)}
+.bdrow{margin-bottom:14px}
+.bdrow .lbl{display:flex;justify-content:space-between;font-family:'Oswald',sans-serif;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.bdrow .lbl b{color:#fff;font-weight:500}
+.track{height:9px;background:#171a20;border:1px solid var(--line-soft);position:relative;overflow:hidden}
+.track i{position:absolute;left:0;top:0;bottom:0;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.bdblock.red .track i{background:linear-gradient(90deg,#8b0b0b,var(--red-hot))}
+.bdblock.blue .track i{background:linear-gradient(90deg,#0d3f80,var(--blue-hot))}
+
+footer{text-align:center;color:#575d6b;font-size:13px;padding:34px 16px 10px;letter-spacing:.05em;line-height:1.7}
+footer a{color:#7c8496}
+
+@media (max-width:820px){
+  .pickers{grid-template-columns:1fr;gap:10px}
+  .vsmini{display:none}
+  .cards{grid-template-columns:1fr}
+  .vsbar{min-height:52px;border:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .fcard.blue{text-align:left}
+  .fcard.blue .badges{justify-content:flex-start}
+  .fcard.blue .photo img{transform:none}
+  .srow{grid-template-columns:1fr 120px 1fr}
+  .slabel{font-size:9px;letter-spacing:.1em}
+  .hist,.bd{grid-template-columns:1fr}
+  .co{grid-template-columns:1fr 96px 1fr}
+  .rkrow{grid-template-columns:24px 34px 1fr auto;gap:8px}
+  .rkmeta{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="ring"></div>
+  <div class="msg" id="loadmsg">Loading the roster…</div>
+  <div class="bar"><i id="loadbar"></i></div>
+  <div class="errbox" id="errbox"></div>
+</div>
+
+<header class="top">
+  <h1>Tale <span class="of">of the</span> Tape</h1>
+  <p>UFC Fighter Head-to-Head</p>
+  <div class="toolbar">
+    <button class="tool" id="btnRandom">Random Matchup</button>
+    <button class="tool" id="btnSwap">Swap Corners</button>
+    <button class="tool" id="btnClear">Clear</button>
+    <button class="tool" id="btnLink">Copy Link</button>
+    <button class="tool" id="btnRankings">Browse Rankings ↓</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="pickers">
+    <div class="picker red" id="pick-a">
+      <label>Red Corner</label>
+      <input type="text" id="in-a" placeholder="Search a fighter…" autocomplete="off" spellcheck="false">
+      <div class="results" id="res-a"></div>
+    </div>
+    <div class="vsmini">VS</div>
+    <div class="picker blue" id="pick-b">
+      <label>Blue Corner</label>
+      <input type="text" id="in-b" placeholder="Search a fighter…" autocomplete="off" spellcheck="false">
+      <div class="results" id="res-b"></div>
+    </div>
+  </div>
+
+  <div class="tape">
+    <div class="cards">
+      <div class="fcard red" id="card-a"></div>
+      <div class="vsbar"><span>VS</span></div>
+      <div class="fcard blue" id="card-b"></div>
+    </div>
+    <div class="matchnote" id="matchnote"></div>
+    <div class="statsec">
+      <div class="sechead">Tale of the Tape</div>
+      <div id="stats"></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-p="p-hist">Fight History</button>
+    <button class="tab" data-p="p-bd">Career Breakdown</button>
+    <button class="tab" data-p="p-h2h">Head to Head</button>
+  </div>
+
+  <div class="panel on" id="p-hist"><div class="hist">
+    <div class="histcol red" id="h-a"></div>
+    <div class="histcol blue" id="h-b"></div>
+  </div></div>
+
+  <div class="panel" id="p-bd"><div class="bd">
+    <div class="bdblock red" id="bd-a"></div>
+    <div class="bdblock blue" id="bd-b"></div>
+  </div></div>
+
+  <div class="panel" id="p-h2h"><div id="h2h"></div></div>
+
+  <div class="rankwrap" id="rankwrap">
+    <button class="rankhead" id="rankToggle" type="button" aria-expanded="false">
+      <div class="rankhead-txt">
+        <h2>Divisional Rankings</h2>
+        <p>Browse the top 15 in every weight class and load fighters straight into a corner.</p>
+      </div>
+      <span class="rankchev" id="rankchev">▾</span>
+    </button>
+    <div class="rankbody" id="rankbody"><div class="rankinner">
+      <div class="divpills" id="divpills"></div>
+      <div class="ranklist" id="ranklist"></div>
+      <div class="rankfoot">Tap a fighter's <span style="color:#ff6a6a">R</span> or <span style="color:#6aaaff">B</span> to load them into a corner — or tap the row for the next open slot. Official UFC rankings, updated weekly.</div>
+    </div></div>
+  </div>
+
+</div>
+
+<footer>
+  Fight history &amp; physicals from <a href="http://ufcstats.com" target="_blank" rel="noopener">UFCStats</a> ·
+  Photos, bios &amp; divisional rankings from the UFC athlete roster.<br>
+  Records shown are UFC-only unless labelled "Pro". Not affiliated with UFC / Zuffa.
+</footer>
+
+<script>
+"use strict";
+
+/* ============================ config ============================ */
+const CDN = "https://cdn.jsdelivr.net/gh/Greco1899/scrape_ufc_stats@main/";
+const SRC = {
+  tott:    CDN + "ufc_fighter_tott.csv",
+  results: CDN + "ufc_fight_results.csv",
+  events:  CDN + "ufc_event_details.csv",
+  roster:  "https://api.octagon-api.com/fighters",
+  rankings:"https://api.octagon-api.com/rankings"
+};
+
+/* ============================ helpers ============================ */
+const $ = s => document.querySelector(s);
+const el = (t, c, h) => { const n = document.createElement(t); if (c) n.className = c; if (h != null) n.innerHTML = h; return n; };
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+
+function norm(s){
+  return String(s||"")
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .toLowerCase().replace(/[^a-z0-9]/g,"");
+}
+function titleCase(s){ return String(s||"").toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()); }
+
+/* minimal RFC4180 CSV parser */
+function parseCSV(text){
+  const rows=[]; let row=[], field="", q=false, i=0;
+  if(text.charCodeAt(0)===0xFEFF) i=1;
+  for(; i<text.length; i++){
+    const c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){field+='"';i++;} else q=false; }
+      else field+=c;
+    } else {
+      if(c==='"') q=true;
+      else if(c===','){ row.push(field); field=""; }
+      else if(c==='\n'){ row.push(field); rows.push(row); row=[]; field=""; }
+      else if(c==='\r'){ /* skip */ }
+      else field+=c;
+    }
+  }
+  if(field.length||row.length){ row.push(field); rows.push(row); }
+  const head=rows.shift().map(h=>h.trim());
+  return rows.filter(r=>r.length>1).map(r=>{
+    const o={}; head.forEach((h,j)=> o[h]=(r[j]==null?"":r[j]).trim()); return o;
+  });
+}
+
+const MONTHS={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function parseDate(s){
+  if(!s) return null;
+  const m=String(s).match(/([A-Za-z]{3})[a-z.]*\s+(\d{1,2}),\s*(\d{4})/);
+  if(!m) return null;
+  const mo=MONTHS[m[1].toLowerCase()];
+  if(mo==null) return null;
+  return new Date(Date.UTC(+m[3], mo, +m[2]));
+}
+const MON3=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmtDate(d){ return d ? MON3[d.getUTCMonth()]+" "+d.getUTCFullYear() : "—"; }
+function fmtDateFull(d){ return d ? MON3[d.getUTCMonth()]+" "+d.getUTCDate()+", "+d.getUTCFullYear() : "—"; }
+
+function heightToInches(s){
+  if(!s) return null;
+  const m=String(s).match(/(\d+)'\s*(\d+)?/);
+  if(m) return (+m[1])*12 + (+(m[2]||0));
+  const n=parseFloat(s);
+  return (isFinite(n) && n>40 && n<95) ? n : null;
+}
+function inchesToFt(n){ if(n==null) return null; return Math.floor(n/12)+"' "+Math.round(n%12)+'"'; }
+function numOf(s){ const n=parseFloat(String(s||"").replace(/[^0-9.]/g,"")); return isFinite(n)?n:null; }
+function ageFrom(dob){
+  const d=parseDate(dob); if(!d) return null;
+  const now=new Date(); let a=now.getUTCFullYear()-d.getUTCFullYear();
+  const m=now.getUTCMonth()-d.getUTCMonth();
+  if(m<0 || (m===0 && now.getUTCDate()<d.getUTCDate())) a--;
+  return (a>0 && a<80) ? a : null;
+}
+
+/* ============================ data model ============================ */
+const DB = { byKey:new Map(), list:[] };
+let RANKINGS = null;
+let RANKS_BY_KEY = new Map();
+let RANKED_FIGHTERS = [];
+
+/* handles Chinese/Korean-order name variants between the rankings feed and
+   the historical CSVs, e.g. "Zhang Weili" vs "Weili Zhang" */
+function altNormKey(name){
+  const parts=String(name||"").trim().split(/\s+/);
+  if(parts.length!==2) return null;
+  return norm(parts[1]+" "+parts[0]);
+}
+function findByName(name){
+  const k=norm(name);
+  if(DB.byKey.has(k)) return DB.byKey.get(k);
+  const ak=altNormKey(name);
+  if(ak && DB.byKey.has(ak)) return DB.byKey.get(ak);
+  return null;
+}
+/* looks a fighter up in DB by name, or mints a lightweight stand-in entry
+   so any ranked fighter can still be loaded into a corner even if they're
+   missing from the historical fight-results sample */
+function resolveFighter(name){
+  let f=findByName(name);
+  if(f) return f;
+  f=getF(norm(name));
+  f.name=String(name||"").trim() || f.key;
+  if(!f.rec) f.rec=tally(f.fights||[]);
+  f.searchable=norm(f.name)+" "+norm(f.nickname||"");
+  f.sortName=f.name.split(/\s+/).slice(-1)[0].toLowerCase();
+  if(!DB.list.includes(f)) DB.list.push(f);
+  return f;
+}
+function isP4P(cat){ return /pound-for-pound/i.test(cat.id||""); }
+function divisionLabel(cat){ return isP4P(cat) ? (/women/i.test(cat.categoryName)?"Women's P4P":"Men's P4P") : cat.categoryName; }
+
+/* build key -> {divisions:[{name,rank,champ}], p4pMen, p4pWomen} from the rankings feed */
+function buildRanks(json){
+  const map=new Map();
+  for(const cat of json){
+    const p4p=isP4P(cat);
+    const order=[];
+    if(cat.champion && cat.champion.championName) order.push({name:cat.champion.championName, champ:!p4p});
+    for(const f of (cat.fighters||[])) order.push({name:f.name, champ:false});
+    order.forEach((o,i)=>{
+      const key=norm(o.name); if(!key) return;
+      if(!map.has(key)) map.set(key, {divisions:[], p4pMen:null, p4pWomen:null});
+      const entry=map.get(key);
+      if(p4p){
+        if(/women/i.test(cat.categoryName)) entry.p4pWomen=i+1; else entry.p4pMen=i+1;
+      } else {
+        entry.divisions.push({name:cat.categoryName, rank:i+1, champ:o.champ});
+      }
+    });
+  }
+  return map;
+}
+function ranksFor(f){
+  if(!f) return null;
+  let e=RANKS_BY_KEY.get(f.key);
+  if(!e){ const ak=altNormKey(f.name); if(ak) e=RANKS_BY_KEY.get(ak); }
+  return e||null;
+}
+/* pick the ranking entry matching the fighter's current division, else the first available */
+function primaryRank(f){
+  const e=ranksFor(f); if(!e||!e.divisions.length) return null;
+  if(f.division){
+    const nd=norm(f.division);
+    const m=e.divisions.find(d=> nd.includes(norm(d.name)) || norm(d.name).includes(nd));
+    if(m) return m;
+  }
+  return e.divisions[0];
+}
+
+function getF(key){
+  if(!DB.byKey.has(key)){
+    DB.byKey.set(key, {
+      key, name:"", nickname:"", img:"", division:"", status:"",
+      height:null, weight:null, reach:null, legReach:null, stance:"",
+      dob:"", age:null, born:"", style:"", debut:"", rank:"",
+      pro:null, fights:[]
+    });
+  }
+  return DB.byKey.get(key);
+}
+
+function methodShort(m){
+  const s=String(m||"").trim();
+  if(/^KO/i.test(s)) return "KO/TKO";
+  if(/Submission/i.test(s)) return "Submission";
+  if(/Decision - Unanimous/i.test(s)) return "Decision (U)";
+  if(/Decision - Split/i.test(s)) return "Decision (S)";
+  if(/Decision - Majority/i.test(s)) return "Decision (M)";
+  if(/Decision/i.test(s)) return "Decision";
+  if(/DQ/i.test(s)) return "DQ";
+  if(/Overturned/i.test(s)) return "Overturned";
+  if(/Could Not Continue/i.test(s)) return "No Contest";
+  if(/TKO/i.test(s)) return "KO/TKO";
+  return s || "—";
+}
+function methodClass(m){
+  const s=methodShort(m);
+  if(s==="KO/TKO") return "ko";
+  if(s==="Submission") return "sub";
+  if(/Decision/.test(s)) return "dec";
+  return "other";
+}
+function fightSeconds(round, time){
+  const r=parseInt(round,10);
+  const m=String(time||"").match(/(\d+):(\d+)/);
+  if(!isFinite(r)) return null;
+  const t = m ? (+m[1])*60 + (+m[2]) : 0;
+  return (r-1)*300 + t;
+}
+function fmtMMSS(s){
+  if(s==null||!isFinite(s)) return "—";
+  const m=Math.floor(s/60), ss=Math.round(s%60);
+  return m+":"+String(ss).padStart(2,"0");
+}
+
+/* ============================ load ============================ */
+let LOADED=0;
+const STEPS=4;
+function step(msg){
+  LOADED++;
+  $("#loadbar").style.width = Math.min(100, Math.round(LOADED/STEPS*100)) + "%";
+  if(msg) $("#loadmsg").textContent = msg;
+}
+
+async function getText(url){
+  const r = await fetch(url, {cache:"force-cache"});
+  if(!r.ok) throw new Error(url + " → HTTP " + r.status);
+  return r.text();
+}
+
+async function boot(){
+  try{
+    $("#loadmsg").textContent = "Pulling fighter records…";
+    const [tottT, evT, resT] = await Promise.all([
+      getText(SRC.tott).then(t=>{ step("Pulling fight history…"); return t; }),
+      getText(SRC.events).then(t=>{ step(); return t; }),
+      getText(SRC.results).then(t=>{ step("Crunching careers…"); return t; })
+    ]);
+
+    /* --- physicals: every fighter who ever appeared on a UFC card --- */
+    for(const r of parseCSV(tottT)){
+      const nm=r.FIGHTER; if(!nm) continue;
+      const k=norm(nm); if(!k) continue;
+      const f=getF(k);
+      f.name = f.name || nm;
+      f.height   = heightToInches(r.HEIGHT);
+      f.weight   = numOf(r.WEIGHT);
+      f.reach    = numOf(r.REACH);
+      f.stance   = r.STANCE || "";
+      f.dob      = r.DOB && r.DOB !== "--" ? r.DOB : "";
+      f.age      = ageFrom(f.dob);
+    }
+
+    /* --- event dates --- */
+    const evDate=new Map();
+    for(const e of parseCSV(evT)){
+      if(!e.EVENT) continue;
+      evDate.set(String(e.EVENT).trim(), { date:parseDate(e.DATE), loc:e.LOCATION||"" });
+    }
+
+    /* --- fights --- */
+    for(const r of parseCSV(resT)){
+      const bout=String(r.BOUT||""); const parts=bout.split(/\s+vs\.\s+/i);
+      if(parts.length!==2) continue;
+      const a=parts[0].trim(), b=parts[1].trim();
+      if(!a||!b) continue;
+      const ev=(r.EVENT||"").trim();
+      const info=evDate.get(ev)||{};
+      const oc=(r.OUTCOME||"").toUpperCase();
+      let ra="N", rb="N";
+      if(oc==="W/L"){ra="W";rb="L";}
+      else if(oc==="L/W"){ra="L";rb="W";}
+      else if(oc==="D/D"){ra="D";rb="D";}
+      const wc=(r.WEIGHTCLASS||"").replace(/\s*Bout\s*$/i,"").trim();
+      const isTitle=/title/i.test(r.WEIGHTCLASS||"");
+      const base={
+        event:ev, date:info.date||null, loc:info.loc||"",
+        method:methodShort(r.METHOD), mclass:methodClass(r.METHOD),
+        round:r.ROUND||"", time:r.TIME||"", secs:fightSeconds(r.ROUND,r.TIME),
+        weightclass:wc, title:isTitle, detail:(r.DETAILS||"").trim(), url:r.URL||""
+      };
+      const fa=getF(norm(a)); if(!fa.name) fa.name=a;
+      const fb=getF(norm(b)); if(!fb.name) fb.name=b;
+      fa.fights.push(Object.assign({opp:b, oppKey:norm(b), res:ra}, base));
+      fb.fights.push(Object.assign({opp:a, oppKey:norm(a), res:rb}, base));
+    }
+
+    /* --- official roster: photos, nicknames, bios (active athletes) --- */
+    /* --- official rankings: top 15 + champion per division --- */
+    const [rr, rkr] = await Promise.all([
+      fetch(SRC.roster, {cache:"force-cache"}).catch(e=>{ console.warn("roster fetch failed:", e); return null; }),
+      fetch(SRC.rankings, {cache:"force-cache"}).catch(e=>{ console.warn("rankings fetch failed:", e); return null; })
+    ]);
+    try{
+      if(rr && rr.ok){
+        const roster = await rr.json();
+        for(const id in roster){
+          const o=roster[id]; if(!o||!o.name) continue;
+          const f=getF(norm(o.name));
+          f.name     = String(o.name).trim();
+          f.nickname = o.nickname || f.nickname;
+          f.img      = o.imgUrl || "";
+          f.division = (o.category||"").replace(/\s*Division\s*$/i,"");
+          f.status   = o.status || "";
+          f.born     = o.placeOfBirth && o.placeOfBirth!=="null" ? o.placeOfBirth : "";
+          f.style    = o.fightingStyle && o.fightingStyle!=="null" ? o.fightingStyle : "";
+          f.debut    = o.octagonDebut || "";
+          f.legReach = numOf(o.legReach) || null;
+          if(numOf(o.height))  f.height = numOf(o.height);
+          if(numOf(o.reach))   f.reach  = numOf(o.reach);
+          if(numOf(o.weight))  f.weight = numOf(o.weight);
+          if(o.age && numOf(o.age)) f.age = numOf(o.age);
+          const w=parseInt(o.wins,10), l=parseInt(o.losses,10), d=parseInt(o.draws,10);
+          if(isFinite(w)&&isFinite(l)) f.pro = {w, l, d:isFinite(d)?d:0};
+        }
+      }
+    }catch(e){ console.warn("roster (photos) unavailable:", e); }
+    try{
+      if(rkr && rkr.ok){
+        RANKINGS = await rkr.json();
+        RANKS_BY_KEY = buildRanks(RANKINGS);
+      }
+    }catch(e){ console.warn("rankings unavailable:", e); }
+    step("Ready");
+
+    /* --- finalize --- */
+    for(const f of DB.byKey.values()){
+      f.fights.sort((x,y)=>{
+        const dx=x.date?x.date.getTime():0, dy=y.date?y.date.getTime():0;
+        return dy-dx;
+      });
+      f.name = String(f.name||"").replace(/\s+/g," ").trim();
+      f.nickname = String(f.nickname||"").replace(/\s+/g," ").trim();
+      f.rec = tally(f.fights);
+      if(!f.division){
+        const last=f.fights.find(x=>x.weightclass);
+        f.division = last ? last.weightclass.replace(/^UFC\s+/,"") : "";
+      }
+      if(!f.name) f.name = f.key;
+      f.searchable = norm(f.name) + " " + norm(f.nickname);
+      f.sortName = f.name.split(/\s+/).slice(-1)[0].toLowerCase();
+    }
+    DB.list = [...DB.byKey.values()]
+      .filter(f => f.fights.length > 0 || f.img)
+      .sort((a,b)=> b.fights.length - a.fights.length);
+
+    if(RANKINGS){
+      const names=new Set();
+      for(const cat of RANKINGS){
+        if(cat.champion && cat.champion.championName) names.add(cat.champion.championName);
+        for(const fi of (cat.fighters||[])) names.add(fi.name);
+      }
+      RANKED_FIGHTERS = [...names].map(resolveFighter);
+    }
+
+    $("#loader").style.opacity="0";
+    setTimeout(()=>$("#loader").remove(), 400);
+
+    initUI();
+  }catch(err){
+    console.error(err);
+    const L=$("#loader"); L.classList.add("err");
+    $("#loadmsg").textContent="Couldn't load fighter data";
+    $("#errbox").innerHTML =
+      "The page pulls live data from <b>cdn.jsdelivr.net</b> and <b>api.octagon-api.com</b>.<br><br>" +
+      "If you opened this file directly from disk, your browser may be blocking those requests. " +
+      "Serving the folder over a local web server fixes it — e.g. run <code style='color:#ddd'>python3 -m http.server</code> " +
+      "in this folder and open <code style='color:#ddd'>http://localhost:8000</code>.<br><br>" +
+      "<span style='color:#666'>"+esc(err.message)+"</span>";
+  }
+}
+
+function tally(fights){
+  let w=0,l=0,d=0,n=0, ko=0, sub=0, dec=0, koL=0, subL=0, decL=0, titleW=0, titleF=0, secs=0, timed=0;
+  for(const f of fights){
+    if(f.title) titleF++;
+    if(f.res==="W"){ w++; if(f.title) titleW++;
+      if(f.mclass==="ko")ko++; else if(f.mclass==="sub")sub++; else if(f.mclass==="dec")dec++; }
+    else if(f.res==="L"){ l++;
+      if(f.mclass==="ko")koL++; else if(f.mclass==="sub")subL++; else if(f.mclass==="dec")decL++; }
+    else if(f.res==="D") d++; else n++;
+    if(f.secs!=null){ secs+=f.secs; timed++; }
+  }
+  // current streak
+  let streak=0, sk="";
+  for(const f of fights){
+    if(f.res!=="W" && f.res!=="L"){ if(streak===0) continue; else break; }
+    if(!sk) sk=f.res;
+    if(f.res===sk) streak++; else break;
+  }
+  const finishes=ko+sub;
+  return { w,l,d,n, ko,sub,dec, koL,subL,decL, titleW, titleF,
+           finishes, finishRate: w? finishes/w : 0,
+           avgSecs: timed? secs/timed : null,
+           streak, streakKind:sk, total:fights.length };
+}
+
+/* ============================ search UI ============================ */
+const SEL = { a:null, b:null };
+
+function makePicker(side){
+  const input = $("#in-"+side), box = $("#res-"+side);
+  let items=[], idx=-1;
+
+  function search(q){
+    const nq=norm(q);
+    if(!nq) return DB.list.slice(0,40);
+    const starts=[], contains=[];
+    for(const f of DB.list){
+      const p = f.searchable.indexOf(nq);
+      if(p===0 || norm(f.name.split(/\s+/).slice(-1)[0]).indexOf(nq)===0) starts.push(f);
+      else if(p>0) contains.push(f);
+      if(starts.length>60) break;
+    }
+    return starts.concat(contains).slice(0,60);
+  }
+  function render(list){
+    items=list; idx=-1;
+    box.innerHTML="";
+    if(!list.length){ box.appendChild(el("div","empty","No fighter found.")); box.classList.add("open"); return; }
+    list.forEach((f,i)=>{
+      const r=el("div","row");
+      r.innerHTML =
+        '<span class="dot'+(f.img?"":" off")+'"></span>'+
+        '<span class="nm">'+esc(f.name)+'</span>'+
+        (f.nickname?'<span class="nk">"'+esc(f.nickname)+'"</span>':'')+
+        '<span class="meta">'+esc(f.division||"—")+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')+'</span>';
+      r.addEventListener("mousedown", ev=>{ ev.preventDefault(); choose(f); });
+      box.appendChild(r);
+    });
+    box.classList.add("open");
+  }
+  function choose(f){
+    SEL[side]=f; input.value=f.name; box.classList.remove("open"); input.blur();
+    renderAll(); syncHash();
+  }
+  input.addEventListener("focus", ()=> render(search(input.value)));
+  input.addEventListener("input", ()=> render(search(input.value)));
+  input.addEventListener("blur", ()=> setTimeout(()=>box.classList.remove("open"), 120));
+  input.addEventListener("keydown", e=>{
+    if(!box.classList.contains("open")) return;
+    const rows=[...box.querySelectorAll(".row")];
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+      e.preventDefault();
+      idx += e.key==="ArrowDown"?1:-1;
+      if(idx<0) idx=rows.length-1; if(idx>=rows.length) idx=0;
+      rows.forEach(r=>r.classList.remove("active"));
+      if(rows[idx]){ rows[idx].classList.add("active"); rows[idx].scrollIntoView({block:"nearest"}); }
+    } else if(e.key==="Enter"){
+      e.preventDefault();
+      if(items[idx>=0?idx:0]) choose(items[idx>=0?idx:0]);
+    } else if(e.key==="Escape"){ box.classList.remove("open"); }
+  });
+  return { set:f=>{ SEL[side]=f; input.value=f?f.name:""; } };
+}
+
+/* ============================ rendering ============================ */
+const HIST_STEP = 8;
+const shown = { a:HIST_STEP, b:HIST_STEP };
+
+function initials(name){
+  return name.split(/\s+/).map(s=>s[0]).join("").slice(0,2).toUpperCase();
+}
+
+function cardHTML(f, side){
+  if(!f){
+    return '<div class="corner">'+(side==="a"?"Red":"Blue")+' Corner</div>'+
+           '<div class="fname" style="color:#31363f">Select a fighter</div>'+
+           '<div class="fnick"></div>'+
+           '<div class="photo"><div class="silh">?</div></div>';
+  }
+  const r=f.rec;
+  const rec = r.w+"-"+r.l+(r.d?"-"+r.d:"")+(r.n?" ("+r.n+" NC)":"");
+  const pro = f.pro ? (f.pro.w+"-"+f.pro.l+(f.pro.d?"-"+f.pro.d:"")) : null;
+  const badges=[];
+  const pr=primaryRank(f), rk=ranksFor(f);
+  if(pr) badges.push('<span class="badge '+(pr.champ?"champ":"rank")+'">'+(pr.champ?"Champion":"#"+pr.rank+" Ranked")+'</span>');
+  if(f.division) badges.push('<span class="badge">'+esc(f.division)+'</span>');
+  if(rk && (rk.p4pMen||rk.p4pWomen)) badges.push('<span class="badge rank">P4P #'+(rk.p4pMen||rk.p4pWomen)+'</span>');
+  if(r.titleW>0) badges.push('<span class="badge champ">'+r.titleW+'× Title Win'+(r.titleW>1?'s':'')+'</span>');
+  if(f.status && f.status!=="Active") badges.push('<span class="badge">'+esc(f.status)+'</span>');
+  if(!f.status && f.fights.length) {
+    const last=f.fights[0].date;
+    if(last && (Date.now()-last.getTime()) > 1000*60*60*24*365*2.5)
+      badges.push('<span class="badge">Inactive</span>');
+  }
+  if(r.streak>=2) badges.push('<span class="badge">'+r.streak+' Fight '+(r.streakKind==="W"?"Win":"Loss")+' Streak</span>');
+
+  const photo = f.img
+    ? '<img src="'+esc(f.img)+'" alt="'+esc(f.name)+'" loading="lazy" onerror="this.outerHTML=\'<div class=&quot;silh&quot;>'+esc(initials(f.name))+'</div>\'">'
+    : '<div class="silh">'+esc(initials(f.name))+'</div>';
+
+  return '<div class="corner">'+(side==="a"?"Red":"Blue")+' Corner</div>'+
+    '<div class="fname">'+esc(f.name)+'</div>'+
+    '<div class="fnick">'+(f.nickname?'“'+esc(f.nickname)+'”':'')+'</div>'+
+    '<div class="frec">'+esc(pro||rec)+'<small>'+(pro?'Pro Record':'UFC Record')+'</small></div>'+
+    '<div class="badges">'+badges.join("")+'</div>'+
+    '<div class="photo">'+photo+'</div>';
+}
+
+/* stat row spec: [label, valueFn, betterFn]  better: 1 = higher wins, -1 = lower wins, 0 = no contest */
+function statRows(a,b){
+  const R=[];
+  const push=(label, va, vb, cmp)=> R.push({label, va, vb, cmp});
+  const rec=f=>{const r=f.rec;return r.w+"-"+r.l+(r.d?"-"+r.d:"");};
+
+  push("Age", a?.age, b?.age, "low");
+  push("Height", a?.height, b?.height, "high");
+  push("Weight", a?.weight, b?.weight, "none");
+  push("Reach", a?.reach, b?.reach, "high");
+  if((a&&a.legReach)||(b&&b.legReach)) push("Leg Reach", a?.legReach, b?.legReach, "high");
+  push("Stance", a?.stance, b?.stance, "none");
+  push("Division", a?.division, b?.division, "none");
+  if((a&&a.style)||(b&&b.style)) push("Fighting Style", a?.style, b?.style, "none");
+  if((a&&a.born)||(b&&b.born)) push("Born", a?.born, b?.born, "none");
+  push("UFC Record", a?a.rec.w:null, b?b.rec.w:null, "high");
+  push("UFC Fights", a?a.rec.total:null, b?b.rec.total:null, "high");
+  push("Wins by KO/TKO", a?a.rec.ko:null, b?b.rec.ko:null, "high");
+  push("Wins by Submission", a?a.rec.sub:null, b?b.rec.sub:null, "high");
+  push("Wins by Decision", a?a.rec.dec:null, b?b.rec.dec:null, "high");
+  push("Finish Rate", a?a.rec.finishRate:null, b?b.rec.finishRate:null, "high");
+  push("Avg. Fight Time", a?a.rec.avgSecs:null, b?b.rec.avgSecs:null, "none");
+  push("Title Fights", a?a.rec.titleF:null, b?b.rec.titleF:null, "high");
+  push("Current Streak", a?a.rec:null, b?b.rec:null, "none");
+  push("Octagon Debut", a?.debut || (a&&a.fights.length?fmtDateFull(a.fights[a.fights.length-1].date):null),
+                        b?.debut || (b&&b.fights.length?fmtDateFull(b.fights[b.fights.length-1].date):null), "none");
+  push("Last Fight", a&&a.fights.length?a.fights[0]:null, b&&b.fights.length?b.fights[0]:null, "none");
+
+  // formatting
+  const fmt=(label,v,f)=>{
+    if(v==null||v==="") return "—";
+    switch(label){
+      case "Height": return inchesToFt(v)+' <span style="color:#6e7484;font-size:.75em">('+Math.round(v)+'")</span>';
+      case "Reach": case "Leg Reach": return Math.round(v)+'"';
+      case "Weight": return Math.round(v)+" lbs";
+      case "UFC Record": return f.rec.w+"-"+f.rec.l+(f.rec.d?"-"+f.rec.d:"");
+      case "Finish Rate": return Math.round(v*100)+"%";
+      case "Avg. Fight Time": return fmtMMSS(v);
+      case "Current Streak": return v.streak>0 ? v.streak+" "+(v.streakKind==="W"?"WIN":"LOSS")+(v.streak>1?"S":"") : "—";
+      case "Last Fight": return (v.res==="W"?"W":v.res==="L"?"L":v.res==="D"?"D":"NC")+" vs "+esc(v.opp)+
+        ' <span style="color:#6e7484;font-size:.8em">'+fmtDate(v.date)+'</span>';
+      default: return esc(v);
+    }
+  };
+  const num=(label,v)=>{
+    if(v==null) return null;
+    if(label==="Current Streak") return null;
+    if(label==="UFC Record") return v;
+    return typeof v==="number" ? v : null;
+  };
+
+  return R.map(r=>{
+    const na=num(r.label,r.va), nb=num(r.label,r.vb);
+    let win="";
+    if(r.cmp!=="none" && na!=null && nb!=null && na!==nb){
+      const aWins = r.cmp==="high" ? na>nb : na<nb;
+      win = aWins ? "a" : "b";
+    }
+    return {
+      label:r.label,
+      ha: r.va==null? "—" : fmt(r.label, r.va, a),
+      hb: r.vb==null? "—" : fmt(r.label, r.vb, b),
+      win
+    };
+  });
+}
+
+function renderStats(a,b){
+  const host=$("#stats"); host.innerHTML="";
+  if(!a && !b){
+    host.innerHTML='<div class="nodata" style="text-align:center;padding:28px">Pick a fighter for each corner to build the tape.</div>';
+    return;
+  }
+  for(const r of statRows(a,b)){
+    const row=el("div","srow");
+    row.innerHTML =
+      '<div class="sval l '+(r.win==="a"?"win":r.win==="b"?"lose":"tie")+'">'+r.ha+'</div>'+
+      '<div class="slabel">'+esc(r.label)+'</div>'+
+      '<div class="sval r '+(r.win==="b"?"win":r.win==="a"?"lose":"tie")+'">'+r.hb+'</div>';
+    host.appendChild(row);
+  }
+}
+
+function fightHTML(f, oppHighlightKey){
+  const hl = oppHighlightKey && f.oppKey===oppHighlightKey;
+  return '<div class="fight"'+(hl?' style="background:rgba(212,175,55,.07)"':'')+'>'+
+    '<div class="res '+f.res+'">'+f.res+'</div>'+
+    '<div><div class="opp">'+esc(f.opp)+(f.title?' <span class="title-tag">TITLE</span>':'')+'</div>'+
+    '<div class="sub">'+esc(f.method)+(f.round?' · R'+esc(f.round)+' '+esc(f.time):'')+'</div></div>'+
+    '<div class="when">'+fmtDate(f.date)+'<br><span style="font-size:11px;color:#565c68">'+esc((f.event||"").replace(/^UFC Fight Night:\s*/,"UFC FN: ").slice(0,26))+'</span></div>'+
+  '</div>';
+}
+
+function renderHistory(side, f, other){
+  const host=$("#h-"+side);
+  host.innerHTML="";
+  if(!f){ host.innerHTML='<div class="nodata">No fighter selected.</div>'; return; }
+  host.appendChild(el("h3",null, esc(f.name)+" — "+f.fights.length+" UFC fight"+(f.fights.length===1?"":"s")));
+  if(!f.fights.length){ host.appendChild(el("div","nodata","No UFC bouts on record.")); return; }
+  const n=Math.min(shown[side], f.fights.length);
+  const box=el("div");
+  box.innerHTML = f.fights.slice(0,n).map(x=>fightHTML(x, other?other.key:null)).join("");
+  host.appendChild(box);
+  if(n < f.fights.length){
+    const btn=el("button","tool showmore","Show "+Math.min(HIST_STEP, f.fights.length-n)+" more");
+    btn.onclick=()=>{ shown[side]+=HIST_STEP; renderHistory(side,f,other); };
+    host.appendChild(btn);
+  }
+}
+
+function renderBreakdown(side, f){
+  const host=$("#bd-"+side); host.innerHTML="";
+  if(!f){ host.innerHTML='<div class="nodata">No fighter selected.</div>'; return; }
+  const r=f.rec;
+  host.appendChild(el("h3",null,esc(f.name)));
+  const rows=[
+    ["Wins by KO/TKO", r.ko, r.w],
+    ["Wins by Submission", r.sub, r.w],
+    ["Wins by Decision", r.dec, r.w],
+    ["Losses by KO/TKO", r.koL, r.l],
+    ["Losses by Submission", r.subL, r.l],
+    ["Losses by Decision", r.decL, r.l]
+  ];
+  for(const [lbl,v,den] of rows){
+    const pct = den? Math.round(v/den*100) : 0;
+    const d=el("div","bdrow");
+    d.innerHTML='<div class="lbl"><span>'+lbl+'</span><b>'+v+(den?' <span style="color:#6e7484">('+pct+'%)</span>':'')+'</b></div>'+
+      '<div class="track"><i style="width:'+pct+'%"></i></div>';
+    host.appendChild(d);
+  }
+  const extra=el("div");
+  extra.style.cssText="margin-top:16px;border-top:1px solid var(--line-soft);padding-top:12px";
+  const bits=[
+    ["Finish rate", r.w? Math.round(r.finishes/r.w*100)+"% of wins" : "—"],
+    ["Avg. fight time", fmtMMSS(r.avgSecs)],
+    ["Title fights", r.titleF+" ("+r.titleW+" won)"],
+    ["Went to decision", r.total? Math.round((r.dec+r.decL)/r.total*100)+"% of bouts" : "—"],
+    ["First UFC bout", f.fights.length? fmtDateFull(f.fights[f.fights.length-1].date) : "—"],
+    ["Most recent", f.fights.length? fmtDateFull(f.fights[0].date) : "—"]
+  ];
+  extra.innerHTML = bits.map(([k,v])=>
+    '<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:15px">'+
+    '<span style="color:var(--muted)">'+k+'</span><span>'+esc(v)+'</span></div>').join("");
+  host.appendChild(extra);
+}
+
+function renderH2H(a,b){
+  const host=$("#h2h"); host.innerHTML="";
+  if(!a||!b){ host.innerHTML='<div class="nodata">Pick both fighters to see shared history.</div>'; return; }
+
+  const direct = a.fights.filter(f=>f.oppKey===b.key);
+  if(direct.length){
+    const box=el("div","h2h-banner");
+    let inner='<h3>They have met '+direct.length+' time'+(direct.length>1?'s':'')+'</h3>';
+    inner+=direct.map(f=>
+      '<div style="margin-top:10px;font-size:16px">'+
+      '<b style="color:'+(f.res==="W"?"#4fd672":f.res==="L"?"#ff6b6b":"#d4af37")+'">'+
+      (f.res==="W"?esc(a.name):f.res==="L"?esc(b.name):"Draw")+'</b>'+
+      (f.res==="W"||f.res==="L"?" def. ":" — ")+
+      (f.res==="W"?esc(b.name):f.res==="L"?esc(a.name):"")+
+      ' <span style="color:var(--muted)">· '+esc(f.method)+' · R'+esc(f.round)+' '+esc(f.time)+
+      ' · '+esc(f.event)+' ('+fmtDateFull(f.date)+')</span></div>').join("");
+    box.innerHTML=inner;
+    host.appendChild(box);
+  } else {
+    const box=el("div","h2h-banner");
+    box.style.borderColor="var(--line)"; box.style.background="var(--panel)";
+    box.innerHTML='<h3 style="color:var(--muted)">These two have never fought in the UFC</h3>';
+    host.appendChild(box);
+  }
+
+  // common opponents
+  const mapB=new Map();
+  for(const f of b.fights){ if(!mapB.has(f.oppKey)) mapB.set(f.oppKey,[]); mapB.get(f.oppKey).push(f); }
+  const common=[];
+  for(const f of a.fights){
+    if(f.oppKey===b.key) continue;
+    if(mapB.has(f.oppKey)) common.push({key:f.oppKey, name:f.opp, af:f, bfs:mapB.get(f.oppKey)});
+  }
+  const seen=new Set(); const uniq=common.filter(c=> seen.has(c.key)?false:(seen.add(c.key),true));
+
+  const h=el("h3");
+  h.style.cssText="font-size:15px;letter-spacing:.14em;margin:22px 0 6px;color:var(--muted)";
+  h.textContent="Common Opponents ("+uniq.length+")";
+  host.appendChild(h);
+
+  if(!uniq.length){ host.appendChild(el("div","nodata","No shared opponents in the UFC.")); return; }
+
+  const head=el("div","co");
+  head.style.cssText="border-bottom:1px solid var(--line);color:var(--muted);font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase";
+  head.innerHTML='<div class="side l">'+esc(a.name)+'</div><div class="mid">Opponent</div><div class="side">'+esc(b.name)+'</div>';
+  host.appendChild(head);
+
+  for(const c of uniq){
+    const af=c.af, bf=c.bfs[0];
+    const row=el("div","co");
+    row.innerHTML =
+      '<div class="side l"><span class="tag '+af.res+'">'+af.res+'</span> <span style="color:var(--muted);font-size:13.5px">'+esc(af.method)+' · '+fmtDate(af.date)+'</span></div>'+
+      '<div class="mid">'+esc(c.name)+'</div>'+
+      '<div class="side"><span class="tag '+bf.res+'">'+bf.res+'</span> <span style="color:var(--muted);font-size:13.5px">'+esc(bf.method)+' · '+fmtDate(bf.date)+'</span></div>';
+    host.appendChild(row);
+  }
+}
+
+/* one-line storyline: rank matchup, cross-division flag, physical edges, stance clash */
+function matchupBlurb(a,b){
+  if(!a||!b) return "";
+  const bits=[];
+  const ra=primaryRank(a), rb=primaryRank(b);
+  const sameDiv = a.division && b.division && norm(a.division)===norm(b.division);
+  if(ra && rb){
+    bits.push("<b>"+(ra.champ?"Champion":"#"+ra.rank)+"</b> vs <b>"+(rb.champ?"Champion":"#"+rb.rank)+"</b>"+
+      (sameDiv ? " in the "+esc(a.division)+" division." : ", a cross-division matchup."));
+  } else if(a.division && b.division && !sameDiv){
+    bits.push("Cross-division matchup — "+esc(a.name)+" fights at <b>"+esc(a.division)+"</b>, "+esc(b.name)+" at <b>"+esc(b.division)+"</b>.");
+  }
+  const edges=[];
+  if(a.reach!=null && b.reach!=null && a.reach!==b.reach){
+    const d=Math.round(Math.abs(a.reach-b.reach));
+    edges.push("<b>"+esc(a.reach>b.reach?a.name:b.name)+"</b> has a "+d+'" reach edge');
+  }
+  if(a.height!=null && b.height!=null && a.height!==b.height){
+    const d=Math.round(Math.abs(a.height-b.height));
+    edges.push("<b>"+esc(a.height>b.height?a.name:b.name)+"</b> is "+d+'" taller');
+  }
+  if(edges.length) bits.push(edges.join(" · ")+".");
+  if(a.stance && b.stance){
+    bits.push(a.stance===b.stance ? "Both fight "+esc(a.stance)+"." : "Style clash: "+esc(a.stance)+" vs "+esc(b.stance)+".");
+  }
+  return bits.join(" ");
+}
+function renderMatchNote(a,b){
+  const host=$("#matchnote"); if(!host) return;
+  const txt = (a&&b) ? matchupBlurb(a,b) : "";
+  host.innerHTML = txt;
+  host.style.display = txt ? "block" : "none";
+}
+
+/* ============================ rankings browser ============================ */
+const RANK_UI = { active:null };
+
+function setRankingsOpen(open){
+  const wrap=$("#rankwrap"), btn=$("#rankToggle");
+  wrap.classList.toggle("open", open);
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+}
+function initRankings(){
+  const wrap=$("#rankwrap");
+  if(!RANKINGS || !RANKINGS.length){ wrap.style.display="none"; return; }
+  wrap.style.display="";
+  $("#rankToggle").onclick=()=> setRankingsOpen(!wrap.classList.contains("open"));
+  const pillHost=$("#divpills"); pillHost.innerHTML="";
+  RANKINGS.forEach(cat=>{
+    const btn=el("button","divpill"+(isP4P(cat)?" p4p":""), esc(divisionLabel(cat)));
+    btn.dataset.id=cat.id;
+    btn.onclick=()=>{ RANK_UI.active=cat.id; renderDivPills(); renderRankList(); };
+    pillHost.appendChild(btn);
+  });
+  RANK_UI.active = RANKINGS[0].id;
+  renderDivPills();
+  renderRankList();
+}
+function renderDivPills(){
+  $("#divpills").querySelectorAll(".divpill").forEach(b=> b.classList.toggle("on", b.dataset.id===RANK_UI.active));
+}
+function renderRankList(){
+  const host=$("#ranklist"); if(!host) return;
+  host.innerHTML="";
+  if(!RANKINGS) return;
+  const cat=RANKINGS.find(c=>c.id===RANK_UI.active);
+  if(!cat){ host.innerHTML='<div class="nodata">No ranking data.</div>'; return; }
+  const p4p=isP4P(cat);
+  const rows=[];
+  if(cat.champion && cat.champion.championName) rows.push({name:cat.champion.championName, pos:p4p?"1":"C", champ:!p4p});
+  (cat.fighters||[]).forEach((fi,i)=> rows.push({name:fi.name, pos:String(p4p?i+2:i+1), champ:false}));
+
+  rows.forEach(r=>{
+    const f=findByName(r.name);
+    const key=f?f.key:norm(r.name);
+    const isA = !!(SEL.a && SEL.a.key===key), isB = !!(SEL.b && SEL.b.key===key);
+    const img = f && f.img
+      ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(initials(r.name))+'">'
+      : esc(initials(r.name));
+    const meta = f
+      ? esc(f.division||cat.categoryName)+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')
+      : esc(cat.categoryName);
+    const nick = f && f.nickname ? '<span class="rknick">"'+esc(f.nickname)+'"</span>' : '';
+    const row=el("div","rkrow"+(isA?" sel-a":"")+(isB?" sel-b":""));
+    row.innerHTML =
+      '<span class="rkpos'+(r.champ?" champ":"")+'">'+esc(r.pos)+'</span>'+
+      '<span class="rkimg">'+img+'</span>'+
+      '<span><span class="rkname">'+esc(r.name)+nick+'</span><span class="rkmeta">'+meta+'</span></span>'+
+      '<span class="rkbtns">'+
+        '<button class="rkbtn red'+(isA?" active":"")+'" data-side="a" title="Add to Red corner">R</button>'+
+        '<button class="rkbtn blue'+(isB?" active":"")+'" data-side="b" title="Add to Blue corner">B</button>'+
+      '</span>';
+    row.querySelectorAll(".rkbtn").forEach(btn=>{
+      btn.addEventListener("click", ev=>{
+        ev.stopPropagation();
+        const fx=resolveFighter(r.name);
+        if(btn.dataset.side==="a") PA.set(fx); else PB.set(fx);
+        shown.a=HIST_STEP; shown.b=HIST_STEP;
+        renderAll(); syncHash();
+      });
+    });
+    row.addEventListener("click", ()=>{
+      if(SEL.a && SEL.b) return; // both slots full — use R/B to replace deliberately
+      const fx=resolveFighter(r.name);
+      if(!SEL.a) PA.set(fx); else if(!SEL.b) PB.set(fx); else return;
+      shown.a=HIST_STEP; shown.b=HIST_STEP;
+      renderAll(); syncHash();
+    });
+    host.appendChild(row);
+  });
+}
+
+function renderAll(){
+  const a=SEL.a, b=SEL.b;
+  $("#card-a").innerHTML = cardHTML(a,"a");
+  $("#card-b").innerHTML = cardHTML(b,"b");
+  renderStats(a,b);
+  shown.a = Math.max(shown.a, HIST_STEP); shown.b = Math.max(shown.b, HIST_STEP);
+  renderHistory("a", a, b);
+  renderHistory("b", b, a);
+  renderBreakdown("a", a);
+  renderBreakdown("b", b);
+  renderH2H(a,b);
+  renderMatchNote(a,b);
+  renderRankList();
+  document.title = (a&&b) ? a.name+" vs "+b.name+" — Tale of the Tape" : "Tale of the Tape — UFC Fighter Comparison";
+}
+
+/* ============================ wiring ============================ */
+let PA, PB;
+function syncHash(){
+  const p=new URLSearchParams();
+  if(SEL.a) p.set("red", SEL.a.key);
+  if(SEL.b) p.set("blue", SEL.b.key);
+  history.replaceState(null,"", p.toString()? "#"+p.toString() : "#");
+}
+function fromHash(){
+  const p=new URLSearchParams(location.hash.replace(/^#/,""));
+  const ra=p.get("red"), rb=p.get("blue");
+  if(ra && DB.byKey.has(ra)) PA.set(DB.byKey.get(ra));
+  if(rb && DB.byKey.has(rb)) PB.set(DB.byKey.get(rb));
+}
+
+function initUI(){
+  PA = makePicker("a");
+  PB = makePicker("b");
+
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+      document.querySelectorAll(".panel").forEach(x=>x.classList.remove("on"));
+      t.classList.add("on"); $("#"+t.dataset.p).classList.add("on");
+    };
+  });
+
+  $("#btnSwap").onclick=()=>{
+    const t=SEL.a; PA.set(SEL.b); PB.set(t);
+    shown.a=HIST_STEP; shown.b=HIST_STEP;
+    renderAll(); syncHash();
+  };
+  $("#btnClear").onclick=()=>{
+    PA.set(null); PB.set(null); shown.a=HIST_STEP; shown.b=HIST_STEP;
+    renderAll(); syncHash();
+  };
+  $("#btnRandom").onclick=()=>{
+    // favor currently-ranked fighters most of the time for more realistic dream matchups
+    const useRanked = RANKED_FIGHTERS.length>4 && Math.random()<0.65;
+    const pool = useRanked ? RANKED_FIGHTERS : DB.list.filter(f=>f.fights.length>=5);
+    const pick=()=>pool[Math.floor(Math.random()*pool.length)];
+    let x=pick(), y=pick(); let guard=0;
+    while(y===x && guard++<20) y=pick();
+    PA.set(x); PB.set(y);
+    shown.a=HIST_STEP; shown.b=HIST_STEP;
+    renderAll(); syncHash();
+  };
+  $("#btnLink").onclick=async ()=>{
+    try{ await navigator.clipboard.writeText(location.href); $("#btnLink").textContent="Copied!"; }
+    catch(e){ $("#btnLink").textContent="Copy failed"; }
+    setTimeout(()=>$("#btnLink").textContent="Copy Link",1400);
+  };
+  $("#btnRankings").onclick=()=>{
+    setRankingsOpen(true);
+    $("#rankwrap").scrollIntoView({behavior:"smooth", block:"start"});
+  };
+
+  initRankings();
+
+  fromHash();
+  if(!SEL.a && !SEL.b){
+    // a marquee default if present
+    const dA = DB.byKey.get("ilaitopuria") || DB.byKey.get("iliatopuria");
+    const dB = DB.byKey.get("islammakhachev");
+    if(dA) PA.set(dA);
+    if(dB) PB.set(dB);
+  }
+  renderAll();
+  syncHash();
+}
+
+boot();
+</script>
+</body>
+</html>
