@@ -243,6 +243,204 @@ button.tool:active{transform:translateY(1px)}
 footer{text-align:center;color:#575d6b;font-size:13px;padding:34px 16px 10px;letter-spacing:.05em;line-height:1.7}
 footer a{color:#7c8496}
 
+/* ============================================================
+   DREAM CARD BUILDER
+   ============================================================ */
+.cardview{
+  position:fixed;inset:0;z-index:80;overflow-y:auto;display:none;
+  background:
+    radial-gradient(1000px 520px at 50% -8%, #1d1013 0%, transparent 62%),
+    #050608;
+}
+.cardview.open{display:block}
+body.locked{overflow:hidden}
+.cvtop{
+  position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:12px 16px;background:rgba(5,6,8,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.cvtop .cvttl{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:14px;color:#fff;margin-right:auto}
+.cvtop .cvttl small{display:block;color:var(--muted);font-size:10.5px;letter-spacing:.22em;margin-top:2px}
+.cvwrap{max-width:1080px;margin:0 auto;padding:26px 16px 90px}
+
+/* ---- step: setup ---- */
+.setupbox{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0a0c0f);padding:26px 22px}
+.setupbox h2{font-size:clamp(22px,3.4vw,34px);letter-spacing:.06em;text-align:center}
+.setupbox h2 em{color:var(--red-hot);font-style:normal}
+.setupbox .sub{text-align:center;color:var(--muted);font-size:15px;margin:8px 0 26px;line-height:1.6}
+.evname{display:block;width:min(420px,100%);margin:0 auto 26px;background:#0b0d11;border:1px solid var(--line);color:var(--text);
+  padding:12px 14px;font-size:18px;font-family:'Oswald',sans-serif;letter-spacing:.06em;text-align:center;text-transform:uppercase;border-radius:2px;outline:none}
+.evname:focus{border-color:var(--red)}
+.evname::placeholder{color:#4d5462;letter-spacing:.1em}
+.szrow{display:grid;grid-template-columns:170px 1fr;gap:14px;align-items:center;padding:14px 0;border-top:1px solid var(--line-soft)}
+.szrow .szlbl{font-family:'Oswald',sans-serif;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#c8cedb}
+.szrow .szlbl span{display:block;color:#5f6675;font-size:11px;letter-spacing:.08em;text-transform:none;font-family:'Barlow Condensed',sans-serif;margin-top:2px}
+.szopts{display:flex;gap:6px;flex-wrap:wrap}
+.szopt{width:40px;height:36px;border:1px solid var(--line);background:#0f1218;color:var(--muted);font-family:'Oswald',sans-serif;font-size:14px;cursor:pointer;border-radius:2px;transition:.14s}
+.szopt:hover{color:#fff;border-color:#3a3f4b}
+.szopt.on{background:var(--red);border-color:var(--red);color:#fff}
+.szopt.zero{width:auto;padding:0 12px;font-size:11.5px;letter-spacing:.12em}
+.gobar{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+button.big{
+  font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:13px;
+  background:var(--red);border:1px solid var(--red);color:#fff;padding:13px 30px;border-radius:2px;cursor:pointer;transition:.15s;
+}
+button.big:hover{background:var(--red-hot);border-color:var(--red-hot)}
+button.big.ghost{background:transparent;border-color:var(--line);color:var(--muted)}
+button.big.ghost:hover{color:#fff;border-color:#4a5163;background:#12151b}
+button.big:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---- step: build ---- */
+.secblock{margin-bottom:26px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0a0c0f)}
+.sechdr{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line-soft);background:#0a0c0f}
+.sechdr h3{font-size:14px;letter-spacing:.2em}
+.sechdr .cnt{color:#5f6675;font-size:12.5px;letter-spacing:.1em;margin-right:auto;font-family:'Oswald',sans-serif}
+.mini{font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;background:#12151b;border:1px solid var(--line);
+  color:var(--muted);padding:6px 10px;border-radius:2px;cursor:pointer;transition:.14s}
+.mini:hover{color:#fff;border-color:#4a5163}
+.mini.warn:hover{color:#ff6b6b;border-color:var(--red)}
+.slot{display:grid;grid-template-columns:26px 1fr 54px 1fr 30px;gap:8px;align-items:start;padding:11px 14px;border-bottom:1px solid var(--line-soft)}
+.slot:last-child{border-bottom:none}
+.slot.mainev{background:linear-gradient(90deg,rgba(210,10,10,.07),transparent 60%)}
+.slotno{font-family:'Oswald',sans-serif;font-size:11px;color:#4d5462;padding-top:14px;text-align:center;line-height:1.2}
+.slotno b{display:block;color:var(--gold);font-size:9px;letter-spacing:.1em}
+.slotvs{font-family:'Oswald',sans-serif;font-weight:700;color:#3a3f4b;font-size:15px;text-align:center;padding-top:12px}
+.fslot{position:relative}
+.fslot .fsin{display:flex;align-items:center;gap:8px;background:#0b0d11;border:1px solid var(--line);border-radius:2px;padding:6px 8px}
+.fslot.red .fsin{border-left:3px solid rgba(210,10,10,.75)}
+.fslot.blue .fsin{border-left:3px solid rgba(21,103,211,.75)}
+.fslot input{flex:1;min-width:0;background:none;border:none;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:16px;outline:none;padding:5px 2px}
+.fslot input::placeholder{color:#4d5462}
+.fslot .fsav{width:30px;height:30px;border-radius:50%;overflow:hidden;background:#0c0e12;border:1px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:10px;color:#4a505c}
+.fslot .fsav img{width:100%;height:100%;object-fit:cover;object-position:top}
+.fslot .fsbtn{background:none;border:none;color:#5f6675;cursor:pointer;font-size:15px;padding:2px 4px;line-height:1;flex:none}
+.fslot .fsbtn:hover{color:#fff}
+.fslot .fsbtn.rk{font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.1em;border:1px solid var(--line);border-radius:2px;padding:4px 6px}
+.fslot .fsmeta{font-size:12px;color:#5f6675;letter-spacing:.03em;padding:3px 2px 0 6px;min-height:15px}
+.slotacts{display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:10px}
+.slotdel{background:none;border:none;color:#3f4553;cursor:pointer;font-size:15px;line-height:1;padding:2px}
+.slotdel:hover{color:#ff6b6b}
+.slotdel.tglt{font-size:13px}
+.slotdel.tglt:hover{color:var(--gold)}
+.slotdel.tglt.on{color:var(--gold)}
+.dupwarn{color:#ff8a5c;font-size:12px;letter-spacing:.03em}
+.slotres{position:absolute;z-index:40;top:100%;left:0;right:0;background:#0d0f13;border:1px solid var(--line);max-height:280px;overflow-y:auto;display:none;box-shadow:0 18px 40px rgba(0,0,0,.7)}
+.slotres.open{display:block}
+
+/* ---- rankings picker modal ---- */
+.rankpick{position:fixed;inset:0;z-index:95;background:rgba(3,4,6,.8);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:5vh 14px}
+.rankpick.open{display:flex}
+.rpbox{width:min(620px,100%);max-height:88vh;display:flex;flex-direction:column;background:#0b0d11;border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.8)}
+.rphdr{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line-soft)}
+.rphdr h3{font-size:14px;letter-spacing:.16em;margin-right:auto}
+.rphdr h3 span{display:block;color:var(--muted);font-size:10.5px;letter-spacing:.2em;margin-top:3px}
+.rpclose{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+.rpclose:hover{color:#fff}
+.rpbody{overflow-y:auto}
+
+/* ---- the finished card (poster) ---- */
+.poster{border:1px solid #23262e;background:linear-gradient(180deg,#0d0f13,#08090b 60%);padding:0 0 8px}
+.pbanner{text-align:center;padding:26px 18px 20px;border-bottom:1px solid #1b1e25;background:linear-gradient(180deg,rgba(210,10,10,.18),transparent)}
+.pbanner .plabel{font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.4em;color:#ff6a6a;text-transform:uppercase}
+.pbanner h2{font-size:clamp(26px,5.6vw,54px);letter-spacing:.06em;line-height:1;margin-top:8px}
+.pbanner .pmeta{color:#6b7280;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;margin-top:10px;font-family:'Oswald',sans-serif}
+.psec{margin-top:2px}
+.psechdr{display:flex;align-items:center;gap:12px;padding:14px 18px 10px}
+.psechdr:before,.psechdr:after{content:'';height:1px;background:var(--line);flex:1}
+.psechdr span{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#8d94a3;white-space:nowrap}
+.pbout{border-bottom:1px solid #14171d;cursor:pointer;transition:background .16s;position:relative}
+.pbout:hover{background:rgba(255,255,255,.028)}
+.pbout:last-child{border-bottom:none}
+.pbtag{text-align:center;font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#5f6675;padding:10px 10px 0}
+.pbtag b{color:var(--gold);font-weight:500}
+.pbtag i{color:#ff6a6a;font-style:normal}
+.pbrow{display:grid;grid-template-columns:1fr 74px 1fr;align-items:center;padding:8px 14px 16px}
+.pside{display:flex;align-items:center;gap:12px;min-width:0}
+.pside.b{flex-direction:row-reverse;text-align:right}
+.pface{width:72px;height:72px;border-radius:50%;overflow:hidden;flex:none;background:#0c0e12;border:1px solid #262a33;
+  display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:17px;color:#454b57;transition:.18s}
+.pface img{width:100%;height:100%;object-fit:cover;object-position:top}
+.pside.a .pface{box-shadow:0 0 0 2px rgba(210,10,10,.45)}
+.pside.b .pface{box-shadow:0 0 0 2px rgba(21,103,211,.45)}
+.pbout:hover .pface{transform:scale(1.06)}
+.pinfo{min-width:0;display:block}
+.pnm,.pnk,.prc{display:block}
+.pnm{font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(15px,2.3vw,21px);text-transform:uppercase;line-height:1.1;letter-spacing:.02em;overflow-wrap:anywhere}
+.pnk{color:var(--gold);font-style:italic;font-size:13px;line-height:1.3}
+.prc{color:#7b8291;font-size:13px;font-family:'Oswald',sans-serif;letter-spacing:.06em;margin-top:2px}
+.prk{display:inline-block;font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.12em;border:1px solid #3c4250;color:#aeb5c3;padding:2px 5px;border-radius:2px;margin-top:4px}
+.prk.champ{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
+.pvs{font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;color:#4a5060;text-align:center}
+.pbout.mainev .pbrow{padding:10px 14px 22px}
+.pbout.mainev .pface{width:120px;height:120px;box-shadow:0 0 0 3px rgba(210,10,10,.55),0 16px 34px rgba(0,0,0,.6)}
+.pbout.mainev .pside.b .pface{box-shadow:0 0 0 3px rgba(21,103,211,.55),0 16px 34px rgba(0,0,0,.6)}
+.pbout.mainev .pnm{font-size:clamp(20px,4vw,36px)}
+.pbout.mainev .pvs{font-size:30px;color:#fff;text-shadow:0 0 20px rgba(255,43,43,.75)}
+.pbout.mainev{background:radial-gradient(560px 200px at 50% 40%, rgba(210,10,10,.12), transparent 70%)}
+.pbout.tbd{opacity:.5;cursor:default}
+.pbout.tbd:hover{background:none}
+.pbout.tbd:hover .pface{transform:none}
+.pfoot{text-align:center;color:#4f5563;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-family:'Oswald',sans-serif;padding:18px 14px 6px}
+
+/* ---- tape modal ---- */
+.tapemodal{position:fixed;inset:0;z-index:100;background:rgba(3,4,6,.86);backdrop-filter:blur(4px);display:none;overflow-y:auto}
+.tapemodal.open{display:block}
+.tmbox{max-width:940px;margin:3vh auto;background:linear-gradient(180deg,#101216,#0a0c0f);border:1px solid var(--line);box-shadow:0 40px 90px rgba(0,0,0,.85)}
+.tmtop{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(10,12,15,.96);border-bottom:1px solid var(--line-soft)}
+.tmtop .tmlbl{font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:#8d94a3;margin-right:auto}
+.tmnav{background:#12151b;border:1px solid var(--line);color:var(--muted);font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;
+  padding:7px 12px;border-radius:2px;cursor:pointer}
+.tmnav:hover:not(:disabled){color:#fff;border-color:#4a5163}
+.tmnav:disabled{opacity:.35;cursor:not-allowed}
+.tmclose{background:none;border:none;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;padding:0 4px}
+.tmclose:hover{color:#fff}
+.tmcards{display:grid;grid-template-columns:1fr 82px 1fr;align-items:stretch;border-bottom:1px solid var(--line)}
+.tmnote{padding:12px 18px;background:#0d0f13;border-bottom:1px solid var(--line-soft);color:#c8cedb;font-size:14.5px;line-height:1.6;text-align:center}
+.tmnote b{color:#fff;font-weight:600}
+.tmnote:empty{display:none}
+.tmsub{padding:16px 18px 26px}
+.tmsub h4{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px;border-bottom:1px solid var(--line-soft);padding-bottom:7px}
+.tmlast{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tmlast .col h5{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.08em;color:#c8cedb;margin:0 0 4px}
+.tmh2h{border:1px solid var(--gold);background:rgba(212,175,55,.07);padding:12px 14px;font-size:15px;line-height:1.6}
+.tmh2h.none{border-color:var(--line);background:var(--panel);color:var(--muted)}
+
+@media (max-width:820px){
+  .szrow{grid-template-columns:1fr;gap:8px}
+  .slot{grid-template-columns:1fr;gap:6px;padding:12px 10px}
+  .slotno{text-align:left;padding-top:0;display:flex;align-items:center;gap:6px;font-size:12px}
+  .slotno b{display:inline;font-size:9.5px}
+  .slotvs{text-align:left;padding-top:0;font-size:12px;color:#4d5462;letter-spacing:.16em}
+  .slotacts{flex-direction:row;justify-content:flex-end;gap:14px;padding-top:0}
+  .fslot input{font-size:15.5px}
+  .pbrow{grid-template-columns:1fr 46px 1fr;padding:6px 8px 14px}
+  .pface{width:56px;height:56px}
+  .pbout.mainev .pface{width:82px;height:82px}
+  .pside{gap:8px}
+  .pnk{display:none}
+  .tmcards{grid-template-columns:1fr}
+  .tmlast{grid-template-columns:1fr}
+  .tmbox{margin:0}
+  .tmcards .fcard{min-height:auto;padding-bottom:12px}
+  .tmcards .photo{min-height:118px}
+  .tmcards .photo .silh{width:104px;height:124px;font-size:30px}
+  .tmcards .photo img{max-height:190px}
+  .tmcards .vsbar{min-height:46px}
+}
+@media (max-width:620px){
+  .pside,.pside.b{flex-direction:column;align-items:center;text-align:center;gap:6px}
+  .pinfo{text-align:center}
+  .pnm{font-size:13.5px;line-height:1.15}
+  .pbout.mainev .pnm{font-size:18px}
+  .prc{font-size:12px}
+  .pvs{font-size:15px}
+  .pbout.mainev .pvs{font-size:22px}
+  .pbrow{grid-template-columns:1fr 42px 1fr;padding:4px 4px 14px}
+  .cvwrap{padding:16px 8px 80px}
+  .cvtop{padding:10px}
+  .cvtop .cvttl{width:100%;margin-bottom:6px}
+}
+
 @media (max-width:820px){
   .pickers{grid-template-columns:1fr;gap:10px}
   .vsmini{display:none}
@@ -273,6 +471,7 @@ footer a{color:#7c8496}
   <h1>Tale <span class="of">of the</span> Tape</h1>
   <p>UFC Fighter Head-to-Head</p>
   <div class="toolbar">
+    <button class="tool" id="btnDreamCard" style="border-color:var(--red);color:#fff;background:#1c1013">★ Build Your Dream Card</button>
     <button class="tool" id="btnRandom">Random Matchup</button>
     <button class="tool" id="btnSwap">Swap Corners</button>
     <button class="tool" id="btnClear">Clear</button>
@@ -343,6 +542,53 @@ footer a{color:#7c8496}
     </div></div>
   </div>
 
+</div>
+
+<!-- ===================== dream card builder ===================== -->
+<div class="cardview" id="cardview">
+  <div class="cvtop">
+    <div class="cvttl" id="cvttl">Build Your Dream Card<small>Fantasy Matchmaker</small></div>
+    <button class="mini" id="cvEdit" style="display:none">◀ Edit Card</button>
+    <button class="mini" id="cvShuffle" style="display:none">Shuffle Empty</button>
+    <button class="mini" id="cvRestart">Start Over</button>
+    <button class="mini warn" id="cvClose">✕ Close</button>
+  </div>
+  <div class="cvwrap" id="cvbody"></div>
+</div>
+
+<!-- rankings picker for a single slot -->
+<div class="rankpick" id="rankpick">
+  <div class="rpbox">
+    <div class="rphdr">
+      <h3 id="rphdr">Pick from the rankings<span id="rpsub">Red corner</span></h3>
+      <button class="rpclose" id="rpclose">✕</button>
+    </div>
+    <div class="divpills" id="rpdivpills"></div>
+    <div class="rpbody"><div class="ranklist" id="rplist"></div></div>
+  </div>
+</div>
+
+<!-- tale of the tape modal -->
+<div class="tapemodal" id="tapemodal">
+  <div class="tmbox">
+    <div class="tmtop">
+      <span class="tmlbl" id="tmlbl">Tale of the Tape</span>
+      <button class="tmnav" id="tmPrev">◀ Prev</button>
+      <button class="tmnav" id="tmNext">Next ▶</button>
+      <button class="tmclose" id="tmClose">✕</button>
+    </div>
+    <div class="tmcards">
+      <div class="fcard red" id="tm-card-a"></div>
+      <div class="vsbar"><span>VS</span></div>
+      <div class="fcard blue" id="tm-card-b"></div>
+    </div>
+    <div class="tmnote" id="tmnote"></div>
+    <div class="statsec">
+      <div class="sechead">Tale of the Tape</div>
+      <div id="tmstats"></div>
+    </div>
+    <div class="tmsub" id="tmsub"></div>
+  </div>
 </div>
 
 <footer>
@@ -874,7 +1120,7 @@ function statRows(a,b){
       case "UFC Record": return f.rec.w+"-"+f.rec.l+(f.rec.d?"-"+f.rec.d:"");
       case "Finish Rate": return Math.round(v*100)+"%";
       case "Avg. Fight Time": return fmtMMSS(v);
-      case "Current Streak": return v.streak>0 ? v.streak+" "+(v.streakKind==="W"?"WIN":"LOSS")+(v.streak>1?"S":"") : "—";
+      case "Current Streak": return v.streak>0 ? v.streak+" "+(v.streakKind==="W"?(v.streak>1?"WINS":"WIN"):(v.streak>1?"LOSSES":"LOSS")) : "—";
       case "Last Fight": return (v.res==="W"?"W":v.res==="L"?"L":v.res==="D"?"D":"NC")+" vs "+esc(v.opp)+
         ' <span style="color:#6e7484;font-size:.8em">'+fmtDate(v.date)+'</span>';
       default: return esc(v);
@@ -1097,6 +1343,7 @@ function initRankings(){
   RANK_UI.active = RANKINGS[0].id;
   renderDivPills();
   renderRankList();
+  setRankingsOpen(true);   // rankings start expanded
 }
 function renderDivPills(){
   $("#divpills").querySelectorAll(".divpill").forEach(b=> b.classList.toggle("on", b.dataset.id===RANK_UI.active));
@@ -1171,6 +1418,7 @@ function renderAll(){
 /* ============================ wiring ============================ */
 let PA, PB;
 function syncHash(){
+  if(typeof CARD_OPEN!=="undefined" && CARD_OPEN) return;   // dream card owns the hash while open
   const p=new URLSearchParams();
   if(SEL.a) p.set("red", SEL.a.key);
   if(SEL.b) p.set("blue", SEL.b.key);
@@ -1184,6 +1432,7 @@ function fromHash(){
 }
 
 function initUI(){
+  const INITIAL_HASH = location.hash;
   PA = makePicker("a");
   PB = makePicker("b");
 
@@ -1237,6 +1486,562 @@ function initUI(){
   }
   renderAll();
   syncHash();
+  initCardBuilder(INITIAL_HASH);
+}
+
+/* ============================================================
+   DREAM CARD BUILDER
+   ============================================================ */
+const SEC_DEFS = [
+  { id:"main",   label:"Main Card",     note:"3–8 bouts · 5 is standard", min:3, max:8, allowZero:false, def:5 },
+  { id:"prelim", label:"Prelims",       note:"3–8 bouts",                 min:3, max:8, allowZero:true,  def:5 },
+  { id:"early",  label:"Early Prelims", note:"optional · 2–4 bouts",      min:2, max:4, allowZero:true,  def:0 }
+];
+const SETUP = { main:5, prelim:5, early:0 };
+const CARD  = { name:"", sections:[] };   // sections: {id,label,bouts:[{a,b,title,titleTouched}]}
+let CARD_STEP = "setup";
+let CARD_OPEN = false;
+
+const secDef = id => SEC_DEFS.find(s=>s.id===id);
+const blankBout = () => ({ a:null, b:null, title:false, titleTouched:false });
+
+function allBouts(){
+  const out=[];
+  CARD.sections.forEach(sec=> sec.bouts.forEach((b,i)=> out.push({sec, bout:b, i})));
+  return out;
+}
+function boutLabel(sec, i){
+  if(sec.id==="main"){
+    if(i===0) return "Main Event";
+    if(i===1) return "Co-Main Event";
+  }
+  if(sec.id==="prelim" && i===0) return "Prelim Headliner";
+  return "";
+}
+function boutWeight(b){
+  if(!b.a || !b.b) return "";
+  const da=b.a.division||"", db=b.b.division||"";
+  if(da && db && norm(da)===norm(db)) return da;
+  if(da && db) return da+" / "+db+" catchweight";
+  return da||db||"";
+}
+/* auto-flag a title fight when a reigning champ meets someone from their own division */
+function autoTitle(b){
+  if(b.titleTouched || !b.a || !b.b) return;
+  const ra=primaryRank(b.a), rb=primaryRank(b.b);
+  const champ = (ra&&ra.champ) ? ra : (rb&&rb.champ) ? rb : null;
+  if(!champ) { b.title=false; return; }
+  const other = (ra&&ra.champ) ? b.b : b.a;
+  const oe = ranksFor(other);
+  b.title = !!(oe && oe.divisions.some(d=> norm(d.name)===norm(champ.name)));
+}
+function usedKeys(exceptBout){
+  const s=new Map();
+  for(const {bout} of allBouts()){
+    if(bout===exceptBout) continue;
+    if(bout.a) s.set(bout.a.key,(s.get(bout.a.key)||0)+1);
+    if(bout.b) s.set(bout.b.key,(s.get(bout.b.key)||0)+1);
+  }
+  return s;
+}
+
+/* ---------- shared fighter search ---------- */
+function fsearch(q){
+  const nq=norm(q);
+  if(!nq) return DB.list.slice(0,40);
+  const starts=[], contains=[];
+  for(const f of DB.list){
+    const p=f.searchable.indexOf(nq);
+    if(p===0 || norm(f.name.split(/\s+/).slice(-1)[0]).indexOf(nq)===0) starts.push(f);
+    else if(p>0) contains.push(f);
+    if(starts.length>60) break;
+  }
+  return starts.concat(contains).slice(0,50);
+}
+function resultRowHTML(f){
+  return '<span class="dot'+(f.img?"":" off")+'"></span>'+
+    '<span class="nm">'+esc(f.name)+'</span>'+
+    (f.nickname?'<span class="nk">"'+esc(f.nickname)+'"</span>':'')+
+    '<span class="meta">'+esc(f.division||"—")+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')+'</span>';
+}
+
+/* ---------- open / close ---------- */
+function openCardView(step){
+  CARD_OPEN=true;
+  if(step) CARD_STEP=step;
+  $("#cardview").classList.add("open");
+  document.body.classList.add("locked");
+  renderCardView();
+  window.scrollTo(0,0);
+}
+function closeCardView(){
+  CARD_OPEN=false;
+  $("#cardview").classList.remove("open");
+  document.body.classList.remove("locked");
+  syncHash();
+}
+
+function renderCardView(){
+  const host=$("#cvbody");
+  $("#cvEdit").style.display   = CARD_STEP==="poster" ? "" : "none";
+  $("#cvShuffle").style.display= CARD_STEP==="build"  ? "" : "none";
+  $("#cvttl").innerHTML = CARD_STEP==="poster"
+    ? esc(CARD.name || "Your Dream Card")+"<small>Tap a fighter for the tape</small>"
+    : "Build Your Dream Card<small>"+(CARD_STEP==="build"?"Make the matchups":"Set the card")+"</small>";
+  host.innerHTML="";
+  if(CARD_STEP==="setup")  renderSetup(host);
+  if(CARD_STEP==="build")  renderBuild(host);
+  if(CARD_STEP==="poster") renderPoster(host);
+}
+
+/* ---------- step 1: setup ---------- */
+function renderSetup(host){
+  const box=el("div","setupbox");
+  box.innerHTML =
+    '<h2>Build Your <em>Dream</em> Card</h2>'+
+    '<p class="sub">Set how many fights you want, then make the matchups.<br>'+
+    'When you\'re done you get the whole card laid out — tap any fighter to open the tale of the tape.</p>'+
+    '<input class="evname" id="setupName" maxlength="44" placeholder="Event name (optional)" value="'+esc(CARD.name)+'">';
+  for(const d of SEC_DEFS){
+    const row=el("div","szrow");
+    let opts='';
+    if(d.allowZero) opts+='<button class="szopt zero'+(SETUP[d.id]===0?" on":"")+'" data-sec="'+d.id+'" data-n="0">None</button>';
+    for(let n=d.min;n<=d.max;n++) opts+='<button class="szopt'+(SETUP[d.id]===n?" on":"")+'" data-sec="'+d.id+'" data-n="'+n+'">'+n+'</button>';
+    row.innerHTML='<div class="szlbl">'+d.label+'<span>'+d.note+'</span></div><div class="szopts">'+opts+'</div>';
+    box.appendChild(row);
+  }
+  const bar=el("div","gobar");
+  bar.innerHTML='<button class="big" id="setupGo">Make the Matchups →</button>'+
+                '<button class="big ghost" id="setupRandom">Surprise Me — Random Card</button>';
+  box.appendChild(bar);
+  host.appendChild(box);
+
+  box.querySelectorAll(".szopt").forEach(b=>{
+    b.onclick=()=>{
+      SETUP[b.dataset.sec]=+b.dataset.n;
+      box.querySelectorAll('.szopt[data-sec="'+b.dataset.sec+'"]').forEach(x=>x.classList.remove("on"));
+      b.classList.add("on");
+    };
+  });
+  $("#setupName").oninput=e=>{ CARD.name=e.target.value; };
+  $("#setupGo").onclick=()=>{ applySetup(); CARD_STEP="build"; renderCardView(); window.scrollTo(0,0); };
+  $("#setupRandom").onclick=()=>{ applySetup(); shuffleEmpty(true); CARD_STEP="poster"; renderCardView(); window.scrollTo(0,0); };
+}
+function applySetup(){
+  const old=new Map(CARD.sections.map(s=>[s.id,s.bouts]));
+  CARD.sections = SEC_DEFS.filter(d=>SETUP[d.id]>0).map(d=>{
+    const keep=old.get(d.id)||[];
+    const bouts=[];
+    for(let i=0;i<SETUP[d.id];i++) bouts.push(keep[i]||blankBout());
+    return { id:d.id, label:d.label, bouts };
+  });
+}
+
+/* ---------- step 2: build ---------- */
+function renderBuild(host){
+  const dups=usedKeys(null);
+  CARD.sections.forEach(sec=>{
+    const def=secDef(sec.id);
+    const block=el("div","secblock");
+    const hdr=el("div","sechdr");
+    hdr.innerHTML='<h3>'+esc(sec.label)+'</h3><span class="cnt">'+sec.bouts.length+' bout'+(sec.bouts.length===1?'':'s')+'</span>';
+    const add=el("button","mini","+ Add Bout");
+    add.disabled = sec.bouts.length>=def.max;
+    if(add.disabled) add.style.opacity=".35";
+    add.onclick=()=>{ if(sec.bouts.length<def.max){ sec.bouts.push(blankBout()); SETUP[sec.id]=sec.bouts.length; renderCardView(); } };
+    hdr.appendChild(add);
+    block.appendChild(hdr);
+
+    sec.bouts.forEach((b,i)=>{
+      autoTitle(b);
+      const lbl=boutLabel(sec,i);
+      const row=el("div","slot"+(sec.id==="main"&&i===0?" mainev":""));
+      row.appendChild(el("div","slotno", String(i+1)+(lbl?'<b>'+esc(lbl.replace(" Event","").replace(" Headliner",""))+'</b>':'')));
+      row.appendChild(fighterSlot(b,"a"));
+      row.appendChild(el("div","slotvs","VS"));
+      row.appendChild(fighterSlot(b,"b"));
+
+      const acts=el("div","slotacts");
+      const tg=el("button","slotdel tglt"+(b.title?" on":""),"◎");
+      tg.title="Mark as a title fight";
+      tg.onclick=()=>{ b.title=!b.title; b.titleTouched=true; renderCardView(); };
+      const del=el("button","slotdel","✕");
+      del.title="Remove this bout";
+      del.onclick=()=>{
+        if(sec.bouts.length<=1){ sec.bouts[0]=blankBout(); }
+        else sec.bouts.splice(i,1);
+        SETUP[sec.id]=sec.bouts.length;
+        renderCardView();
+      };
+      acts.appendChild(tg); acts.appendChild(del);
+      row.appendChild(acts);
+      block.appendChild(row);
+    });
+    host.appendChild(block);
+  });
+
+  const dupNames=[...dups.entries()].filter(([k,n])=>n>1)
+    .map(([k])=> (DB.byKey.get(k)||{}).name || k);
+  const bar=el("div","gobar");
+  const filled=allBouts().filter(x=>x.bout.a&&x.bout.b).length;
+  bar.innerHTML =
+    (dupNames.length?'<div style="width:100%;text-align:center;margin-bottom:6px" class="dupwarn">Booked twice on this card: '+esc(dupNames.join(", "))+'</div>':'')+
+    '<button class="big" id="buildGo">See the Card →</button>'+
+    '<button class="big ghost" id="buildBack">◀ Change Card Size</button>';
+  host.appendChild(bar);
+  $("#buildGo").disabled = filled===0;
+  $("#buildGo").onclick=()=>{ CARD_STEP="poster"; renderCardView(); window.scrollTo(0,0); };
+  $("#buildBack").onclick=()=>{ CARD_STEP="setup"; renderCardView(); window.scrollTo(0,0); };
+}
+
+/* one corner of one bout: avatar + search input + rankings shortcut */
+function fighterSlot(bout, side){
+  const wrap=el("div","fslot "+(side==="a"?"red":"blue"));
+  const f=bout[side];
+  const av = f && f.img
+    ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(f?initials(f.name):"")+'">'
+    : (f?esc(initials(f.name)):'<span style="color:#333a45">?</span>');
+  wrap.innerHTML =
+    '<div class="fsin">'+
+      '<span class="fsav">'+av+'</span>'+
+      '<input type="text" placeholder="'+(side==="a"?"Red corner…":"Blue corner…")+'" autocomplete="off" spellcheck="false" value="'+esc(f?f.name:"")+'">'+
+      (f?'<button class="fsbtn" title="Clear">✕</button>':'<button class="fsbtn rk" title="Pick from rankings">RANK</button>')+
+    '</div>'+
+    '<div class="fsmeta"></div>'+
+    '<div class="slotres"></div>';
+
+  const input=wrap.querySelector("input");
+  const box=wrap.querySelector(".slotres");
+  const meta=wrap.querySelector(".fsmeta");
+
+  if(f){
+    const pr=primaryRank(f);
+    const bits=[];
+    if(pr) bits.push(pr.champ?"Champion":"#"+pr.rank);
+    if(f.division) bits.push(f.division);
+    bits.push(f.rec.w+"-"+f.rec.l+(f.rec.d?"-"+f.rec.d:""));
+    const dup=usedKeys(bout).get(f.key);
+    meta.innerHTML = esc(bits.join(" · ")) + (dup?' <span class="dupwarn">· also booked elsewhere</span>':'');
+  }
+
+  function render(list){
+    box.innerHTML="";
+    if(!list.length){ box.innerHTML='<div class="empty">No fighter found.</div>'; box.classList.add("open"); return; }
+    list.forEach(fx=>{
+      const r=el("div","row"); r.innerHTML=resultRowHTML(fx);
+      r.addEventListener("mousedown", ev=>{ ev.preventDefault(); pick(fx); });
+      box.appendChild(r);
+    });
+    box.classList.add("open");
+  }
+  function pick(fx){ bout[side]=fx; bout.titleTouched=bout.titleTouched||false; renderCardView(); }
+
+  input.addEventListener("focus", ()=> render(fsearch(input.value)));
+  input.addEventListener("input", ()=> render(fsearch(input.value)));
+  input.addEventListener("blur", ()=> setTimeout(()=>box.classList.remove("open"),140));
+  input.addEventListener("keydown", e=>{
+    if(e.key==="Enter"){ e.preventDefault(); const l=fsearch(input.value); if(l.length) pick(l[0]); }
+    if(e.key==="Escape") box.classList.remove("open");
+  });
+  wrap.querySelector(".fsbtn").onclick=()=>{
+    if(f){ bout[side]=null; renderCardView(); }
+    else openRankPick(bout, side);
+  };
+  return wrap;
+}
+
+/* ---------- rankings picker modal ---------- */
+const RP={ bout:null, side:null, active:null };
+function openRankPick(bout, side){
+  if(!RANKINGS||!RANKINGS.length) return;   // rankings feed unavailable — search box still works
+  RP.bout=bout; RP.side=side; RP.active=RP.active||RANKINGS[0].id;
+  $("#rpsub").textContent = (side==="a"?"Red corner":"Blue corner");
+  const pills=$("#rpdivpills"); pills.innerHTML="";
+  RANKINGS.forEach(cat=>{
+    const b=el("button","divpill"+(isP4P(cat)?" p4p":"")+(cat.id===RP.active?" on":""), esc(divisionLabel(cat)));
+    b.onclick=()=>{ RP.active=cat.id; openRankPick(RP.bout,RP.side); };
+    pills.appendChild(b);
+  });
+  const host=$("#rplist"); host.innerHTML="";
+  const cat=RANKINGS.find(c=>c.id===RP.active)||RANKINGS[0];
+  const p4p=isP4P(cat);
+  const rows=[];
+  if(cat.champion&&cat.champion.championName) rows.push({name:cat.champion.championName,pos:p4p?"1":"C",champ:!p4p});
+  (cat.fighters||[]).forEach((fi,i)=> rows.push({name:fi.name,pos:String(p4p?i+2:i+1),champ:false}));
+  const taken=usedKeys(null);
+  rows.forEach(r=>{
+    const f=findByName(r.name), key=f?f.key:norm(r.name);
+    const img = f&&f.img
+      ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(initials(r.name))+'">'
+      : esc(initials(r.name));
+    const meta = (f? esc(f.division||cat.categoryName)+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'') : esc(cat.categoryName))
+      + (taken.get(key)?' · <span class="dupwarn">on this card</span>':'');
+    const row=el("div","rkrow");
+    row.innerHTML=
+      '<span class="rkpos'+(r.champ?" champ":"")+'">'+esc(r.pos)+'</span>'+
+      '<span class="rkimg">'+img+'</span>'+
+      '<span><span class="rkname">'+esc(r.name)+(f&&f.nickname?'<span class="rknick">"'+esc(f.nickname)+'"</span>':'')+'</span>'+
+      '<span class="rkmeta">'+meta+'</span></span><span></span>';
+    row.onclick=()=>{
+      RP.bout[RP.side]=resolveFighter(r.name);
+      closeRankPick(); renderCardView();
+    };
+    host.appendChild(row);
+  });
+  $("#rankpick").classList.add("open");
+}
+function closeRankPick(){ $("#rankpick").classList.remove("open"); }
+
+/* ---------- shuffle / random fill ---------- */
+function shuffleEmpty(all){
+  const pool = (RANKED_FIGHTERS && RANKED_FIGHTERS.length>10)
+    ? RANKED_FIGHTERS : DB.list.filter(f=>f.fights.length>=5);
+  if(!pool.length) return;
+  const byDiv=new Map();
+  for(const f of pool){
+    const d=norm(f.division||"");
+    if(!d) continue;
+    if(!byDiv.has(d)) byDiv.set(d,[]);
+    byDiv.get(d).push(f);
+  }
+  const used=new Set();
+  for(const {bout} of allBouts()){
+    if(all){ bout.a=null; bout.b=null; bout.title=false; bout.titleTouched=false; }
+    if(bout.a) used.add(bout.a.key);
+    if(bout.b) used.add(bout.b.key);
+  }
+  const rnd=arr=>arr[Math.floor(Math.random()*arr.length)];
+  const take=(list)=>{
+    const avail=list.filter(f=>f && !used.has(f.key));
+    if(!avail.length) return null;
+    const f=rnd(avail); used.add(f.key); return f;
+  };
+  for(const {bout} of allBouts()){
+    if(!bout.a) bout.a = take(pool) || take(DB.list);
+    if(!bout.b){
+      const d=bout.a?norm(bout.a.division||""):"";
+      const list=(d && byDiv.get(d) && byDiv.get(d).length>2) ? byDiv.get(d) : pool;
+      bout.b = take(list) || take(pool) || take(DB.list);
+    }
+    bout.titleTouched=false; autoTitle(bout);
+  }
+}
+
+/* ---------- step 3: the poster ---------- */
+function posterSideHTML(f, side){
+  if(!f){
+    return '<div class="pside '+side+'"><span class="pface">?</span>'+
+           '<span class="pinfo"><span class="pnm" style="color:#3a404c">TBD</span></span></div>';
+  }
+  const img = f.img
+    ? '<img src="'+esc(f.img)+'" alt="'+esc(f.name)+'" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(initials(f.name))+'">'
+    : esc(initials(f.name));
+  const pr=primaryRank(f), rk=ranksFor(f);
+  let tag="";
+  if(pr) tag='<span class="prk'+(pr.champ?" champ":"")+'">'+(pr.champ?"CHAMPION":"#"+pr.rank)+'</span>';
+  else if(rk&&(rk.p4pMen||rk.p4pWomen)) tag='<span class="prk">P4P #'+(rk.p4pMen||rk.p4pWomen)+'</span>';
+  const r=f.pro||f.rec;
+  const rec=(f.pro? f.pro.w+"-"+f.pro.l+(f.pro.d?"-"+f.pro.d:"") : f.rec.w+"-"+f.rec.l+(f.rec.d?"-"+f.rec.d:""));
+  return '<div class="pside '+side+'">'+
+    '<span class="pface">'+img+'</span>'+
+    '<span class="pinfo">'+
+      '<span class="pnm">'+esc(f.name)+'</span>'+
+      (f.nickname?'<span class="pnk">"'+esc(f.nickname)+'"</span>':'')+
+      '<span class="prc">'+esc(rec)+'</span>'+
+      (tag?'<br>'+tag:'')+
+    '</span></div>';
+}
+function renderPoster(host){
+  const bouts=allBouts();
+  const filled=bouts.filter(x=>x.bout.a&&x.bout.b);
+  const me=CARD.sections.find(s=>s.id==="main");
+  const meBout=me&&me.bouts[0];
+  const poster=el("div","poster");
+
+  const head=el("div","pbanner");
+  head.innerHTML='<div class="plabel">Fantasy Fight Card</div>'+
+    '<h2>'+esc(CARD.name || (meBout&&meBout.a&&meBout.b ? meBout.a.name.split(" ").slice(-1)[0]+" vs "+meBout.b.name.split(" ").slice(-1)[0] : "Your Dream Card"))+'</h2>'+
+    '<div class="pmeta">'+bouts.length+' Bouts · '+CARD.sections.map(s=>esc(s.label)).join(" · ")+'</div>';
+  poster.appendChild(head);
+
+  CARD.sections.forEach(sec=>{
+    const block=el("div","psec");
+    block.appendChild(el("div","psechdr","<span>"+esc(sec.label)+"</span>"));
+    sec.bouts.forEach((b,i)=>{
+      const ready=!!(b.a&&b.b);
+      const row=el("div","pbout"+(sec.id==="main"&&i===0?" mainev":"")+(ready?"":" tbd"));
+      const lbl=boutLabel(sec,i), wc=boutWeight(b);
+      const tagbits=[];
+      if(lbl) tagbits.push('<i>'+esc(lbl)+'</i>');
+      if(wc) tagbits.push(esc(wc));
+      if(b.title) tagbits.push('<b>Title Fight</b>');
+      row.innerHTML =
+        (tagbits.length?'<div class="pbtag">'+tagbits.join(" · ")+'</div>':'<div class="pbtag">&nbsp;</div>')+
+        '<div class="pbrow">'+posterSideHTML(b.a,"a")+'<div class="pvs">VS</div>'+posterSideHTML(b.b,"b")+'</div>';
+      if(ready) row.onclick=()=> openTape(b);
+      block.appendChild(row);
+    });
+    poster.appendChild(block);
+  });
+  poster.appendChild(el("div","pfoot", filled.length? "Tap any matchup for the tale of the tape" : "Fill in some matchups to see the tape"));
+  host.appendChild(poster);
+
+  const bar=el("div","gobar");
+  bar.innerHTML='<button class="big" id="postEdit">◀ Edit Matchups</button>'+
+                '<button class="big ghost" id="postLink">Copy Card Link</button>'+
+                '<button class="big ghost" id="postClose">Back to Comparison</button>';
+  host.appendChild(bar);
+  $("#postEdit").onclick=()=>{ CARD_STEP="build"; renderCardView(); window.scrollTo(0,0); };
+  $("#postClose").onclick=closeCardView;
+  $("#postLink").onclick=async()=>{
+    const url=location.origin+location.pathname+location.search+"#"+encodeCard();
+    try{ await navigator.clipboard.writeText(url); $("#postLink").textContent="Copied!"; }
+    catch(e){ $("#postLink").textContent="Copy failed"; }
+    setTimeout(()=>$("#postLink").textContent="Copy Card Link",1500);
+  };
+  history.replaceState(null,"","#"+encodeCard());
+}
+
+/* ---------- tale of the tape modal ---------- */
+let TAPE_LIST=[], TAPE_IDX=-1;
+function openTape(bout){
+  TAPE_LIST = allBouts().filter(x=>x.bout.a&&x.bout.b).map(x=>x);
+  TAPE_IDX  = TAPE_LIST.findIndex(x=>x.bout===bout);
+  if(TAPE_IDX<0) return;
+  renderTape();
+  $("#tapemodal").classList.add("open");
+}
+function closeTape(){ $("#tapemodal").classList.remove("open"); }
+function stepTape(d){
+  if(!TAPE_LIST.length) return;
+  TAPE_IDX=(TAPE_IDX+d+TAPE_LIST.length)%TAPE_LIST.length;
+  renderTape();
+  $("#tapemodal").scrollTop=0;
+}
+function renderTape(){
+  const item=TAPE_LIST[TAPE_IDX]; if(!item) return;
+  const b=item.bout, a=b.a, c=b.b;
+  const lbl=boutLabel(item.sec,item.i), wc=boutWeight(b);
+  const bits=[item.sec.label];
+  if(lbl) bits.push(lbl);
+  if(wc) bits.push(wc);
+  if(b.title) bits.push("Title Fight");
+  $("#tmlbl").textContent = bits.join(" · ");
+  $("#tmPrev").disabled = TAPE_LIST.length<2;
+  $("#tmNext").disabled = TAPE_LIST.length<2;
+  $("#tmNext").textContent = TAPE_LIST.length>1 ? "Next ▶ ("+(TAPE_IDX+1)+"/"+TAPE_LIST.length+")" : "Next ▶";
+
+  $("#tm-card-a").innerHTML = cardHTML(a,"a");
+  $("#tm-card-b").innerHTML = cardHTML(c,"b");
+  $("#tmnote").innerHTML = matchupBlurb(a,c);
+
+  const st=$("#tmstats"); st.innerHTML="";
+  for(const r of statRows(a,c)){
+    const row=el("div","srow");
+    row.innerHTML='<div class="sval l '+(r.win==="a"?"win":r.win==="b"?"lose":"tie")+'">'+r.ha+'</div>'+
+      '<div class="slabel">'+esc(r.label)+'</div>'+
+      '<div class="sval r '+(r.win==="b"?"win":r.win==="a"?"lose":"tie")+'">'+r.hb+'</div>';
+    st.appendChild(row);
+  }
+
+  /* head to head + recent form */
+  const sub=$("#tmsub"); sub.innerHTML="";
+  const direct=a.fights.filter(f=>f.oppKey===c.key);
+  const h=el("div","tmh2h"+(direct.length?"":" none"));
+  if(direct.length){
+    h.innerHTML='<b style="color:var(--gold);font-family:Oswald,sans-serif;letter-spacing:.1em">THEY HAVE MET '+direct.length+' TIME'+(direct.length>1?'S':'')+'</b>'+
+      direct.map(f=>'<div style="margin-top:8px">'+
+        '<b style="color:'+(f.res==="W"?"#4fd672":f.res==="L"?"#ff6b6b":"#d4af37")+'">'+
+        (f.res==="W"?esc(a.name):f.res==="L"?esc(c.name):"Draw")+'</b>'+
+        (f.res==="W"||f.res==="L"?" def. ":" — ")+
+        (f.res==="W"?esc(c.name):f.res==="L"?esc(a.name):"")+
+        ' <span style="color:var(--muted)">· '+esc(f.method)+' · R'+esc(f.round)+' '+esc(f.time)+' · '+esc(f.event)+' ('+fmtDateFull(f.date)+')</span></div>').join("");
+  } else {
+    const mapB=new Set(c.fights.map(f=>f.oppKey));
+    const common=[...new Set(a.fights.filter(f=>mapB.has(f.oppKey)).map(f=>f.opp))];
+    h.innerHTML='These two have never fought. '+
+      (common.length? 'They share <b style="color:#fff">'+common.length+'</b> common opponent'+(common.length>1?'s':'')+': '+esc(common.slice(0,6).join(", "))+(common.length>6?'…':'')
+                    : 'No common opponents in the UFC.');
+  }
+  sub.appendChild(h);
+
+  const last=el("div");
+  last.innerHTML='<h4>Recent Form</h4>';
+  const grid=el("div","tmlast");
+  [[a,"red"],[c,"blue"]].forEach(([f,cls])=>{
+    const col=el("div","col");
+    col.innerHTML='<h5 style="color:'+(cls==="red"?"#ff6a6a":"#6aaaff")+'">'+esc(f.name)+'</h5>'+
+      (f.fights.length? f.fights.slice(0,5).map(x=>fightHTML(x,null)).join("")
+                      : '<div class="nodata">No UFC bouts on record.</div>');
+    grid.appendChild(col);
+  });
+  last.appendChild(grid);
+  sub.appendChild(last);
+}
+
+/* ---------- share link ---------- */
+function encodeCard(){
+  const parts=CARD.sections.map(s=> s.id+":"+s.bouts.map(b=>
+    (b.title?"*":"")+(b.a?b.a.key:"")+"-"+(b.b?b.b.key:"")).join(","));
+  return "card="+encodeURIComponent(CARD.name||"")+"|"+parts.join("|");
+}
+function decodeCard(hash){
+  if(!/^#?card=/.test(hash)) return false;
+  const body=hash.replace(/^#?card=/,"");
+  const segs=body.split("|");
+  CARD.name=decodeURIComponent(segs.shift()||"");
+  const secs=[];
+  for(const seg of segs){
+    const m=seg.match(/^([a-z]+):(.*)$/); if(!m) continue;
+    const d=secDef(m[1]); if(!d) continue;
+    const bouts=(m[2]?m[2].split(","):[]).map(pair=>{
+      const title=/^\*/.test(pair);
+      const [ka,kb]=pair.replace(/^\*/,"").split("-");
+      const b=blankBout();
+      b.title=title; b.titleTouched=true;
+      if(ka&&DB.byKey.has(ka)) b.a=DB.byKey.get(ka);
+      if(kb&&DB.byKey.has(kb)) b.b=DB.byKey.get(kb);
+      return b;
+    });
+    if(bouts.length){ secs.push({id:d.id,label:d.label,bouts}); SETUP[d.id]=bouts.length; }
+  }
+  SEC_DEFS.forEach(d=>{ if(!secs.some(s=>s.id===d.id)) SETUP[d.id]=0; });
+  if(!secs.length) return false;
+  CARD.sections=secs;
+  return true;
+}
+
+/* ---------- wiring ---------- */
+function initCardBuilder(initialHash){
+  $("#btnDreamCard").onclick=()=>{
+    if(!CARD.sections.length){ applySetup(); }
+    openCardView(CARD.sections.some(s=>s.bouts.some(b=>b.a||b.b)) ? CARD_STEP : "setup");
+  };
+  $("#cvClose").onclick=closeCardView;
+  $("#cvEdit").onclick=()=>{ CARD_STEP="build"; renderCardView(); window.scrollTo(0,0); };
+  $("#cvShuffle").onclick=()=>{ shuffleEmpty(false); renderCardView(); };
+  $("#cvRestart").onclick=()=>{
+    CARD.sections.forEach(s=>s.bouts.forEach(b=>{ b.a=null;b.b=null;b.title=false;b.titleTouched=false; }));
+    CARD_STEP="setup"; renderCardView(); window.scrollTo(0,0);
+  };
+  $("#rpclose").onclick=closeRankPick;
+  $("#rankpick").addEventListener("click", e=>{ if(e.target.id==="rankpick") closeRankPick(); });
+  $("#tmClose").onclick=closeTape;
+  $("#tmPrev").onclick=()=>stepTape(-1);
+  $("#tmNext").onclick=()=>stepTape(1);
+  $("#tapemodal").addEventListener("click", e=>{ if(e.target.id==="tapemodal") closeTape(); });
+  document.addEventListener("keydown", e=>{
+    if(e.key==="Escape"){
+      if($("#tapemodal").classList.contains("open")) return closeTape();
+      if($("#rankpick").classList.contains("open"))  return closeRankPick();
+      if(CARD_OPEN) return closeCardView();
+    }
+    if($("#tapemodal").classList.contains("open")){
+      if(e.key==="ArrowRight") stepTape(1);
+      if(e.key==="ArrowLeft")  stepTape(-1);
+    }
+  });
+  if(decodeCard(initialHash||"")) openCardView("poster");
 }
 
 boot();
