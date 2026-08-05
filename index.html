@@ -162,7 +162,12 @@ button.tool:active{transform:translateY(1px)}
 .photo{flex:1;display:flex;align-items:flex-end;justify-content:center;min-height:170px;margin-top:6px;position:relative}
 .photo img{max-height:290px;max-width:100%;object-fit:contain;filter:drop-shadow(0 20px 30px rgba(0,0,0,.75))}
 .fcard.blue .photo img{transform:scaleX(-1)}
-.photo .silh{width:150px;height:190px;display:flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:3px;color:#39404e;font-family:'Oswald',sans-serif;font-size:44px;letter-spacing:.06em;background:#0c0e12}
+.photo .silh{width:150px;height:190px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:3px;color:#39404e;font-family:'Oswald',sans-serif;font-size:44px;letter-spacing:.06em;background:#0c0e12}
+.findpic{font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;background:#14171d;border:1px solid var(--line);
+  color:#7e8695;padding:6px 10px;border-radius:2px;cursor:pointer;transition:.14s;white-space:nowrap}
+.findpic:hover:not(:disabled){color:#fff;border-color:var(--red);background:#1c1013}
+.findpic:disabled{opacity:.6;cursor:default}
+.findpic.miss{color:#8a6a5c;border-color:#3a2c26}
 .vsbar{display:flex;align-items:center;justify-content:center;background:#000;border-left:1px solid var(--line);border-right:1px solid var(--line);position:relative}
 .vsbar span{font-family:'Oswald',sans-serif;font-weight:700;font-size:34px;color:#fff;text-shadow:0 0 22px rgba(255,43,43,.8)}
 .vsbar:before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,rgba(210,10,10,.35),transparent)}
@@ -610,6 +615,140 @@ const SRC = {
   rankings:"https://api.octagon-api.com/rankings"
 };
 
+/* ---- UFC photo paths, harvested from ufc.com athlete pages ---- */
+const UFC_IMG = "https://ufc.com/images/styles/athlete_bio_full_body/s3/";
+/* PHOTOS-BEGIN (regenerate to refresh) */
+const PHOTOS = {
+adrianyanez:"2024-12/YANEZ_ADRIAN_L_12-14.png",alexandervolkov:"2025-10/VOLKOV_ALEXANDER_L_10-25.png",alexpereira:"2025-03/PEREIRA_ALEX_L.png",
+alexperez:"2026-05/PEREZ_ALEX_L_05-30.png",aliaquinta:"2021-11/67178%252Fprofile-galery%252Ffullbodyleft-picture%252FIAQUINTA_AL_L_11-06.png",
+alistairovereem:"2020-09/OVEREEM_ALISTAIR_L_04-20.png",aljamainsterling:"2026-04/STERLING_ALJAMAIN_L_04-25.png",
+allannascimento:"2026-06/NASCIMENTO_ALLAN_L_06-20.png",alonzomenifield:"2025-06/MENIFIELD_ALONZO_L_06-14.png",
+amandalemos:"2026-03/LEMOS_AMANDA_L_03-14.png",amandanunes:"2025-12/NUNES_AMANDA_R.png",
+andersonsilva:"image/fighter_images/Anderson_Silva/SILVA_ANDERSON_L.png",andrealee:"2025-02/LEE_ANDREA_L_03-01.png",
+andrefili:"2026-03/FILI_ANDRE_L_03-14.png",andreiarlovski:"2024-06/ARLOVSKI_ANDREI_L_06-29.png",andrepetroski:"2024-12/3/PETROSKI_ANDRE_L_09-07.png",
+angelahill:"2026-05/HILL_ANGELA_L_05-30.png",antedelija:"2025-09/DELIJA_ANTE_R_09-06.png",anthonyhernandez:"2025-01/5/HERNANDEZ_ANTHONY_L_10-19.png",
+anthonypettis:"2019-08/PETTIS_ANTHONY_L_0.png",anthonysmith:"2025-04/SMITH_ANTHONY_L_04-26.png",arianelipski:"2025-06/DA_SILVA_ARIANE_L_06-07.png",
+armantsarukyan:"2025-11/TSARUKYAN_ARMAN_L_11-22.png",arnoldallen:"2026-05/ALLEN_ARNOLD_L_05-16.png",
+aspenladd:"2021-07/67418%252Fprofile-galery%252Ffullbodyleft-picture%252FLADD_ASPEN_L_07-24.png",asualmabayev:"2026-06/ALMABAYEV_ASU_L_06-27.png",
+beneildariush:"2026-04/DARIUSH_BENEIL_L_05-02.png",benoitsaintdenis:"2026-07/SAINT_DENIS_BENOIT_L_07-11.png",
+bobbygreen:"2026-07/GREEN_KING_L_07-11.png",bogdanguskov:"2025-01/7/GUSKOV_BOGDAN_L_01-18.png",bonickal:"2026-06/NICKAL_BO_L_06-14.png",
+bradtavares:"2026-03/TAVARES_BRAD_L_03-14.png",brandonroyval:"2026-07/ROYVAL_BRANDON_L_07-11.png",brianortega:"2025-08/ORTEGA_BRIAN_L_08-23.png",
+brocklesnar:"image/ufc-fighter-container/67517/profile-galery/fullbodyleft-picture/Brock-Lesnar_548_LeftFullBodyImage.png",
+brunosilva:"2026-06/SILVA_BRUNO_L_06-06.png",bryanbarberena:"2023-07/BARBERENA_BRYAN_L_07-22.png",brycemitchell:"2026-06/MITCHELL_BRYCE_L_06-06.png",
+cainvelasquez:"image/ufc-fighter-container/67538/profile-galery/fullbodyleft-picture/Cain-Velasquez_899_LeftFullBodyImage.png",
+caioborralho:"2026-03/BORRALHO_CAIO_L_03-07.png",calvinkattar:"2025-07/KATTAR_CALVIN_L_07-12.png",carlaesparza:"2024-10/ESPARZA_CARLA_L_10-05.png",
+carloscondit:"2021-07/67555%252Fprofile-galery%252Ffullbodyleft-picture%252FCONDIT_CARLOS_L_07-10.png",
+carlosprates:"2025-01/5/PRATES_CARLOS_L_08-17.png",caseyoneill:"2026-03/ONEILL_CASEY_L_03-28.png",catzingano:"2018-10/ZINGANO_CAT_L_0.png",
+chadmendes:"image/fighter_images/Chad_Mendes/MENDES_CHAD_L.png",charlesjohnson:"2026-03/JOHNSON_CHARLES_L_03-14.png",
+charlesjourdain:"2025-10/JOURDAIN_CHARLES_L_10-18.png",charlesoliveira:"2026-03/OLIVEIRA_CHARLES_L_BMFMOCK.png",
+chasehooper:"2026-07/HOOPER_CHASE_L_07-18.png",chrisbarnett:"2024-10/5/BARNETT_CHRIS_L_09-10.png",chriscurtis:"2026-03/CURTIS_CHRIS_L_03-14.png",
+chrisgutierrez:"2025-10/GUTIERREZ_CHRIS_L_10-04.png",chrisweidman:"2024-12/WEIDMAN_CHRIS_L_12-07.png",cjvergara:"2024-10/VERGARA_CJ_L_10-12.png",
+claudiagadelha:"2020-11/67642%252Fprofile-galery%252Ffullbodyleft-picture%252FGADELHA_CLAUDIA_L_07-06.png",
+clayguida:"2025-01/2/GUIDA_CLAY_L_12-07.png",codybrundage:"2026-05/BRUNDAGE_CODY_L_05-16.png",codydurden:"2026-03/DURDEN_CODY_L_03-07.png",
+codygarbrandt:"2026-07/GARBRANDT_CODY_L_07-11.png",colbycovington:"2025-01/5/COVINGTON_COLBY_L_12-14.png",
+conormcgregor:"2026-07/MCGREGOR_CONOR_L_07-11.png",coreyanderson:"2020-02/ANDERSON_COREY_L.png",courtmcgee:"2024-10/MCGEE_COURT_L_10-05.png",
+cubswanson:"2026-04/SWANSON_CUB_L_04-11.png",damonblackshear:"2025-04/BLACKSHEAR_DAMON_L_04-26.png",danhooker:"2026-01/HOOKER_DAN_L_01-31.png",
+danielcormier:"2020-08/CORMIER_DANIEL_L_08-15.png",danielrodriguez:"2024-10/RODRIGUEZ_DANIEL_L_10-12.png",danige:"2025-07/IGE_DAN_L_07-19.png",
+darrentill:"2022-12/TILL_DARREN_L_12-10.png",daviddvorak:"2023-06/DVORAK_DAVID_L_06-10.png",
+deivesonfigueiredo:"2025-10/FIGUEIREDO_DEIVESON_L_10-11.png",demetriousjohnson:"2018-10/JOHNSON_DEMETRIOUS_L.png",
+denisegomes:"2024-11/GOMES_DENISE_L_11-04.png",derekbrunson:"2023-03/BRUNSON_DEREK_L_03-05.png",derricklewis:"2026-06/LEWIS_DERRICK_R_06-14.png",
+diegosanchez:"2020-09/SANCHEZ_DIEGO_L_02-15.png",dominickcruz:"2024-10/2/CRUZ_DOMINICK_L_12-11.png",
+dominickreyes:"2026-04/REYES_DOMINICK_L_04-11.png",donaldcerrone:"2022-05/06971e1e-4aa9-404e-96f4-b50c2f56c21f%252FCERRONE_DONALD_L_05-07.png",
+drewdober:"2026-03/DOBER_DREW_L_03-07.png",dustinjacoby:"2026-07/JACOBY_DUSTIN_L_07-25.png",dustinpoirier:"2025-01/5/POIRIER_DUSTIN_L_06-01.png",
+eddiealvarez:"image/ufc-fighter-container/67873/profile-galery/fullbodyleft-picture/eddie-alvarez_498601_LeftFullBodyImage.png",
+emilyducote:"2023-05/DUCOTE_EMILY_L_05-20.png",
+fabriciowerdum:"image/ufc-fighter-container/67940/profile-galery/fullbodyleft-picture/Fabricio-Werdum_837_LeftFullBodyImage.png",
+faresziam:"2026-06/ZIAM_FARES_L_06-06.png",frankieedgar:"2021-11/67978%252Fprofile-galery%252Ffullbodyleft-picture%252FEDGAR_FRANKIE_L_11-06.png",
+gabrielbonfim:"2025-11/BONFIM_GABRIEL_L_11-08.png",geoffneal:"2026-02/NEAL_GEOFF_L_02-21.png",
+georgesstpierre:"image/ufc-fighter-container/68009/profile-galery/fullbodyleft-picture/Georges-St-Pierre_318_LeftFullBodyImage.png",
+geraldmeerschaert:"2025-08/MEERSCHAERT_GERALD_L_08-16.png",germainederandamie:"2024-10/2/DE_RANDAMIE_GERMAINE_L_04-06.png",
+gigachikadze:"2025-12/CHIKADZE_GIGA_L_12-13.png",gilbertburns:"2026-04/BURNS_GILBERT_L_04-18.png",
+gillianrobertson:"2025-01/5/ROBERTSON_GILLIAN_L_01-20.png",gloverteixeira:"2023-01/TEIXEIRA_GLOVER_L_01-19.png",
+grantdawson:"2026-05/DAWSON_GRANT_L_05-09.png",
+graymaynard:"image/ufc-fighter-container/68043/profile-galery/fullbodyleft-picture/Gray-Maynard_512_LeftFullBodyImage.png",
+henrycejudo:"2025-12/CEJUDO_HENRY_L_12-06.png",hollyholm:"2025-01/4/HOLM_HOLLY_L_04-13.png",iasminlucindo:"2025-08/LUCINDO_IASMIN_L_08-09.png",
+ignaciobahamondes:"2026-03/BAHAMONDES_IGNACIO_L_03-28.png",ikramaliskerov:"2026-06/ALISKEROV_IKRAM_L_06-27.png",
+ioncutelaba:"2026-06/CUTELABA_ION_L_06-20.png",irenealdana:"2025-01/5/ALDANA_IRENE_L_09-14.png",israeladesanya:"2026-03/ADESANYA_ISRAEL_L_03-28.png",
+jailtonalmeida:"2026-02/ALMEIDA_JAILTON_L_02-07.png",jalinturner:"2025-03/TURNER_JALIN_L_03-08.png",
+janblachowicz:"2026-07/BLACHOWICZ_JAN_L_08-01.png",jasminejasudavicius:"2026-04/JASUDAVICIUS_JASMINE_L_04-18.png",
+jeansilva:"2025-02/SILVA_JEAN_L_02-22.png",jessicaandrade:"2025-08/ANDRADE_JESSICA_L_08-16.png",jessicapenne:"2024-10/14/PENNE_JESSICA_L_10-19.png",
+jimmiller:"2026-05/MILLER_JIM_L_05-09.png",joannajedrzejczyk:"2022-06/JEDRZEJCZYK_JOANNA_L_06-11.png",joelalvarez:"2026-05/ALVAREZ_JOEL_L_05-09.png",
+joepyfer:"2024-06/PYFER_JOE_L_06-29.png",johndodson:"2020-08/DODSON_JOHN_L_02-15.png",
+johnlineker:"image/fighter_images/John_Lineker/LINEKER_JOHN_L.png",johnnywalker:"2025-08/WALKER_JOHNNY_L_08-23.png",
+johnyhendricks:"image/ufc-fighter-container/68317/profile-galery/fullbodyleft-picture/Johny-Hendricks_130419_LeftFullBodyImage.png",
+jorgemasvidal:"2023-06/MASVIDAL_JORGE_L_04-08.png",josealdo:"2025-05/ALDO_JOSE_L_05-10.png",
+josephbenavidez:"image/fighter_images/Joseph_Benavidez/BENAVIDEZ_JOSEPH_L.png",joshemmett:"2026-03/EMMETT_JOSH_L_03-14.png",
+juliannapena:"2022-08/PENA_JULIANNA_L_12-11.png",justingaethje:"2026-06/GAETHJE_JUSTIN_R_BELT_06-14.png",justintafa:"2025-09/TAFA_JUSTIN_L_09-27.png",
+kaikarafrance:"2025-01/5/KARA-FRANCE_KAI_L_08-17.png",karinesilva:"2025-08/SILVA_KARINE_L_08-16.png",karolrosa:"2026-06/ROSA_KAROL_L_06-20.png",
+katlyncerminara:"2025-01/5/CERMINARA_KATLYN_L_03-09.png",kelvingastelum:"2026-04/GASTELUM_KELVIN_L_04-11.png",
+ketlenvieira:"2026-05/VIEIRA_KETLEN_L_05-16.png",kevinholland:"2026-04/HOLLAND_KEVIN_L_04-11.png",kevinlee:"2023-06/LEE_KEVIN_L_07-01.png",
+khabibnurmagomedov:"image/fighter_images/Khabib_Nurmagomedov/1NURMAGOMEDOV_KHABIB_L.png",khalilrountreejr:"2025-01/5/ROUNTREE_KHALIL_L_12-09.png",
+kylenelson:"2025-10/NELSON_KYLE_L_10-18.png",kylerphillips:"2026-04/PHILLIPS_KYLER_L_04-18.png",laurenmurphy:"2023-01/MURPHY_LAUREN_L_01-19.png",
+leronemurphy:"2025-08/MURPHY_LERONE_L_08-16.png",lijingliang:"2024-08/JINGLIANG_LI_L_08-17.png",loopygodinez:"2025-03/GODINEZ_LOOPY_L_03-29.png",
+luanapinheiro:"2025-01/5/PINHEIRO_LUANA_L_11-09.png",lukerockhold:"2022-08/ROCKHOLD_LUKE_L_08-20.png",
+lyotomachida:"2022-03/fc34e9f1-af85-4a11-bdaa-7ab1383b41e4%252FLyoto-Machida_831_LeftFullBodyImage.png",
+mackenziedern:"2025-10/DERN_MACKENZIE_L_BELT.png",macychiasson:"2025-10/CHIASSON_MACY_L_10-04.png",manelkape:"2026-06/KAPE_MANEL_L_06-20.png",
+manueltorres:"2025-03/TORRES_MANUEL_L_03-29.png",marcintybura:"2026-03/TYBURA_MARCIN_L_03-28.png",marcusmcghee:"2026-06/MCGHEE_MARCUS_L_06-06.png",
+marinarodriguez:"2025-05/RODRIGUEZ_MARINA_L_05-03.png",mariobautista:"2026-02/BAUTISTA_MARIO_L_02-07.png",
+markhunt:"image/fighter_images/Mark_Hunt/HUNT_MARK_L.png",marlonvera:"2026-02/VERA_MARLON_L_02-28.png",martinbuday:"2025-07/BUDAY_MARTIN_L_07-26.png",
+marvinvettori:"2025-12/VETTORI_MARVIN_L_12-06.png",mateuszgamrot:"2026-04/GAMROT_MATEUSZ_L_04-11.png",
+matheusnicolau:"2024-10/16/NICOLAU_MATHEUS_L_10-19.png",mattbrown:"2023-05/BROWN_MATT_L_05-13.png",mattschnell:"2026-06/SCHNELL_MATT_L_06-06.png",
+maxholloway:"2024-04/HOLLOWAY_MAX_L_04-13.png",mayceebarber:"2025-12/BARBER_MAYCEE_L_12-06.png",
+mayrabuenosilva:"2026-04/BUENO_SILVA_MAYRA_L_04-25.png",melsikbaghdasaryan:"2026-06/BAGHDASARYAN_MELSIK_L_06-20.png",
+michaelbisping:"2022-03/e285d3e7-8514-48ec-9ea0-7936e956b507%252FMichael-Bisping_758_LeftFullBodyImage.png",
+michaelchiesa:"2026-03/CHIESA_MICHAEL_L_03-28.png",michaeljohnson:"2026-01/JOHNSON_MICHAEL_L_01-24.png",
+michaelmorales:"2025-01/5/MORALES_MICHAEL_L_08-24.png",michellewatersongomez:"2024-06/WATERSON-GOMEZ_MICHELLE_L_06-29.png",
+michelpereira:"2025-08/PEREIRA_MICHEL_L_08-23.png",mickparkin:"2025-01/5/PARKIN_MICK_L_07-27.png",mieshatate:"2025-01/5/TATE_MIESHA_L_12-02.png",
+milesjohns:"2025-11/JOHNS_MILES_L_11-08.png",mirandamaverick:"2025-01/5/MAVERICK_MIRANDA_L_12-14.png",mollymccann:"2025-03/MCCANN_MOLLY_L_03-22.png",
+monteljackson:"2026-04/JACKSON_MONTEL_L_04-25.png",muhammadmokaev:"2022-03/911ce7a0-a97f-497c-9a2d-b3bbfa3e50d8%252FMOKAEV_MUHAMMAD_L_03-19.png",
+nasrathaqparast:"2025-10/HAQPARAST_NASRAT_L_10-25.png",nassourdineimavov:"2025-09/IMAVOV_NASSOURDINE_L_09-06.png",
+natediaz:"2023-02/DIAZ_NATE_L_09-10.png",nathanielwood:"2025-10/WOOD_NATHANIEL_L_10-25.png",neilmagny:"2025-12/MAGNY_NEIL_L_12-13.png",
+nickdiaz:"2021-09/68907%252Fprofile-galery%252Ffullbodyleft-picture%252FDIAZ_NICK_L_09-25.png",nikitakrylov:"2026-07/KRYLOV_NIKITA_L_07-11.png",
+normadumont:"2026-04/DUMONT_NORMA_L_04-25.png",odeosbourne:"2026-02/OSBOURNE_ODE_L_02-21.png",
+ovincesaintpreux:"2024-03/SAINT_PREUX_OVINCE_L_03-16.png",paddypimblett:"2025-01/5/PIMBLETT_PADDY_L_07-27.png",
+patsabatini:"2026-05/SABATINI_PAT_L_05-09.png",paulocosta:"2025-07/COSTA_PAULO_L_07-19.png",paytontalbott:"2025-06/TALBOTT_PAYTON_L_06-28.png",
+pedromunhoz:"2024-03/MUNHOZ_PEDRO_L_03-09.png",punahelesoriano:"2025-10/SORIANO_PUNAHELE_L_10-04.png",
+quintonjackson:"2022-03/1f545533-e10c-4b45-82c4-ce24ff0d36b1%252FQuinton-Jackson_828_LeftFullBodyImage.png",
+rafaeldosanjos:"2024-10/5/DOS_ANJOS_RAFAEL_L_12-03.png",rafaelfiziev:"2026-06/FIZIEV_RAFAEL_L_06-27.png",randybrown:"2025-04/BROWN_RANDY_L_04-26.png",
+raphaelassuncao:"2023-03/ASSUNCAO_RAPHAEL_L_03-11.png",
+rashadevans:"image/ufc-fighter-container/69052/profile-galery/fullbodyleft-picture/Rashad-Evans_712_LeftFullBodyImage.png",
+raulrosasjr:"2025-03/ROSAS_JR_RAUL_L_03-29.png",renatomoicano:"2026-04/MOICANO_RENATO_L_04-04.png",ricardolamas:"2020-08/LAMAS_RICARDO_L_08-29.png",
+rickysimon:"2026-03/SIMON_RICKY_L_03-28.png",rizvankuniev:"2025-06/KUNIEV_RIZVAN_R_06-21.png",robbielawler:"2023-07/LAWLER_ROBBIE_L_07-08.png",
+robertwhittaker:"2025-07/WHITTAKER_ROBERT_L_07-26.png",robfont:"2026-03/FONT_ROB_L_03-07.png",rodolfovieira:"2026-04/VIEIRA_RODOLFO_L_04-25.png",
+romandolidze:"2026-03/DOLIDZE_ROMAN_L_03-21.png",
+ronaldosouza:"2021-05/68142%252Fprofile-galery%252Ffullbodyleft-picture%252FSOUZA_JACARE_L_05-15.png",
+rondarousey:"2022-03/85973314-4705-4ef9-ab85-f2d4e16e35a1%252FRonda-Rousey_241883_LeftFullBodyImage.png",
+rosenamajunas:"2025-06/NAMAJUNAS_ROSE_L_06-14.png",
+roxannemodafferi:"2021-09/69156%252Fprofile-galery%252Ffullbodyleft-picture%252FMODAFFERI_ROXANNE_L_09-25.png",
+ryanspann:"2025-07/SPANN_RYAN_L_07-19.png",santiagoponzinibbio:"2026-07/PONZINIBBIO_SANTIAGO_L_07-25.png",
+seanomalley:"2026-06/OMALLEY_SEAN_L_06-14.png",seanstrickland:"2024-01/STRICKLAND_SEAN_L_BELT_01-20.png",
+sergheispivac:"2026-02/SPIVAC_SERGHEI_L_02-21.png",shamilgaziev:"2026-04/GAZIEV_SHAMIL_L_05-02.png",sodiqyusuff:"2025-05/YUSUFF_SODIQ_L_05-17.png",
+songyadong:"2026-05/YADONG_SONG_L_05-30.png",stephenthompson:"2025-07/THOMPSON_STEPHEN_L_07-12.png",steveerceg:"2026-07/ERCEG_STEVE_L_07-25.png",
+stipemiocic:"2024-10/2/MIOCIC_STIPE_L.png",sumudaerji:"2026-03/SUMUDAERJI_L_03-07.png",taituivasa:"2026-04/TUIVASA_TAI_L_05-02.png",
+tatsurotaira:"2025-07/TAIRA_TATSURO_L_08-02.png",teciatorres:"2025-05/PENNINGTON_TECIA_L_05-17.png",
+terrancemckinney:"2026-03/MCKINNEY_TERRANCE_L_03-28.png",thembagorimbo:"2024-10/GORIMBO_THEMBA_L_10-12.png",
+thiagosantos:"2022-08/SANTOS_THIAGO_L_08-06.png",timelliott:"2026-04/ELLIOTT_TIM_L_05-02.png",tjdillashaw:"2021-07/DILLASHAW_TJ_L_07-24.png",
+tonyferguson:"2024-08/FERGUSON_TONY_L_08-03.png",tracycortez:"2026-07/CORTEZ_TRACY_L_07-11.png",
+tyronwoodley:"image/ufc-fighter-container/69431/profile-galery/fullbodyleft-picture/WOODLEY_TYRON_L_09-19.png",
+uriahhall:"2022-06/8b787623-45ca-45ae-9642-49677bf57ce9%252FHALL_URIAH_L_07-02.png",urijahfaber:"2025-01/1/FABER_URIJAH_L.png",
+valentinashevchenko:"2025-11/SHEVCHENKO_VALENTINA_L_BELT_11-15.png",valterwalker:"2026-07/WALKER_VALTER_L_07-25.png",
+vicenteluque:"2025-10/LUQUE_VICENTE_L_10-11.png",viniciusoliveira:"2026-06/OLIVEIRA_VINICIUS_L_06-20.png",
+virnajandiroba:"2026-04/JANDIROBA_VIRNA_L_04-04.png",vivianearaujo:"2025-06/ARAUJO_VIVIANE_L_06-28.png",
+volkanoezdemir:"2025-11/OEZDEMIR_VOLKAN_L_11-22.png",waldocortesacosta:"2026-01/CORTES_ACOSTA_WALDO_L_01-24.png",
+yairrodriguez:"2025-04/RODRIGUEZ_YAIR_L_04-12.png",yanasantos:"2025-05/SANTOS_YANA_L_05-03.png",yanxiaonan:"2025-04/XIAONAN_YAN_L_04-12.png",
+yoelromero:"2019-08/ROMERO_YOEL_L.png",youssefzalal:"2024-08/ZALAL_YOUSSEF_L_08-10.png",zhangmingyang:"2026-05/MINGYANG_ZHANG_L_05-30.png"
+};
+/* PHOTOS-END */
+/* fighters the historical CSVs know under a former name */
+Object.assign(PHOTOS, {
+  michellewaterson:  PHOTOS.michellewatersongomez,
+  katlynchookagian:  PHOTOS.katlyncerminara,
+  teciapennington:   PHOTOS.teciatorres,
+  jacaresouza:       PHOTOS.ronaldosouza,
+  rampagejackson:    PHOTOS.quintonjackson,
+  cowboycerrone:     PHOTOS.donaldcerrone
+});
+
 /* ============================ helpers ============================ */
 const $ = s => document.querySelector(s);
 const el = (t, c, h) => { const n = document.createElement(t); if (c) n.className = c; if (h != null) n.innerHTML = h; return n; };
@@ -689,6 +828,26 @@ function altNormKey(name){
   if(parts.length!==2) return null;
   return norm(parts[1]+" "+parts[0]);
 }
+/* baked-in UFC photo lookup — tries the spelling variants the historical CSVs
+   and the UFC roster disagree on (name order, Jr/Sr, double surnames) */
+function photoPath(name){
+  const toks = String(name||"").trim().split(/\s+/).filter(Boolean);
+  if(!toks.length) return null;
+  const tries = [norm(name)];
+  if(toks.length===2) tries.push(norm(toks[1]+toks[0]));
+  const last = toks[toks.length-1];
+  if(/^(jr|sr)\.?$/i.test(last)) tries.push(norm(toks.slice(0,-1).join(" ")));
+  else tries.push(norm(name+" jr"));
+  if(last.indexOf("-")>0){
+    const [a,b] = last.split("-");
+    tries.push(norm(toks.slice(0,-1).concat(a).join(" ")));
+    tries.push(norm(toks.slice(0,-1).concat(b).join(" ")));
+  }
+  if(toks.length>2) tries.push(norm(toks[0]+" "+last));
+  for(const t of tries){ if(t && PHOTOS[t]) return UFC_IMG + PHOTOS[t]; }
+  return null;
+}
+
 function findByName(name){
   const k=norm(name);
   if(DB.byKey.has(k)) return DB.byKey.get(k);
@@ -704,6 +863,7 @@ function resolveFighter(name){
   if(f) return f;
   f=getF(norm(name));
   f.name=String(name||"").trim() || f.key;
+  if(!f.img) f.img = photoPath(f.name) || "";
   if(!f.rec) f.rec=tally(f.fights||[]);
   f.searchable=norm(f.name)+" "+norm(f.nickname||"");
   f.sortName=f.name.split(/\s+/).slice(-1)[0].toLowerCase();
@@ -915,6 +1075,8 @@ async function boot(){
       });
       f.name = String(f.name||"").replace(/\s+/g," ").trim();
       f.nickname = String(f.nickname||"").replace(/\s+/g," ").trim();
+      /* baked-in UFC photos for fighters the rankings feed doesn't carry */
+      if(!f.img) f.img = photoPath(f.name) || "";
       f.rec = tally(f.fights);
       if(!f.division){
         const last=f.fights.find(x=>x.weightclass);
@@ -1072,7 +1234,8 @@ function cardHTML(f, side){
 
   const photo = f.img
     ? '<img src="'+esc(f.img)+'" alt="'+esc(f.name)+'" loading="lazy" onerror="this.outerHTML=\'<div class=&quot;silh&quot;>'+esc(initials(f.name))+'</div>\'">'
-    : '<div class="silh">'+esc(initials(f.name))+'</div>';
+    : '<div class="silh">'+esc(initials(f.name))+
+      '<button class="findpic" data-key="'+esc(f.key)+'" title="Search Wikipedia for a photo of '+esc(f.name)+'">Find photo</button></div>';
 
   return '<div class="corner">'+(side==="a"?"Red":"Blue")+' Corner</div>'+
     '<div class="fname">'+esc(f.name)+'</div>'+
@@ -1364,7 +1527,7 @@ function renderRankList(){
     const key=f?f.key:norm(r.name);
     const isA = !!(SEL.a && SEL.a.key===key), isB = !!(SEL.b && SEL.b.key===key);
     const img = f && f.img
-      ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(initials(r.name))+'">'
+      ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent=&quot;'+esc(initials(r.name))+'&quot;">'
       : esc(initials(r.name));
     const meta = f
       ? esc(f.division||cat.categoryName)+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')
@@ -1488,6 +1651,70 @@ function initUI(){
   syncHash();
   initCardBuilder(INITIAL_HASH);
 }
+
+/* ============================================================
+   WIKIPEDIA PHOTO FALLBACK
+   Wikimedia's API sends CORS headers, so the page can query it
+   directly — no proxy, no scraping.
+   ============================================================ */
+async function wikiPhoto(name){
+  const api = "https://en.wikipedia.org/w/api.php?";
+  const q = new URLSearchParams({
+    action:"query", format:"json", origin:"*",
+    prop:"pageimages|description", piprop:"original|thumbnail", pithumbsize:"640",
+    generator:"search", gsrsearch:name+" mixed martial artist UFC", gsrlimit:"5"
+  });
+  const r = await fetch(api+q.toString());
+  if(!r.ok) throw new Error("wikipedia HTTP "+r.status);
+  const j = await r.json();
+  const pages = j && j.query && j.query.pages ? Object.values(j.query.pages) : [];
+  if(!pages.length) return null;
+
+  const want = norm(name);
+  const last = norm(name.split(/\s+/).slice(-1)[0]);
+  const scored = pages.map(p=>{
+    const t = norm(p.title||"");
+    const d = String(p.description||"").toLowerCase();
+    let s = 0;
+    if(t===want) s += 100;
+    else if(t.startsWith(want) || want.startsWith(t)) s += 60;
+    else if(last && t.includes(last)) s += 25;
+    if(/martial|fighter|ufc|mma|wrestl|boxer/.test(d)) s += 30;
+    if(p.original || p.thumbnail) s += 10;
+    return {p, s};
+  }).filter(x=> x.s >= 35 && (x.p.original || x.p.thumbnail))
+    .sort((a,b)=> b.s - a.s);
+
+  if(!scored.length) return null;
+  const hit = scored[0].p;
+  return (hit.thumbnail && hit.thumbnail.source) || (hit.original && hit.original.source) || null;
+}
+
+document.addEventListener("click", async e=>{
+  const btn = e.target.closest(".findpic");
+  if(!btn) return;
+  e.stopPropagation();
+  const f = DB.byKey.get(btn.dataset.key);
+  if(!f) return;
+  btn.disabled = true;
+  btn.textContent = "Searching…";
+  try{
+    const url = await wikiPhoto(f.name);
+    if(url){
+      f.img = url;
+      renderAll();
+      if($("#tapemodal").classList.contains("open")) renderTape();
+      if(CARD_OPEN) renderCardView();
+    } else {
+      btn.classList.add("miss");
+      btn.textContent = "No photo found";
+    }
+  }catch(err){
+    console.warn("wikipedia lookup failed:", err);
+    btn.classList.add("miss");
+    btn.textContent = "Lookup failed";
+  }
+});
 
 /* ============================================================
    DREAM CARD BUILDER
@@ -1699,7 +1926,7 @@ function fighterSlot(bout, side){
   const wrap=el("div","fslot "+(side==="a"?"red":"blue"));
   const f=bout[side];
   const av = f && f.img
-    ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(f?initials(f.name):"")+'">'
+    ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent=&quot;'+esc(f?initials(f.name):"")+'&quot;">'
     : (f?esc(initials(f.name)):'<span style="color:#333a45">?</span>');
   wrap.innerHTML =
     '<div class="fsin">'+
@@ -1772,7 +1999,7 @@ function openRankPick(bout, side){
   rows.forEach(r=>{
     const f=findByName(r.name), key=f?f.key:norm(r.name);
     const img = f&&f.img
-      ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(initials(r.name))+'">'
+      ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent=&quot;'+esc(initials(r.name))+'&quot;">'
       : esc(initials(r.name));
     const meta = (f? esc(f.division||cat.categoryName)+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'') : esc(cat.categoryName))
       + (taken.get(key)?' · <span class="dupwarn">on this card</span>':'');
@@ -1834,7 +2061,7 @@ function posterSideHTML(f, side){
            '<span class="pinfo"><span class="pnm" style="color:#3a404c">TBD</span></span></div>';
   }
   const img = f.img
-    ? '<img src="'+esc(f.img)+'" alt="'+esc(f.name)+'" loading="lazy" onerror="this.parentElement.textContent='+JSON.stringify(initials(f.name))+'">'
+    ? '<img src="'+esc(f.img)+'" alt="'+esc(f.name)+'" loading="lazy" onerror="this.parentElement.textContent=&quot;'+esc(initials(f.name))+'&quot;">'
     : esc(initials(f.name));
   const pr=primaryRank(f), rk=ranksFor(f);
   let tag="";
