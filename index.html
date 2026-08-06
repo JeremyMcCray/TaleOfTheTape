@@ -318,11 +318,14 @@ footer a{color:#7c8496}
 }
 .cardview.open{display:block}
 body.locked{overflow:hidden}
-.cvtop{
-  position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  padding:12px 16px;background:rgba(5,6,8,.94);backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
-}
+/* header + step actions ride together in one pinned block, so the primary
+   buttons are on screen no matter how far down the card you've scrolled */
+.cvhead{position:sticky;top:0;z-index:6;background:rgba(5,6,8,.95);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);box-shadow:0 10px 24px rgba(0,0,0,.45)}
+.cvtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px}
+.cvacts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 14px}
+.cvacts:not(:empty){padding:2px 14px 12px}
+.cvacts .gobar{margin-top:0}
 .cvtop .cvttl{font-family:'Oswald',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:14px;color:#fff;margin-right:auto}
 .cvtop .cvttl small{display:block;color:var(--muted);font-size:10.5px;letter-spacing:.22em;margin-top:2px}
 .cvwrap{max-width:1080px;margin:0 auto;padding:26px 16px 90px}
@@ -363,13 +366,16 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
   color:var(--muted);padding:6px 10px;border-radius:2px;cursor:pointer;transition:.14s}
 .mini:hover{color:#fff;border-color:#4a5163}
 .mini.warn:hover{color:#ff6b6b;border-color:var(--red)}
-.slot{display:grid;grid-template-columns:26px 1fr 54px 1fr 30px;gap:8px;align-items:start;padding:11px 14px;border-bottom:1px solid var(--line-soft)}
+/* minmax(0,…) so the corner columns can compress: a bare 1fr floors at the
+   slot's min-content, which the text input's intrinsic size blows past on
+   narrow screens and pushes the buttons off the right edge */
+.slot{display:grid;grid-template-columns:26px minmax(0,1fr) 54px minmax(0,1fr) 30px;gap:8px;align-items:start;padding:11px 14px;border-bottom:1px solid var(--line-soft)}
 .slot:last-child{border-bottom:none}
 .slot.mainev{background:linear-gradient(90deg,rgba(210,10,10,.07),transparent 60%)}
 .slotno{font-family:'Oswald',sans-serif;font-size:11px;color:#4d5462;padding-top:14px;text-align:center;line-height:1.2}
 .slotno b{display:block;color:var(--gold);font-size:9px;letter-spacing:.1em}
 .slotvs{font-family:'Oswald',sans-serif;font-weight:700;color:#3a3f4b;font-size:15px;text-align:center;padding-top:12px}
-.fslot{position:relative}
+.fslot{position:relative;min-width:0}
 .fslot .fsin{display:flex;align-items:center;gap:8px;background:#0b0d11;border:1px solid var(--line);border-radius:2px;padding:6px 8px}
 .fslot.red .fsin{border-left:3px solid rgba(210,10,10,.75)}
 .fslot.blue .fsin{border-left:3px solid rgba(21,103,211,.75)}
@@ -377,10 +383,40 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 .fslot input::placeholder{color:#4d5462}
 .fslot .fsav{width:30px;height:30px;border-radius:50%;overflow:hidden;background:#0c0e12;border:1px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:10px;color:#4a505c}
 .fslot .fsav img{width:100%;height:100%;object-fit:cover;object-position:top}
-.fslot .fsbtn{background:none;border:none;color:#5f6675;cursor:pointer;font-size:15px;padding:2px 4px;line-height:1;flex:none}
-.fslot .fsbtn:hover{color:#fff}
-.fslot .fsbtn.rk{font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.1em;border:1px solid var(--line);border-radius:2px;padding:4px 6px}
+.fslot .fsbtn{background:none;border:none;color:#5f6675;cursor:pointer;font-size:15px;line-height:1;flex:none;
+  width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:.14s}
+.fslot .fsbtn:hover{color:#fff;background:#181c23}
+/* The rankings shortcut has to read as a button at a glance. It used to be a
+   hairline ghost chip in muted grey, which people scanned right past — filled,
+   gold and 32px tall so it looks (and taps) like the action it is. */
+.fslot .fsbtn.rk{
+  width:auto;height:32px;min-width:44px;padding:0 10px;gap:5px;
+  font-family:'Oswald',sans-serif;font-weight:600;font-size:10.5px;letter-spacing:.12em;white-space:nowrap;
+  color:#f4e3ad;background:linear-gradient(180deg,rgba(212,175,55,.26),rgba(212,175,55,.10));
+  border:1px solid rgba(212,175,55,.55);
+  transition:background .14s,border-color .14s,color .14s,box-shadow .14s,transform .08s}
+.fslot .fsbtn.rk .rkstar{font-size:11px;line-height:1}
+.fslot .fsbtn.rk:hover,
+.fslot .fsbtn.rk:focus-visible{background:var(--gold);border-color:var(--gold);color:#14161a;
+  box-shadow:0 0 0 3px rgba(212,175,55,.18);outline:none}
+.fslot .fsbtn.rk:active{transform:translateY(1px)}
+/* a few slow pulses the first time the build step is seen, then it settles */
+.fslot .fsbtn.rk.nudge{animation:rknudge 1.7s ease-in-out 3}
+@keyframes rknudge{
+  0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0)}
+  45%{box-shadow:0 0 0 5px rgba(212,175,55,.22)}
+}
+@media (prefers-reduced-motion:reduce){.fslot .fsbtn.rk.nudge{animation:none}}
 .fslot .fsmeta{font-size:12px;color:#5f6675;letter-spacing:.03em;padding:3px 2px 0 6px;min-height:15px}
+/* one-line explainer above the bout list so the shortcut is discoverable
+   even before anyone notices the button */
+.buildhint{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:11px 14px;
+  border:1px solid var(--line);border-left:3px solid var(--gold);
+  background:linear-gradient(90deg,rgba(212,175,55,.09),transparent 70%);
+  color:var(--muted);font-size:13.5px;letter-spacing:.02em}
+.buildhint .kbd{display:inline-flex;align-items:center;gap:4px;color:#f4e3ad;font-family:'Oswald',sans-serif;
+  font-weight:600;font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(212,175,55,.5);
+  background:rgba(212,175,55,.14);border-radius:3px;padding:3px 7px;white-space:nowrap}
 .slotacts{display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:10px}
 .slotdel{background:none;border:none;color:#3f4553;cursor:pointer;font-size:15px;line-height:1;padding:2px}
 .slotdel:hover{color:#ff6b6b}
@@ -388,6 +424,9 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 .slotdel.tglt:hover{color:var(--gold)}
 .slotdel.tglt.on{color:var(--gold)}
 .dupwarn{color:#ff8a5c;font-size:12px;letter-spacing:.03em}
+/* status line under the poster action bar (PNG export) */
+.pngnote{text-align:center;color:var(--muted);font-size:12.5px;letter-spacing:.02em;line-height:1.35}
+.pngnote:not(:empty){padding:0 16px 11px}
 .slotres{position:absolute;z-index:40;top:100%;left:0;right:0;background:#0d0f13;border:1px solid var(--line);max-height:280px;overflow-y:auto;display:none;box-shadow:0 18px 40px rgba(0,0,0,.7)}
 .slotres.open{display:block}
 
@@ -471,12 +510,16 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 
 @media (max-width:820px){
   .szrow{grid-template-columns:1fr;gap:8px}
-  .slot{grid-template-columns:1fr;gap:6px;padding:12px 10px}
+  .slot{grid-template-columns:minmax(0,1fr);gap:6px;padding:12px 10px}
   .slotno{text-align:left;padding-top:0;display:flex;align-items:center;gap:6px;font-size:12px}
   .slotno b{display:inline;font-size:9.5px}
   .slotvs{text-align:left;padding-top:0;font-size:12px;color:#4d5462;letter-spacing:.16em}
   .slotacts{flex-direction:row;justify-content:flex-end;gap:14px;padding-top:0}
   .fslot input{font-size:15.5px}
+  /* fat-finger sizing on phones */
+  .fslot .fsbtn{width:34px;height:34px;font-size:16px}
+  .fslot .fsbtn.rk{width:auto;height:36px;padding:0 12px;font-size:11px}
+  .buildhint{font-size:13px}
   .pbrow{grid-template-columns:1fr 46px 1fr;padding:6px 8px 14px}
   .pface{width:56px;height:56px}
   .pbout.mainev .pface{width:82px;height:82px}
@@ -503,6 +546,9 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
   .cvwrap{padding:16px 8px 80px}
   .cvtop{padding:10px}
   .cvtop .cvttl{width:100%;margin-bottom:6px}
+  .cvacts{gap:7px}
+  .cvacts:not(:empty){padding:0 10px 10px}
+  .cvacts button.big{padding:11px 14px;font-size:11.5px;letter-spacing:.1em;flex:1 1 auto;min-width:0}
 }
 
 @media (max-width:820px){
@@ -676,12 +722,16 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 
 <!-- ===================== dream card builder ===================== -->
 <div class="cardview" id="cardview">
-  <div class="cvtop">
-    <div class="cvttl" id="cvttl">Build Your Dream Card<small>Fantasy Matchmaker</small></div>
-    <button class="mini" id="cvEdit" style="display:none">◀ Edit Card</button>
-    <button class="mini" id="cvShuffle" style="display:none">Shuffle Empty</button>
-    <button class="mini" id="cvRestart">Start Over</button>
-    <button class="mini warn" id="cvClose">✕ Close</button>
+  <div class="cvhead">
+    <div class="cvtop">
+      <div class="cvttl" id="cvttl">Build Your Dream Card<small>Fantasy Matchmaker</small></div>
+      <button class="mini" id="cvEdit" style="display:none">◀ Edit Card</button>
+      <button class="mini" id="cvShuffle" style="display:none">Shuffle Empty</button>
+      <button class="mini" id="cvRestart">Start Over</button>
+      <button class="mini warn" id="cvClose">✕ Close</button>
+    </div>
+    <div class="cvacts" id="cvacts"></div>
+    <div class="pngnote" id="pngnote"></div>
   </div>
   <div class="cvwrap" id="cvbody"></div>
 </div>
@@ -737,7 +787,8 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 <footer>
   Fight history &amp; physicals from <a href="http://ufcstats.com" target="_blank" rel="noopener">UFCStats</a> ·
   Photos, bios &amp; divisional rankings from the UFC athlete roster.<br>
-  Records shown are UFC-only unless labelled "Pro". Not affiliated with UFC / Zuffa.
+  Records shown are full professional records where the roster feed supplies one, reconciled against
+  UFCStats; rows labelled "UFC" count octagon bouts only. Not affiliated with UFC / Zuffa.
 </footer>
 
 <script>
@@ -1166,9 +1217,87 @@ function step(msg){
 }
 
 async function getText(url){
-  const r = await fetch(url, {cache:"force-cache"});
+  /* "no-cache" still uses the disk cache, but revalidates with the server first,
+     so an upstream CSV update lands on the next page load instead of never. */
+  const r = await fetch(url, {cache:"no-cache"});
   if(!r.ok) throw new Error(url + " → HTTP " + r.status);
   return r.text();
+}
+
+/* ==================== pro record reconciliation ====================
+   Two sources disagree about a fighter's record:
+     f.rec — UFC-only, tallied from the UFCStats CSVs, always current
+     f.pro — full pro record from the roster feed, which lags by weeks
+   The roster feed is the only place pre-UFC fights live, so we can't just throw
+   it away when it's stale (that turns Ilia Topuria into 9-1 instead of 17-1).
+   Instead, work out which recent UFC cards the feed hasn't ingested yet and add
+   those results on top of the pro totals.
+
+   The leverage: every bout has a loser, so any card the feed is missing surfaces
+   as at least one fighter whose pro losses trail their UFC losses. That pins the
+   feed's cutoff date for the whole roster — including the winners on those
+   cards, whose staleness would otherwise be invisible in the totals. */
+const MAX_PEEL = 6;         /* more missing fights than this = bad data, not lag */
+const MAX_STALE_DAYS = 180; /* a cutoff older than this is a bug, not a stale feed */
+
+function reconcileProRecords(){
+  let newest = 0;
+  for(const f of DB.byKey.values())
+    for(const g of f.fights)
+      if(g.date && g.date.getTime() > newest) newest = g.date.getTime();
+
+  /* --- pass 1: find the oldest fight the feed appears not to know about --- */
+  let cutoff = null;
+  for(const f of DB.byKey.values()){
+    if(!f.pro || !f.fights.length) continue;
+    let w = f.rec.w, l = f.rec.l, peeled = [];
+    for(const g of f.fights){                  /* already sorted newest-first */
+      if(f.pro.w >= w && f.pro.l >= l) break;  /* totals are plausible again */
+      if(peeled.length >= MAX_PEEL){ peeled = null; break; }
+      if(g.res === "W") w--; else if(g.res === "L") l--;
+      peeled.push(g);
+    }
+    if(!peeled) continue;
+    for(const g of peeled){
+      if(!g.date) continue;
+      const t = g.date.getTime();
+      /* A record that's been inconsistent for years (an overturned result the
+         feed and UFCStats score differently) is a data quirk, not lag — ignore
+         it so one bad fighter can't drag the cutoff back and over-merge
+         everybody else. */
+      if(newest && (newest - t) > MAX_STALE_DAYS*864e5) continue;
+      if(cutoff === null || t < cutoff) cutoff = t;
+    }
+  }
+  if(cutoff !== null)
+    console.info("roster feed is missing UFC results from " +
+                 new Date(cutoff).toDateString() + " onward — merging them in");
+
+  /* --- pass 2: top each pro record up with the results the feed is missing --- */
+  for(const f of DB.byKey.values()){
+    if(!f.pro) continue;
+    if(cutoff !== null){
+      let w=0, l=0, d=0;
+      for(const g of f.fights){
+        if(!g.date || g.date.getTime() < cutoff) continue;
+        if(g.res === "W") w++; else if(g.res === "L") l++; else if(g.res === "D") d++;
+      }
+      /* If this fighter has a loss after the cutoff and the feed's loss count
+         already covers our tally, the feed is current for them — adding again
+         would invent a phantom loss. */
+      const alreadyCurrent = l > 0 && f.pro.l >= f.rec.l;
+      if((w||l||d) && !alreadyCurrent)
+        f.pro = {w:f.pro.w+w, l:f.pro.l+l, d:f.pro.d+d, merged:true};
+    }
+    /* A pro record can never be smaller than the UFC-only one. If it still is,
+       the feed is wrong in a way we can't repair — fall back to f.rec. */
+    if(f.pro.w < f.rec.w || f.pro.l < f.rec.l){
+      console.warn("unreconcilable roster record for " + f.name + ": " +
+                   f.pro.w + "-" + f.pro.l + " vs UFC-only " +
+                   f.rec.w + "-" + f.rec.l + " — using UFC record");
+      f.pro = null;
+    }
+  }
 }
 
 async function boot(){
@@ -1231,8 +1360,8 @@ async function boot(){
     /* --- official roster: photos, nicknames, bios (active athletes) --- */
     /* --- official rankings: top 15 + champion per division --- */
     const [rr, rkr] = await Promise.all([
-      fetch(SRC.roster, {cache:"force-cache"}).catch(e=>{ console.warn("roster fetch failed:", e); return null; }),
-      fetch(SRC.rankings, {cache:"force-cache"}).catch(e=>{ console.warn("rankings fetch failed:", e); return null; })
+      fetch(SRC.roster, {cache:"no-cache"}).catch(e=>{ console.warn("roster fetch failed:", e); return null; }),
+      fetch(SRC.rankings, {cache:"no-cache"}).catch(e=>{ console.warn("rankings fetch failed:", e); return null; })
     ]);
     try{
       if(rr && rr.ok){
@@ -1285,6 +1414,7 @@ async function boot(){
       f.searchable = norm(f.name) + " " + norm(f.nickname);
       f.sortName = f.name.split(/\s+/).slice(-1)[0].toLowerCase();
     }
+    reconcileProRecords();
     DB.list = [...DB.byKey.values()]
       .filter(f => f.fights.length > 0 || f.img)
       .sort((a,b)=> b.fights.length - a.fights.length);
@@ -1297,6 +1427,7 @@ async function boot(){
       }
       RANKED_FIGHTERS = [...names].map(resolveFighter);
     }
+    buildDefaultPicks();
 
     $("#loader").style.opacity="0";
     setTimeout(()=>$("#loader").remove(), 400);
@@ -1338,6 +1469,55 @@ function tally(fights){
            finishes, finishRate: w? finishes/w : 0,
            avgSecs: timed? secs/timed : null,
            streak, streakKind:sk, total:fights.length };
+}
+
+/* The record every part of the UI should show: the full pro record when the
+   roster feed gives us one (reconciled against UFCStats at load), otherwise the
+   UFC-only tally. One helper so the search rows, ranking rows and the tale of
+   the tape can never disagree with each other. */
+/* What the pickers show before you type anything.
+
+   DB.list is sorted by career UFC fight count, which is the right order for
+   "who has the most data" but a poor opening screen — it leads with journeymen
+   who racked up 25 prelim bouts. Lead with pound-for-pound instead, then
+   champions, then the rest of the ranked pool, and let the octagon veterans
+   fill the tail. */
+let DEFAULT_PICKS = [];
+function buildDefaultPicks(){
+  const seen = new Set(), out = [];
+  const push = f => { if(f && f.key && !seen.has(f.key)){ seen.add(f.key); out.push(f); } };
+
+  /* tier 0/1 = pound-for-pound (men, then women), 2 = division champs,
+     3 = everyone else with a divisional ranking */
+  const tierOf = f => {
+    const e = ranksFor(f);
+    if(!e) return null;
+    if(e.p4pMen   != null) return {tier:0, n:e.p4pMen};
+    if(e.p4pWomen != null) return {tier:1, n:e.p4pWomen};
+    if(e.divisions.some(d=>d.champ)) return {tier:2, n:0};
+    if(e.divisions.length) return {tier:3, n:Math.min(...e.divisions.map(d=>d.rank))};
+    return null;
+  };
+
+  const ranked = [];
+  for(const f of RANKED_FIGHTERS){
+    const t = tierOf(f);
+    if(t) ranked.push({f, tier:t.tier, n:t.n});
+  }
+  ranked.sort((a,b)=> a.tier-b.tier || a.n-b.n || a.f.name.localeCompare(b.f.name));
+  for(const x of ranked) push(x.f);
+
+  for(const f of DB.list) push(f);   /* legends and veterans fill the tail */
+  DEFAULT_PICKS = out;
+}
+function defaultPicks(n){
+  return (DEFAULT_PICKS.length ? DEFAULT_PICKS : DB.list).slice(0, n);
+}
+
+function recOf(f){ return f ? (f.pro || f.rec || null) : null; }
+function recStr(f){
+  const r = recOf(f);
+  return r ? r.w+"-"+r.l+(r.d?"-"+r.d:"") : "—";
 }
 
 /* ============================================================
@@ -1492,7 +1672,7 @@ function makePicker(side){
 
   function search(q){
     const nq=norm(q);
-    if(!nq) return DB.list.slice(0,40);
+    if(!nq) return defaultPicks(40);   /* P4P → champions → ranked → veterans */
     const starts=[], contains=[];
     if(danaMatch(nq)) starts.push(buildDana());   /* easter egg — only ever by name */
     for(const f of DB.list){
@@ -1513,7 +1693,7 @@ function makePicker(side){
         '<span class="dot'+(f.img?"":" off")+'"></span>'+
         '<span class="nm">'+esc(f.name)+'</span>'+
         (f.nickname?'<span class="nk">"'+esc(f.nickname)+'"</span>':'')+
-        '<span class="meta">'+esc(f.division||"—")+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')+'</span>';
+        '<span class="meta">'+esc(f.division||"—")+' · '+recStr(f)+'</span>';
       r.addEventListener("mousedown", ev=>{ ev.preventDefault(); choose(f); });
       box.appendChild(r);
     });
@@ -1911,7 +2091,7 @@ function renderRankList(){
       ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent=&quot;'+esc(initials(r.name))+'&quot;">'
       : esc(initials(r.name));
     const meta = f
-      ? esc(f.division||cat.categoryName)+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')
+      ? esc(f.division||cat.categoryName)+' · '+recStr(f)
       : esc(cat.categoryName);
     const nick = f && f.nickname ? '<span class="rknick">"'+esc(f.nickname)+'"</span>' : '';
     const row=el("div","rkrow"+(isA?" sel-a":"")+(isB?" sel-b":""));
@@ -2232,7 +2412,7 @@ function usedKeys(exceptBout){
 /* ---------- shared fighter search ---------- */
 function fsearch(q){
   const nq=norm(q);
-  if(!nq) return DB.list.slice(0,40);
+  if(!nq) return defaultPicks(40);   /* P4P → champions → ranked → veterans */
   const starts=[], contains=[];
   if(danaMatch(nq)) starts.push(buildDana());   /* he can headline a fantasy card too */
   for(const f of DB.list){
@@ -2247,7 +2427,7 @@ function resultRowHTML(f){
   return '<span class="dot'+(f.img?"":" off")+'"></span>'+
     '<span class="nm">'+esc(f.name)+'</span>'+
     (f.nickname?'<span class="nk">"'+esc(f.nickname)+'"</span>':'')+
-    '<span class="meta">'+esc(f.division||"—")+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'')+'</span>';
+    '<span class="meta">'+esc(f.division||"—")+' · '+recStr(f)+'</span>';
 }
 
 /* ---------- open / close ---------- */
@@ -2274,6 +2454,7 @@ function renderCardView(){
     ? esc(CARD.name || "Your Dream Card")+"<small>Tap a fighter for the tape</small>"
     : "Build Your Dream Card<small>"+(CARD_STEP==="build"?"Make the matchups":"Set the card")+"</small>";
   host.innerHTML="";
+  $("#cvacts").innerHTML=""; $("#pngnote").textContent="";
   if(CARD_STEP==="setup")  renderSetup(host);
   if(CARD_STEP==="build")  renderBuild(host);
   if(CARD_STEP==="poster") renderPoster(host);
@@ -2298,7 +2479,7 @@ function renderSetup(host){
   const bar=el("div","gobar");
   bar.innerHTML='<button class="big" id="setupGo">Make the Matchups →</button>'+
                 '<button class="big ghost" id="setupRandom">Surprise Me — Random Card</button>';
-  box.appendChild(bar);
+  $("#cvacts").appendChild(bar);
   host.appendChild(box);
 
   box.querySelectorAll(".szopt").forEach(b=>{
@@ -2325,6 +2506,13 @@ function applySetup(){
 /* ---------- step 2: build ---------- */
 function renderBuild(host){
   const dups=usedKeys(null);
+  if(ranksReady()){
+    const hint=el("div","buildhint");
+    hint.innerHTML='<span>Type a fighter\'s name to search — or hit</span>'+
+      '<span class="kbd"><span aria-hidden="true">★</span> RANKINGS</span>'+
+      '<span>to pick straight from the official top 15.</span>';
+    host.appendChild(hint);
+  }
   CARD.sections.forEach(sec=>{
     const def=secDef(sec.id);
     const block=el("div","secblock");
@@ -2373,7 +2561,7 @@ function renderBuild(host){
     (dupNames.length?'<div style="width:100%;text-align:center;margin-bottom:6px" class="dupwarn">Booked twice on this card: '+esc(dupNames.join(", "))+'</div>':'')+
     '<button class="big" id="buildGo">See the Card →</button>'+
     '<button class="big ghost" id="buildBack">◀ Change Card Size</button>';
-  host.appendChild(bar);
+  $("#cvacts").appendChild(bar);
   $("#buildGo").disabled = filled===0;
   $("#buildGo").onclick=()=>{ CARD_STEP="poster"; renderCardView(); window.scrollTo(0,0); };
   $("#buildBack").onclick=()=>{ CARD_STEP="setup"; renderCardView(); window.scrollTo(0,0); };
@@ -2390,7 +2578,13 @@ function fighterSlot(bout, side){
     '<div class="fsin">'+
       '<span class="fsav">'+av+'</span>'+
       '<input type="text" placeholder="'+(side==="a"?"Red corner…":"Blue corner…")+'" autocomplete="off" spellcheck="false" value="'+esc(f?f.name:"")+'">'+
-      (f?'<button class="fsbtn" title="Clear">✕</button>':'<button class="fsbtn rk" title="Pick from rankings">RANK</button>')+
+      (f
+        ? '<button type="button" class="fsbtn" title="Clear this corner" aria-label="Clear this corner">✕</button>'
+        : (ranksReady()
+            ? '<button type="button" class="fsbtn rk'+(RP_USED?"":" nudge")+'" '+
+              'title="Pick from the official UFC rankings" aria-label="Pick from the official UFC rankings">'+
+              '<span class="rkstar" aria-hidden="true">★</span>RANKINGS</button>'
+            : ''))+
     '</div>'+
     '<div class="fsmeta"></div>'+
     '<div class="slotres"></div>';
@@ -2404,7 +2598,7 @@ function fighterSlot(bout, side){
     const bits=[];
     if(pr) bits.push(pr.champ?"Champion":"#"+pr.rank);
     if(f.division) bits.push(f.division);
-    bits.push(f.rec.w+"-"+f.rec.l+(f.rec.d?"-"+f.rec.d:""));
+    bits.push(recStr(f));
     const dup=usedKeys(bout).get(f.key);
     meta.innerHTML = esc(bits.join(" · ")) + (dup?' <span class="dupwarn">· also booked elsewhere</span>':'');
   }
@@ -2431,7 +2625,8 @@ function fighterSlot(bout, side){
     if(e.key==="Enter"){ e.preventDefault(); const l=fsearch(input.value); if(l.length) pick(l[0]); }
     if(e.key==="Escape") box.classList.remove("open");
   });
-  wrap.querySelector(".fsbtn").onclick=()=>{
+  const btn=wrap.querySelector(".fsbtn");
+  if(btn) btn.onclick=()=>{
     if(f){ bout[side]=null; renderCardView(); }
     else openRankPick(bout, side);
   };
@@ -2440,8 +2635,12 @@ function fighterSlot(bout, side){
 
 /* ---------- rankings picker modal ---------- */
 const RP={ bout:null, side:null, active:null };
+let RP_USED=false;   // once they've found the button, stop nudging
+function ranksReady(){ return !!(RANKINGS && RANKINGS.length); }
 function openRankPick(bout, side){
-  if(!RANKINGS||!RANKINGS.length) return;   // rankings feed unavailable — search box still works
+  if(!ranksReady()) return;   // rankings feed unavailable — search box still works
+  RP_USED=true;
+  if(window.posthog) posthog.capture('button_clicked', { button:'slot_rankings_picker', corner:side });
   RP.bout=bout; RP.side=side; RP.active=RP.active||RANKINGS[0].id;
   $("#rpsub").textContent = (side==="a"?"Red corner":"Blue corner");
   const pills=$("#rpdivpills"); pills.innerHTML="";
@@ -2459,7 +2658,7 @@ function openRankPick(bout, side){
     const img = f&&f.img
       ? '<img src="'+esc(f.img)+'" alt="" loading="lazy" onerror="this.parentElement.textContent=&quot;'+esc(initials(r.name))+'&quot;">'
       : esc(initials(r.name));
-    const meta = (f? esc(f.division||cat.categoryName)+' · '+f.rec.w+'-'+f.rec.l+(f.rec.d?'-'+f.rec.d:'') : esc(cat.categoryName))
+    const meta = (f? esc(f.division||cat.categoryName)+' · '+recStr(f) : esc(cat.categoryName))
       + (taken.get(key)?' · <span class="dupwarn">on this card</span>':'');
     const row=el("div","rkrow");
     row.innerHTML=
@@ -2525,8 +2724,7 @@ function posterSideHTML(f, side){
   let tag="";
   if(pr) tag='<span class="prk'+(pr.champ?" champ":"")+'">'+(pr.champ?"CHAMPION":"#"+pr.rank)+'</span>';
   else if(rk&&(rk.p4pMen||rk.p4pWomen)) tag='<span class="prk">P4P #'+(rk.p4pMen||rk.p4pWomen)+'</span>';
-  const r=f.pro||f.rec;
-  const rec=(f.pro? f.pro.w+"-"+f.pro.l+(f.pro.d?"-"+f.pro.d:"") : f.rec.w+"-"+f.rec.l+(f.rec.d?"-"+f.rec.d:""));
+  const rec = recStr(f);
   return '<div class="pside '+side+'">'+
     '<span class="pface">'+img+'</span>'+
     '<span class="pinfo">'+
@@ -2572,10 +2770,14 @@ function renderPoster(host){
   host.appendChild(poster);
 
   const bar=el("div","gobar");
-  bar.innerHTML='<button class="big" id="postEdit">◀ Edit Matchups</button>'+
+  bar.innerHTML='<button class="big" id="postPng">⬇ Download PNG</button>'+
+                '<button class="big ghost" id="postEdit">◀ Edit Matchups</button>'+
                 '<button class="big ghost" id="postLink">Copy Card Link</button>'+
                 '<button class="big ghost" id="postClose">Back to Comparison</button>';
-  host.appendChild(bar);
+  $("#cvacts").appendChild(bar);
+  const pnote=$("#pngnote");
+  $("#postPng").disabled = filled.length===0 && !bouts.some(x=>x.bout.a||x.bout.b);
+  $("#postPng").onclick=()=> downloadPosterPNG($("#postPng"), pnote);
   $("#postEdit").onclick=()=>{ CARD_STEP="build"; renderCardView(); window.scrollTo(0,0); };
   $("#postClose").onclick=closeCardView;
   $("#postLink").onclick=async()=>{
@@ -2585,6 +2787,685 @@ function renderPoster(host){
     setTimeout(()=>$("#postLink").textContent="Copy Card Link",1500);
   };
   history.replaceState(null,"","#"+encodeCard());
+}
+
+/* ======================= poster PNG export =======================
+   Renders the finished card to a canvas in the traditional fight-poster
+   layout — headline bout large, undercard in rows, a band between each
+   section — and hands it back as a PNG download.
+
+   Photos are fetched with crossOrigin="anonymous" so the canvas can never
+   be tainted and toBlob() can't throw. Any photo whose host refuses CORS
+   falls back to an initials tile, so the export always produces a file. */
+
+const PX = {
+  W:1500, SS:2, PAD:60,          // SS = supersample factor, downscaled on export
+  bg:"#08090b", line:"#23262e", text:"#f2f3f5", muted:"#8d94a3", dim:"#5f6675",
+  gold:"#d4af37", goldSoft:"#f4e3ad", red:"#d20a0a", redHot:"#ff6a6a",
+  blue:"#1567d3", blueHot:"#6aaaff"
+};
+const F_OSW = "Oswald, 'Barlow Condensed', Impact, sans-serif";
+const F_BAR = "'Barlow Condensed', Oswald, sans-serif";
+
+/* photo sizes per tier. `per` is the canonical bouts-per-row: short rows are
+   centred rather than stretched, so every photo in a tier is the same size. */
+const PTIER = {
+  hd:{per:2, cellGap:34, inner:20, pw:300, ph:376, name:44, sub:18, tag:14, pad:34},
+  md:{per:3, cellGap:26, inner:14, pw:205, ph:256, name:30, sub:14, tag:12, pad:28},
+  sm:{per:4, cellGap:22, inner:11, pw:152, ph:190, name:23, sub:12, tag:10, pad:24}
+};
+const PBAND_H = 64, PHEAD_PAD = 34, PFOOT_H = 100;
+
+/* ---- name helpers: posters use surnames ---- */
+const NM_SUFFIX  =/^(jr|jr\.|sr|sr\.|ii|iii|iv)$/i;
+const NM_PARTICLE=/^(da|das|de|del|della|do|dos|van|von|la|le|di|st|st\.|ten|ter)$/i;
+function surnameOf(name){
+  const p=String(name||"").trim().split(/\s+/).filter(Boolean);
+  if(!p.length) return "";
+  let i=p.length-1;
+  while(i>0 && NM_SUFFIX.test(p[i])) i--;
+  let s=i;
+  if(s>0 && NM_PARTICLE.test(p[s-1])) s--;
+  return p.slice(s,i+1).join(" ").toUpperCase();
+}
+/* "WORLD LIGHTWEIGHT CHAMPIONSHIP" / "MIDDLEWEIGHT BOUT", as a real card reads.
+   Returns longest-to-shortest so a narrow cell can step down instead of
+   bleeding into its neighbour. */
+function posterSubOptions(b){
+  const wc=(boutWeight(b)||"").toUpperCase();
+  if(b.title) return wc ? ["WORLD "+wc+" CHAMPIONSHIP", wc+" TITLE", "TITLE FIGHT"] : ["TITLE FIGHT"];
+  if(/CATCHWEIGHT/.test(wc)) return [wc+" BOUT","CATCHWEIGHT BOUT","CATCHWEIGHT"];
+  return wc ? [wc+" BOUT", wc] : [];
+}
+
+/* ---- canvas primitives ---- */
+function rr(c,x,y,w,h,r){
+  if(c.roundRect){ c.beginPath(); c.roundRect(x,y,w,h,r); return; }
+  c.beginPath();
+  c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r);
+  c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath();
+}
+function drawCoverTop(c,img,x,y,w,h){
+  const iw=img.naturalWidth||img.width, ih=img.naturalHeight||img.height;
+  if(!iw||!ih) return;
+  const ir=iw/ih, dr=w/h;
+  let sw,sh,sx;
+  if(ir>dr){ sh=ih; sw=sh*dr; sx=(iw-sw)/2; }   /* crop the sides */
+  else     { sw=iw; sh=sw/dr; sx=0; }           /* crop the bottom, keep the head */
+  c.drawImage(img,sx,0,sw,sh,x,y,w,h);
+}
+/* manual letter-spacing — ctx.letterSpacing is too new to rely on */
+function trackedWidth(c,t,sp){
+  const ch=[...t]; let w=0;
+  for(const x of ch) w+=c.measureText(x).width+sp;
+  return ch.length? w-sp : 0;
+}
+function drawTracked(c,t,x,y,sp,align){
+  const ch=[...t], total=trackedWidth(c,t,sp);
+  let cx = align==="center" ? x-total/2 : align==="right" ? x-total : x;
+  for(const g of ch){ c.fillText(g,cx,y); cx+=c.measureText(g).width+sp; }
+  return total;
+}
+/* shrink until it fits, never below min */
+function fitSize(c,text,maxW,weight,fam,start,min,sp){
+  let s=start;
+  for(; s>min; s--){
+    c.font=weight+" "+s+"px "+fam;
+    const w = sp ? trackedWidth(c,text,sp*s) : c.measureText(text).width;
+    if(w<=maxW) break;
+  }
+  c.font=weight+" "+s+"px "+fam;
+  return s;
+}
+
+/* ---- flags, drawn as rectangles: emoji flags don't render on Windows ---- */
+function fB(c,x,y,w,h,cols,vert){
+  const n=cols.length;
+  for(let i=0;i<n;i++){
+    if(vert) c.fillStyle=cols[i], c.fillRect(x+Math.round(w*i/n),y,Math.ceil(w/n)+1,h);
+    else     c.fillStyle=cols[i], c.fillRect(x,y+Math.round(h*i/n),w,Math.ceil(h/n)+1);
+  }
+}
+const H=(...c0)=>(c,x,y,w,h)=>fB(c,x,y,w,h,c0,false);
+const V=(...c0)=>(c,x,y,w,h)=>fB(c,x,y,w,h,c0,true);
+const N=(field,cross,inner)=>(c,x,y,w,h)=>{             /* nordic cross */
+  c.fillStyle=field; c.fillRect(x,y,w,h);
+  const t=Math.max(2,Math.round(h*.2)), cx=x+Math.round(w*.36), cy=y+h/2;
+  if(inner){ const t2=t+Math.max(2,Math.round(h*.16));
+    c.fillStyle=inner; c.fillRect(x,cy-t2/2,w,t2); c.fillRect(cx-t2/2,y,t2,h); }
+  c.fillStyle=cross; c.fillRect(x,cy-t/2,w,t); c.fillRect(cx-t/2,y,t,h);
+};
+function disc(c,cx,cy,r,col){ c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.fillStyle=col; c.fill(); }
+function star(c,cx,cy,r,col){
+  c.beginPath();
+  for(let i=0;i<10;i++){ const a=-Math.PI/2+i*Math.PI/5, rr2=i%2?r*.42:r;
+    c[i?"lineTo":"moveTo"](cx+Math.cos(a)*rr2, cy+Math.sin(a)*rr2); }
+  c.closePath(); c.fillStyle=col; c.fill();
+}
+const FLAGS = {
+  /* ---- custom ---- */
+  usa:(c,x,y,w,h)=>{ c.fillStyle="#b22234"; c.fillRect(x,y,w,h);
+    c.fillStyle="#fff"; for(let i=1;i<13;i+=2) c.fillRect(x,y+h*i/13,w,h/13);
+    c.fillStyle="#3c3b6e"; c.fillRect(x,y,w*.42,h*7/13); },
+  uk:(c,x,y,w,h)=>{ c.fillStyle="#012169"; c.fillRect(x,y,w,h);
+    c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+    c.strokeStyle="#fff"; c.lineWidth=h*.24;
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w,y+h); c.moveTo(x+w,y); c.lineTo(x,y+h); c.stroke();
+    c.strokeStyle="#C8102E"; c.lineWidth=h*.12; c.stroke();
+    c.strokeStyle="#fff"; c.lineWidth=h*.34;
+    c.beginPath(); c.moveTo(x,y+h/2); c.lineTo(x+w,y+h/2); c.moveTo(x+w/2,y); c.lineTo(x+w/2,y+h); c.stroke();
+    c.strokeStyle="#C8102E"; c.lineWidth=h*.2; c.stroke(); c.restore(); },
+  england:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h);
+    c.strokeStyle="#C8102E"; c.lineWidth=h*.22;
+    c.beginPath(); c.moveTo(x,y+h/2); c.lineTo(x+w,y+h/2); c.moveTo(x+w/2,y); c.lineTo(x+w/2,y+h); c.stroke(); },
+  scotland:(c,x,y,w,h)=>{ c.fillStyle="#005EB8"; c.fillRect(x,y,w,h);
+    c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+    c.strokeStyle="#fff"; c.lineWidth=h*.22;
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w,y+h); c.moveTo(x+w,y); c.lineTo(x,y+h); c.stroke(); c.restore(); },
+  wales:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h/2);
+    c.fillStyle="#00AD43"; c.fillRect(x,y+h/2,w,h/2);
+    c.fillStyle="#C8102E"; c.fillRect(x+w*.3,y+h*.34,w*.42,h*.3); },
+  brazil:(c,x,y,w,h)=>{ c.fillStyle="#009B3A"; c.fillRect(x,y,w,h);
+    c.beginPath(); c.moveTo(x+w/2,y+h*.1); c.lineTo(x+w*.92,y+h/2);
+    c.lineTo(x+w/2,y+h*.9); c.lineTo(x+w*.08,y+h/2); c.closePath();
+    c.fillStyle="#FEDF00"; c.fill(); disc(c,x+w/2,y+h/2,h*.2,"#002776"); },
+  canada:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h);
+    c.fillStyle="#D80621"; c.fillRect(x,y,w*.26,h); c.fillRect(x+w*.74,y,w*.26,h);
+    c.fillRect(x+w*.44,y+h*.2,w*.12,h*.6);
+    c.beginPath(); c.moveTo(x+w/2,y+h*.14); c.lineTo(x+w*.63,y+h*.55);
+    c.lineTo(x+w*.37,y+h*.55); c.closePath(); c.fill(); },
+  japan:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h); disc(c,x+w/2,y+h/2,h*.3,"#BC002D"); },
+  southkorea:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h);
+    disc(c,x+w/2,y+h/2,h*.26,"#CD2E3A");
+    c.save(); c.beginPath(); c.arc(x+w/2,y+h/2,h*.26,Math.PI*.75,Math.PI*1.75); c.closePath(); c.clip();
+    c.fillStyle="#0047A0"; c.fillRect(x,y,w,h); c.restore(); },
+  china:(c,x,y,w,h)=>{ c.fillStyle="#DE2910"; c.fillRect(x,y,w,h);
+    star(c,x+w*.18,y+h*.3,h*.18,"#FFDE00");
+    [[.34,.14],[.42,.28],[.42,.48],[.34,.62]].forEach(p=>star(c,x+w*p[0],y+h*p[1],h*.07,"#FFDE00")); },
+  australia:(c,x,y,w,h)=>{ c.fillStyle="#00008B"; c.fillRect(x,y,w,h);
+    FLAGS.uk(c,x,y,w*.5,h*.5); star(c,x+w*.25,y+h*.76,h*.13,"#fff");
+    [[.66,.28],[.78,.5],[.7,.74],[.86,.66],[.74,.44]].forEach(p=>star(c,x+w*p[0],y+h*p[1],h*.09,"#fff")); },
+  newzealand:(c,x,y,w,h)=>{ c.fillStyle="#00247D"; c.fillRect(x,y,w,h);
+    FLAGS.uk(c,x,y,w*.5,h*.5);
+    [[.68,.3],[.8,.52],[.7,.74],[.86,.66]].forEach(p=>star(c,x+w*p[0],y+h*p[1],h*.1,"#C8102E")); },
+  switzerland:(c,x,y,w,h)=>{ c.fillStyle="#DA291C"; c.fillRect(x,y,w,h);
+    c.fillStyle="#fff"; c.fillRect(x+w*.42,y+h*.2,w*.16,h*.6); c.fillRect(x+w*.28,y+h*.4,w*.44,h*.2); },
+  georgia:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h);
+    c.fillStyle="#FF0000"; c.fillRect(x+w*.42,y,w*.16,h); c.fillRect(x,y+h*.4,w,h*.2);
+    [[.2,.2],[.78,.2],[.2,.78],[.78,.78]].forEach(p=>{
+      c.fillRect(x+w*p[0]-w*.05,y+h*p[1]-h*.03,w*.1,h*.06);
+      c.fillRect(x+w*p[0]-w*.02,y+h*p[1]-h*.1,w*.04,h*.2); }); },
+  greece:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#0D5EAF","#fff","#0D5EAF","#fff","#0D5EAF","#fff","#0D5EAF","#fff","#0D5EAF"],false);
+    c.fillStyle="#0D5EAF"; c.fillRect(x,y,w*.36,h*5/9);
+    c.fillStyle="#fff"; c.fillRect(x+w*.14,y,w*.08,h*5/9); c.fillRect(x,y+h*.2,w*.36,h*.09); },
+  portugal:(c,x,y,w,h)=>{ c.fillStyle="#046A38"; c.fillRect(x,y,w*.4,h);
+    c.fillStyle="#DA291C"; c.fillRect(x+w*.4,y,w*.6,h); disc(c,x+w*.4,y+h/2,h*.24,"#FFE900");
+    disc(c,x+w*.4,y+h/2,h*.14,"#DA291C"); },
+  spain:(c,x,y,w,h)=>{ c.fillStyle="#AA151B"; c.fillRect(x,y,w,h);
+    c.fillStyle="#F1BF00"; c.fillRect(x,y+h*.25,w,h*.5);
+    c.fillStyle="#AA151B"; c.fillRect(x+w*.2,y+h*.36,w*.14,h*.28); },
+  southafrica:(c,x,y,w,h)=>{ c.fillStyle="#DE3831"; c.fillRect(x,y,w,h*.5);
+    c.fillStyle="#002395"; c.fillRect(x,y+h*.5,w,h*.5);
+    /* the horizontal green Y, white-fimbriated, with the black/gold hoist wedge */
+    c.strokeStyle="#fff"; c.lineWidth=h*.30;
+    c.beginPath(); c.moveTo(x+w*.26,y+h/2); c.lineTo(x+w,y+h/2); c.stroke();
+    c.beginPath(); c.moveTo(x-w*.06,y-h*.06); c.lineTo(x+w*.4,y+h/2); c.lineTo(x-w*.06,y+h*1.06); c.stroke();
+    c.strokeStyle="#007A4D"; c.lineWidth=h*.18;
+    c.beginPath(); c.moveTo(x+w*.26,y+h/2); c.lineTo(x+w,y+h/2); c.stroke();
+    c.beginPath(); c.moveTo(x-w*.06,y+h*.02); c.lineTo(x+w*.34,y+h/2); c.lineTo(x-w*.06,y+h*.98); c.stroke();
+    c.save(); c.beginPath(); c.moveTo(x,y+h*.14); c.lineTo(x+w*.2,y+h/2); c.lineTo(x,y+h*.86); c.closePath();
+    c.fillStyle="#000"; c.fill(); c.restore(); },
+  cuba:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#002A8F","#fff","#002A8F","#fff","#002A8F"],false);
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w*.4,y+h/2); c.lineTo(x,y+h); c.closePath();
+    c.fillStyle="#CF142B"; c.fill(); star(c,x+w*.14,y+h/2,h*.16,"#fff"); },
+  puertorico:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#EF3340","#fff","#EF3340","#fff","#EF3340"],false);
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w*.4,y+h/2); c.lineTo(x,y+h); c.closePath();
+    c.fillStyle="#0050F0"; c.fill(); star(c,x+w*.14,y+h/2,h*.16,"#fff"); },
+  chile:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h*.5);
+    c.fillStyle="#D52B1E"; c.fillRect(x,y+h*.5,w,h*.5);
+    c.fillStyle="#0039A6"; c.fillRect(x,y,w*.33,h*.5); star(c,x+w*.165,y+h*.25,h*.16,"#fff"); },
+  philippines:(c,x,y,w,h)=>{ c.fillStyle="#0038A8"; c.fillRect(x,y,w,h*.5);
+    c.fillStyle="#CE1126"; c.fillRect(x,y+h*.5,w,h*.5);
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w*.42,y+h/2); c.lineTo(x,y+h); c.closePath();
+    c.fillStyle="#fff"; c.fill(); disc(c,x+w*.13,y+h/2,h*.13,"#FCD116"); },
+  turkey:(c,x,y,w,h)=>{ c.fillStyle="#E30A17"; c.fillRect(x,y,w,h);
+    disc(c,x+w*.36,y+h/2,h*.24,"#fff"); disc(c,x+w*.42,y+h/2,h*.19,"#E30A17");
+    star(c,x+w*.6,y+h/2,h*.14,"#fff"); },
+  israel:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h);
+    c.fillStyle="#0038B8"; c.fillRect(x,y+h*.12,w,h*.12); c.fillRect(x,y+h*.76,w,h*.12);
+    c.strokeStyle="#0038B8"; c.lineWidth=Math.max(1,h*.05);
+    const r=h*.22, cx=x+w/2, cy=y+h/2;
+    c.beginPath(); c.moveTo(cx,cy-r); c.lineTo(cx+r*.87,cy+r*.5); c.lineTo(cx-r*.87,cy+r*.5); c.closePath();
+    c.moveTo(cx,cy+r); c.lineTo(cx+r*.87,cy-r*.5); c.lineTo(cx-r*.87,cy-r*.5); c.closePath(); c.stroke(); },
+  vietnam:(c,x,y,w,h)=>{ c.fillStyle="#DA251D"; c.fillRect(x,y,w,h); star(c,x+w/2,y+h/2,h*.3,"#FFFF00"); },
+  morocco:(c,x,y,w,h)=>{ c.fillStyle="#C1272D"; c.fillRect(x,y,w,h);
+    c.strokeStyle="#006233"; c.lineWidth=Math.max(1,h*.06);
+    const r=h*.26, cx=x+w/2, cy=y+h/2; c.beginPath();
+    for(let i=0;i<5;i++){ const a=-Math.PI/2+i*2*Math.PI*2/5;
+      c[i?"lineTo":"moveTo"](cx+Math.cos(a)*r, cy+Math.sin(a)*r); }
+    c.closePath(); c.stroke(); },
+  mexico:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#006847","#fff","#CE1126"],true);
+    disc(c,x+w/2,y+h/2,h*.16,"#8B5A2B"); },
+  jamaica:(c,x,y,w,h)=>{ c.fillStyle="#009B3A"; c.fillRect(x,y,w,h);
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w/2,y+h/2); c.lineTo(x,y+h); c.closePath();
+    c.moveTo(x+w,y); c.lineTo(x+w/2,y+h/2); c.lineTo(x+w,y+h); c.closePath();
+    c.fillStyle="#000"; c.fill();
+    c.strokeStyle="#FED100"; c.lineWidth=Math.max(2,h*.14);
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w,y+h); c.moveTo(x+w,y); c.lineTo(x,y+h); c.stroke(); },
+  kazakhstan:(c,x,y,w,h)=>{ c.fillStyle="#00AFCA"; c.fillRect(x,y,w,h);
+    disc(c,x+w*.54,y+h*.42,h*.17,"#FEC50C"); c.fillStyle="#FEC50C"; c.fillRect(x+w*.04,y,w*.05,h); },
+  kyrgyzstan:(c,x,y,w,h)=>{ c.fillStyle="#E8112D"; c.fillRect(x,y,w,h);
+    disc(c,x+w/2,y+h/2,h*.24,"#FFEF00"); disc(c,x+w/2,y+h/2,h*.15,"#E8112D");
+    disc(c,x+w/2,y+h/2,h*.11,"#FFEF00"); },
+  argentina:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#74ACDF","#fff","#74ACDF"],false);
+    disc(c,x+w/2,y+h/2,h*.13,"#F6B40E"); },
+  india:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#FF9933","#fff","#138808"],false);
+    c.strokeStyle="#000088"; c.lineWidth=Math.max(1,h*.04);
+    c.beginPath(); c.arc(x+w/2,y+h/2,h*.13,0,Math.PI*2); c.stroke(); },
+  iran:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#239F40","#fff","#DA0000"],false);
+    c.fillStyle="#DA0000"; c.fillRect(x+w*.42,y+h*.4,w*.16,h*.2); },
+  uzbekistan:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#0099B5","#fff","#1EB53A"],false);
+    disc(c,x+w*.2,y+h*.17,h*.1,"#fff"); disc(c,x+w*.24,y+h*.17,h*.09,"#0099B5"); },
+  azerbaijan:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#00B5E2","#EF3340","#509E2F"],false);
+    disc(c,x+w*.46,y+h/2,h*.13,"#fff"); disc(c,x+w*.5,y+h/2,h*.11,"#EF3340"); },
+  mongolia:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#C4272F","#015197","#C4272F"],true);
+    c.fillStyle="#F9CF02"; c.fillRect(x+w*.12,y+h*.28,w*.04,h*.44); },
+  thailand:(c,x,y,w,h)=>fB(c,x,y,w,h,["#A51931","#F4F5F8","#2D2A4A","#2D2A4A","#F4F5F8","#A51931"],false),
+  suriname:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#377E3F","#fff","#B40A2D","#fff","#377E3F"],false);
+    star(c,x+w/2,y+h/2,h*.16,"#ECC81D"); },
+  cameroon:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#007A5E","#CE1126","#FCD116"],true);
+    star(c,x+w/2,y+h/2,h*.16,"#FCD116"); },
+  nigeria:V("#008751","#fff","#008751"),
+  ghana:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#CE1126","#FCD116","#006B3F"],false);
+    star(c,x+w/2,y+h/2,h*.14,"#000"); },
+  kenya:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#000","#fff","#BB0000","#fff","#006600"],false);
+    c.fillStyle="#fff"; c.fillRect(x+w*.46,y+h*.2,w*.08,h*.6); },
+  congo:(c,x,y,w,h)=>{ c.fillStyle="#007FFF"; c.fillRect(x,y,w,h);
+    c.strokeStyle="#F7D618"; c.lineWidth=Math.max(2,h*.16);
+    c.beginPath(); c.moveTo(x,y+h); c.lineTo(x+w,y); c.stroke(); star(c,x+w*.16,y+h*.28,h*.14,"#F7D618"); },
+  angola:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#CE1126","#000"],false); disc(c,x+w/2,y+h/2,h*.14,"#FFCB00"); },
+  egypt:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#CE1126","#fff","#000"],false);
+    c.fillStyle="#C09300"; c.fillRect(x+w*.44,y+h*.4,w*.12,h*.2); },
+  tunisia:(c,x,y,w,h)=>{ c.fillStyle="#E70013"; c.fillRect(x,y,w,h);
+    disc(c,x+w/2,y+h/2,h*.28,"#fff"); disc(c,x+w/2,y+h/2,h*.19,"#E70013");
+    disc(c,x+w*.56,y+h/2,h*.15,"#fff"); },
+  algeria:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#006233","#fff"],true);
+    disc(c,x+w*.5,y+h/2,h*.2,"#D21034"); disc(c,x+w*.56,y+h/2,h*.16,"#fff"); },
+  moldova:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#0046AE","#FFD200","#CC092F"],true);
+    disc(c,x+w/2,y+h/2,h*.13,"#A4713B"); },
+  belarus:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#C8313E","#4AA657"],false);
+    c.fillStyle="#fff"; c.fillRect(x,y,w*.16,h);
+    c.fillStyle="#C8313E"; for(let i=0;i<4;i++) c.fillRect(x+w*.04,y+h*(i*.26+.04),w*.08,h*.09); },
+  latvia:H("#9E3039","#fff","#9E3039"),
+  malaysia:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#CC0001","#fff","#CC0001","#fff","#CC0001","#fff","#CC0001"],false);
+    c.fillStyle="#010066"; c.fillRect(x,y,w*.5,h*4/7); disc(c,x+w*.2,y+h*.28,h*.11,"#FFCC00");
+    disc(c,x+w*.24,y+h*.28,h*.09,"#010066"); },
+  uae:(c,x,y,w,h)=>{ fB(c,x,y,w,h,["#00732F","#fff","#000"],false);
+    c.fillStyle="#FF0000"; c.fillRect(x,y,w*.26,h); },
+  saudiarabia:(c,x,y,w,h)=>{ c.fillStyle="#006C35"; c.fillRect(x,y,w,h);
+    c.fillStyle="#fff"; c.fillRect(x+w*.16,y+h*.34,w*.68,h*.09); c.fillRect(x+w*.2,y+h*.58,w*.5,h*.07); },
+  qatar:(c,x,y,w,h)=>{ c.fillStyle="#8A1538"; c.fillRect(x,y,w,h);
+    c.fillStyle="#fff"; c.fillRect(x,y,w*.32,h);
+    for(let i=0;i<9;i++){ c.beginPath(); c.moveTo(x+w*.32,y+h*i/9);
+      c.lineTo(x+w*.42,y+h*(i+.5)/9); c.lineTo(x+w*.32,y+h*(i+1)/9); c.closePath(); c.fillStyle="#fff"; c.fill(); } },
+  /* ---- primitive-built ---- */
+  russia:H("#fff","#0039A6","#D52B1E"), netherlands:H("#AE1C28","#fff","#1E4785"),
+  germany:H("#000","#DD0000","#FFCE00"), austria:H("#ED2939","#fff","#ED2939"),
+  hungary:H("#CD2A3E","#fff","#436F4D"), bulgaria:H("#fff","#00966E","#D62612"),
+  armenia:H("#D90012","#0033A0","#F2A800"), lithuania:H("#FDB913","#006A44","#C1272D"),
+  estonia:H("#0072CE","#000","#fff"), ukraine:H("#0057B7","#FFD700"),
+  poland:H("#fff","#DC143C"), indonesia:H("#CE1126","#fff"), singapore:H("#ED2939","#fff"),
+  serbia:H("#C6363C","#0C4076","#fff"), slovakia:H("#fff","#0B4EA2","#EE1C25"),
+  slovenia:H("#fff","#0B4EA2","#EE1C25"), croatia:H("#FF0000","#fff","#171796"),
+  bosnia:H("#002F6C","#FFCE00"),
+  czechia:(c,x,y,w,h)=>{ c.fillStyle="#fff"; c.fillRect(x,y,w,h/2);
+    c.fillStyle="#D7141A"; c.fillRect(x,y+h/2,w,h/2);
+    c.beginPath(); c.moveTo(x,y); c.lineTo(x+w*.45,y+h/2); c.lineTo(x,y+h); c.closePath();
+    c.fillStyle="#11457E"; c.fill(); },
+  colombia:H("#FCD116","#FCD116","#003893","#CE1126"),
+  ecuador:H("#FCD116","#FCD116","#0072CE","#EF3340"),
+  venezuela:H("#FCD116","#0033A0","#CE1126"), bolivia:H("#D52B1E","#F9E300","#007934"),
+  iraq:H("#CE1126","#fff","#000"), syria:H("#CE1126","#fff","#000"),
+  yemen:H("#CE1126","#fff","#000"), sudan:H("#CE1126","#fff","#000"),
+  gabon:H("#009E60","#FCD116","#3A75C4"), lithuania2:H("#FDB913","#006A44","#C1272D"),
+  ireland:V("#169B62","#fff","#FF883E"), france:V("#002395","#fff","#ED2939"),
+  italy:V("#008C45","#F4F5F0","#CD212A"), peru:V("#D91023","#fff","#D91023"),
+  belgium:V("#000","#FDDA24","#EF3340"), romania:V("#002B7F","#FCD116","#CE1126"),
+  chad:V("#002664","#FECB00","#C60C30"), guinea:V("#CE1126","#FCD116","#009460"),
+  ivorycoast:V("#F77F00","#fff","#009E60"), mali:V("#14B53A","#FCD116","#CE1126"),
+  sweden:N("#006AA7","#FECC00"), norway:N("#BA0C2F","#00205B","#fff"),
+  denmark:N("#C8102E","#fff"), finland:N("#fff","#003580"), iceland:N("#02529C","#DC1E35","#fff")
+};
+/* birthplace strings often stop at the state/province */
+const US_STATE=new Set(("alabama alaska arizona arkansas california colorado connecticut delaware florida georgia "+
+  "hawaii idaho illinois indiana iowa kansas kentucky louisiana maine maryland massachusetts michigan minnesota "+
+  "mississippi missouri montana nebraska nevada newhampshire newjersey newmexico newyork northcarolina northdakota "+
+  "ohio oklahoma oregon pennsylvania rhodeisland southcarolina southdakota tennessee texas utah vermont virginia "+
+  "washington westvirginia wisconsin wyoming districtofcolumbia").split(" "));
+const CA_PROV=new Set(("ontario quebec britishcolumbia alberta manitoba saskatchewan novascotia newbrunswick "+
+  "newfoundland princeedwardisland").split(" "));
+const COUNTRY_ALIAS={
+  unitedstates:"usa", unitedstatesofamerica:"usa", us:"usa", america:"usa", usofa:"usa",
+  unitedkingdom:"uk", greatbritain:"uk", northernireland:"uk", britain:"uk",
+  republicofireland:"ireland", russianfederation:"russia", dagestan:"russia", chechnya:"russia",
+  republicofkorea:"southkorea", korea:"southkorea", southkorea:"southkorea",
+  czechrepublic:"czechia", holland:"netherlands", thenetherlands:"netherlands",
+  unitedarabemirates:"uae", abudhabi:"uae", dubai:"uae",
+  democraticrepublicofthecongo:"congo", drcongo:"congo", republicofthecongo:"congo",
+  cotedivoire:"ivorycoast", newzealandaotearoa:"newzealand", kyrgyzrepublic:"kyrgyzstan",
+  bosniaandherzegovina:"bosnia", trinidadandtobago:"trinidad", southafricanrepublic:"southafrica",
+  england:"england", scotland:"scotland", wales:"wales"
+};
+function flagKeyFor(f){
+  const raw=String(f&&f.born||"").trim();
+  if(!raw) return null;
+  const segs=raw.split(",").map(s=>s.trim().toLowerCase().replace(/[^a-z]/g,"")).filter(Boolean);
+  for(let i=segs.length-1;i>=0 && i>=segs.length-2;i--){   /* country, else the state before it */
+    const s=segs[i];
+    if(US_STATE.has(s)) return "usa";
+    if(CA_PROV.has(s))  return "canada";
+    const k=COUNTRY_ALIAS[s]||s;
+    if(FLAGS[k]) return k;
+  }
+  return null;
+}
+function drawFlag(c,key,x,y,w,h){
+  const fn=FLAGS[key]; if(!fn) return;
+  c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip(); fn(c,x,y,w,h); c.restore();
+  c.strokeStyle="rgba(0,0,0,.6)"; c.lineWidth=1; c.strokeRect(x+.5,y+.5,w-1,h-1);
+}
+
+/* ---- image loading ---------------------------------------------------------
+   A canvas that has drawn a cross-origin image without CORS permission can't be
+   exported at all — toBlob() throws — so every photo must arrive through
+   crossOrigin="anonymous". ufc.com does NOT send Access-Control-Allow-Origin,
+   so a direct anonymous load fails and the photo has to come via a proxy that
+   does. One probe per host picks the route, then every photo from that host
+   uses it. Set PHOTO_PROXIES=[] to turn proxying off: the export still works,
+   it just falls back to initials tiles. */
+const PHOTO_PROXIES = [
+  u => "https://images.weserv.nl/?url="+encodeURIComponent(u.replace(/^https?:\/\//,""))+"&w=760",
+  u => "https://api.allorigins.win/raw?url="+encodeURIComponent(u)
+];
+const PHOTO_ROUTE = new Map();   // host -> 0 = direct, 1..n = PHOTO_PROXIES[n-1]
+
+function rawImg(url, ms){
+  return new Promise(res=>{
+    if(!url) return res(null);
+    let done=false;
+    const im=new Image();
+    im.crossOrigin="anonymous";
+    im.onload =()=>{ if(!done){ done=true; res(im.naturalWidth?im:null); } };
+    im.onerror=()=>{ if(!done){ done=true; res(null); } };
+    setTimeout(()=>{ if(!done){ done=true; res(null); } }, ms||12000);
+    im.src=url;
+  });
+}
+function photoHost(u){ try{ return new URL(u, location.href).host || "local"; }catch(e){ return "local"; } }
+function routeUrl(url, r){ return r===0 ? url : PHOTO_PROXIES[r-1](url); }
+/* probe one photo per host to find a route that CORS lets us read back.
+   Only successful routes are cached, so a proxy blip doesn't stick. */
+async function resolvePhotoRoute(host, sample){
+  if(PHOTO_ROUTE.has(host)) return PHOTO_ROUTE.get(host);
+  for(let r=0; r<=PHOTO_PROXIES.length; r++){
+    if(await rawImg(routeUrl(sample,r), 9000)){ PHOTO_ROUTE.set(host,r); return r; }
+  }
+  return -1;
+}
+async function loadPhotos(fighters){
+  const hosts=new Map();
+  fighters.forEach(f=>{ if(f.img){ const h=photoHost(f.img); if(!hosts.has(h)) hosts.set(h,f.img); } });
+  await Promise.all([...hosts].map(([h,sample])=>resolvePhotoRoute(h,sample)));
+  return Promise.all(fighters.map(f=>{
+    if(!f.img) return null;
+    const r=PHOTO_ROUTE.has(photoHost(f.img)) ? PHOTO_ROUTE.get(photoHost(f.img)) : -1;
+    return r<0 ? null : rawImg(routeUrl(f.img,r));
+  }));
+}
+async function ensurePosterFonts(){
+  if(!document.fonts||!document.fonts.load) return;
+  try{
+    await Promise.all([
+      document.fonts.load("700 60px Oswald"), document.fonts.load("600 30px Oswald"),
+      document.fonts.load("500 20px Oswald"), document.fonts.load("400 20px Oswald"),
+      document.fonts.load("500 22px 'Barlow Condensed'")
+    ]);
+    await document.fonts.ready;
+  }catch(e){}
+}
+
+/* ---- layout: rows of bouts, short rows centred ---- */
+function balancedChunk(list, per){
+  if(!list.length) return [];
+  const rows=Math.ceil(list.length/per), out=[];
+  let i=0;
+  for(let r=0;r<rows;r++){
+    const n=Math.ceil((list.length-i)/(rows-r));
+    out.push(list.slice(i,i+n)); i+=n;
+  }
+  return out;
+}
+function posterRows(){
+  const rows=[];
+  CARD.sections.forEach(sec=>{
+    const live=sec.bouts.map((b,i)=>({b, tag:boutLabel(sec,i)})).filter(x=>x.b.a||x.b.b);
+    if(!live.length) return;
+    rows.push({kind:"band", label:sec.label});
+    if(sec.id==="main"){
+      rows.push({kind:"row", items:live.slice(0,2), tier:"hd"});   /* main + co-main share the top row */
+      balancedChunk(live.slice(2), PTIER.md.per).forEach(g=>rows.push({kind:"row", items:g, tier:"md"}));
+    }else{
+      balancedChunk(live, PTIER.sm.per).forEach(g=>rows.push({kind:"row", items:g, tier:"sm"}));
+    }
+  });
+  return rows;
+}
+function rowHeight(t){ return (t.tag? t.tag+11 : 0) + t.ph + 15 + t.name + 9 + t.sub + t.pad; }
+
+/* ---- drawing ---- */
+function drawPosterBg(c,W,H){
+  c.fillStyle=PX.bg; c.fillRect(0,0,W,H);
+  let g=c.createLinearGradient(0,0,0,400);
+  g.addColorStop(0,"rgba(210,10,10,.20)"); g.addColorStop(1,"rgba(210,10,10,0)");
+  c.fillStyle=g; c.fillRect(0,0,W,400);
+  g=c.createRadialGradient(W/2,-120,0,W/2,-120,W*.95);
+  g.addColorStop(0,"rgba(120,132,160,.14)"); g.addColorStop(1,"rgba(120,132,160,0)");
+  c.fillStyle=g; c.fillRect(0,0,W,600);
+  /* faint chevrons, the texture the real posters use */
+  c.save(); c.globalAlpha=.03; c.strokeStyle="#aeb6c6"; c.lineWidth=1.5;
+  for(let i=-H;i<W+H;i+=38){
+    c.beginPath(); c.moveTo(i,0); c.lineTo(i+H,H); c.stroke();
+  }
+  c.restore();
+  g=c.createLinearGradient(0,H-260,0,H);
+  g.addColorStop(0,"rgba(0,0,0,0)"); g.addColorStop(1,"rgba(0,0,0,.55)");
+  c.fillStyle=g; c.fillRect(0,H-260,W,260);
+  c.strokeStyle="#2a2e37"; c.lineWidth=2; c.strokeRect(1,1,W-2,H-2);
+}
+function drawPosterHead(c,y,W,nBouts){
+  const cx=W/2;
+  c.textBaseline="alphabetic"; c.textAlign="left";
+  y+=PHEAD_PAD+18;
+  c.fillStyle=PX.redHot; c.font="500 17px "+F_OSW;
+  drawTracked(c,"FANTASY FIGHT CARD",cx,y,7,"center");
+  y+=18;
+
+  const me=CARD.sections.find(s=>s.id==="main"), mb=me&&me.bouts[0];
+  const title=(CARD.name||"").trim() ||
+    (mb&&mb.a&&mb.b ? surnameOf(mb.a.name)+" VS "+surnameOf(mb.b.name) : "YOUR DREAM CARD");
+  const up=title.toUpperCase();
+  const size=fitSize(c,up,W-PX.PAD*2-20,"700",F_OSW,88,28,.04);
+  y+=size;
+  c.fillStyle=PX.text; drawTracked(c,up,cx,y,size*.04,"center");
+  y+=20;
+
+  c.fillStyle=PX.gold; c.fillRect(cx-58,y,116,2);
+  y+=27;
+  const meta=nBouts+" BOUT"+(nBouts===1?"":"S");
+  c.fillStyle=PX.muted; c.font="400 17px "+F_OSW;
+  drawTracked(c,meta,cx,y,3.8,"center");
+  return y+PHEAD_PAD;
+}
+function drawPosterBand(c,y,W,label){
+  const h=PBAND_H, cx=W/2;
+  c.fillStyle="rgba(255,255,255,.045)"; c.fillRect(0,y+10,W,h-20);
+  c.fillStyle=PX.gold; c.fillRect(0,y+10,W,1.5); c.fillRect(0,y+h-11.5,W,1.5);
+  c.font="600 24px "+F_OSW; c.textBaseline="middle"; c.textAlign="left";
+  c.fillStyle=PX.text;
+  const tw=trackedWidth(c,label.toUpperCase(),8.5);
+  drawTracked(c,label.toUpperCase(),cx,y+h/2+1,8.5,"center");
+  c.fillStyle=PX.gold;
+  [-1,1].forEach(s=>{ const dx=cx+s*(tw/2+26);
+    c.beginPath(); c.moveTo(dx,y+h/2-6); c.lineTo(dx+6,y+h/2); c.lineTo(dx,y+h/2+6); c.lineTo(dx-6,y+h/2); c.closePath(); c.fill(); });
+  c.textBaseline="alphabetic";
+  return y+h;
+}
+function drawFighterPhoto(c,f,img,x,y,w,h,side){
+  rr(c,x,y,w,h,3); c.save(); c.clip();
+  c.fillStyle="#0e1116"; c.fillRect(x,y,w,h);
+  if(img) drawCoverTop(c,img,x,y,w,h);
+  else{
+    const g=c.createLinearGradient(x,y,x,y+h);
+    g.addColorStop(0,"#171b22"); g.addColorStop(1,"#0c0e13");
+    c.fillStyle=g; c.fillRect(x,y,w,h);
+    c.fillStyle="#3a414e"; c.textAlign="center"; c.textBaseline="middle";
+    c.font="600 "+Math.round(h*.24)+"px "+F_OSW;
+    c.fillText(f?initials(f.name):"?", x+w/2, y+h/2);
+    c.textBaseline="alphabetic";
+  }
+  const g2=c.createLinearGradient(x,y+h*.55,x,y+h);
+  g2.addColorStop(0,"rgba(8,9,11,0)"); g2.addColorStop(1,"rgba(8,9,11,.85)");
+  c.fillStyle=g2; c.fillRect(x,y+h*.55,w,h*.45);
+  c.restore();
+  c.strokeStyle="#2b303a"; c.lineWidth=1; rr(c,x+.5,y+.5,w-1,h-1,3); c.stroke();
+  c.fillStyle = side==="a" ? PX.red : PX.blue;
+  c.fillRect(x, y+h-3, w, 3);
+  const fk=flagKeyFor(f);
+  if(fk){
+    const fw=Math.max(20,Math.round(w*.2)), fh=Math.round(fw*.66), pad=Math.max(5,Math.round(w*.045));
+    drawFlag(c,fk,x+pad,y+h-fh-pad-3,fw,fh);
+  }
+}
+function drawBoutCell(c,item,x,y,w,t,imgs){
+  const b=item.b, cx=x+w/2;
+  let cy=y;
+  c.textAlign="left"; c.textBaseline="alphabetic";
+  if(t.tag && item.tag){
+    c.font="500 "+t.tag+"px "+F_OSW; c.fillStyle=PX.redHot;
+    cy+=t.tag;
+    drawTracked(c,item.tag.toUpperCase(),cx,cy,t.tag*.24,"center");
+    cy+=11;
+  }else if(t.tag){ cy+=t.tag+11; }
+
+  const blockW=t.pw*2+t.inner, px0=cx-blockW/2;
+  drawFighterPhoto(c,b.a,imgs.get(b.a&&b.a.key)||null,px0,cy,t.pw,t.ph,"a");
+  drawFighterPhoto(c,b.b,imgs.get(b.b&&b.b.key)||null,px0+t.pw+t.inner,cy,t.pw,t.ph,"b");
+  cy+=t.ph+15;
+
+  /* "MAKHACHEV vs GARRY" — surnames big, vs small and gold */
+  const na=b.a?surnameOf(b.a.name):"TBD", nb=b.b?surnameOf(b.b.name):"TBD";
+  const maxW=w-(t.per>1?24:16);   /* keep a gutter so neighbouring cells never touch */
+  let ns=t.name, sp, vsS, wa, wv, wb;
+  for(;;){
+    c.font="600 "+ns+"px "+F_OSW; sp=ns*.035;
+    wa=trackedWidth(c,na,sp); wb=trackedWidth(c,nb,sp);
+    vsS=Math.max(9,Math.round(ns*.56));
+    c.font="400 "+vsS+"px "+F_OSW; wv=c.measureText(" vs ").width+ns*.3;
+    if(wa+wv+wb<=maxW || ns<=Math.round(t.name*.55)) break;
+    ns--;
+  }
+  cy+=ns;
+  let tx=cx-(wa+wv+wb)/2;
+  c.font="600 "+ns+"px "+F_OSW; c.fillStyle=PX.text;
+  drawTracked(c,na,tx,cy,sp,"left"); tx+=wa;
+  c.font="400 "+vsS+"px "+F_OSW; c.fillStyle=PX.gold;
+  c.fillText(" vs ",tx+ns*.15,cy); tx+=wv;
+  c.font="600 "+ns+"px "+F_OSW; c.fillStyle=PX.text;
+  drawTracked(c,nb,tx,cy,sp,"left");
+  cy+=9;
+
+  const opts=posterSubOptions(b), subMax=maxW;
+  let sub="", ss=t.sub;
+  for(let i=0;i<opts.length;i++){
+    ss=fitSize(c,opts[i],subMax,"400",F_OSW,t.sub,Math.max(7,t.sub-3),.2);
+    sub=opts[i];
+    if(trackedWidth(c,sub,ss*.2)<=subMax) break;    /* else try the shorter wording */
+  }
+  if(sub){
+    if(trackedWidth(c,sub,ss*.2)>subMax){           /* last resort: clip it */
+      while(sub.length>4 && trackedWidth(c,sub+"…",ss*.2)>subMax) sub=sub.slice(0,-1);
+      sub+="…";
+    }
+    cy+=ss;
+    c.fillStyle = b.title ? PX.gold : PX.dim;
+    drawTracked(c,sub,cx,cy,ss*.2,"center");
+  }
+}
+function drawPosterFoot(c,y,W){
+  const cx=W/2;
+  c.fillStyle="#242832"; c.fillRect(PX.PAD,y+14,W-PX.PAD*2,1);
+  c.textAlign="left"; c.textBaseline="alphabetic";
+  c.font="600 22px "+F_OSW; c.fillStyle=PX.gold;
+  drawTracked(c,"TALE OF THE TAPE",cx,y+58,7.5,"center");
+  c.font="400 16px "+F_OSW; c.fillStyle=PX.dim;
+  let host="";
+  try{ host = location.protocol==="file:" ? "" : location.host.replace(/^www\./,""); }catch(e){}
+  drawTracked(c,(host||"Fantasy matchmaker")+"  ·  Built by you",cx,y+82,3,"center");
+}
+
+/* ---- orchestration ---- */
+let POSTER_BUSY=false;
+async function buildPosterCanvas(onStep){
+  await ensurePosterFonts();
+  const rows=posterRows();
+  if(!rows.length) return null;
+
+  /* one load per unique fighter, shared across the card */
+  const people=new Map();
+  rows.forEach(r=>{ if(r.kind!=="row") return;
+    r.items.forEach(it=>["a","b"].forEach(s=>{ const f=it.b[s]; if(f&&!people.has(f.key)) people.set(f.key,f); })); });
+  const entries=[...people.values()];
+  if(onStep) onStep("Fetching photos…");
+  const loaded=await loadPhotos(entries);
+  if(onStep) onStep("Rendering…");
+  const imgs=new Map(); let missing=0, proxied=false;
+  entries.forEach((f,i)=>{
+    imgs.set(f.key,loaded[i]);
+    if(f.img && !loaded[i]) missing++;
+    if(f.img && loaded[i] && PHOTO_ROUTE.get(photoHost(f.img))>0) proxied=true;
+  });
+
+  const W=PX.W, CONTENT=W-PX.PAD*2;
+  const nBouts=rows.reduce((n,r)=>n+(r.kind==="row"?r.items.length:0),0);
+
+  /* measure: header height needs a scratch context */
+  const scratch=document.createElement("canvas").getContext("2d");
+  const headH=drawPosterHead(scratch,0,W,nBouts);
+  let H=headH;
+  rows.forEach(r=>{ H += r.kind==="band" ? PBAND_H : rowHeight(PTIER[r.tier]); });
+  H+=PFOOT_H;
+
+  const cv=document.createElement("canvas");
+  cv.width=Math.round(W*PX.SS); cv.height=Math.round(H*PX.SS);
+  const c=cv.getContext("2d");
+  c.scale(PX.SS,PX.SS);
+  c.textRendering="geometricPrecision";
+  drawPosterBg(c,W,H);
+  let y=drawPosterHead(c,0,W,nBouts);
+  rows.forEach(r=>{
+    if(r.kind==="band"){ y=drawPosterBand(c,y,W,r.label); return; }
+    const t=PTIER[r.tier];
+    const cellW=(CONTENT-t.cellGap*(t.per-1))/t.per;
+    const used=cellW*r.items.length+t.cellGap*(r.items.length-1);
+    let x=(W-used)/2;
+    r.items.forEach(it=>{ drawBoutCell(c,it,x,y,cellW,t,imgs); x+=cellW+t.cellGap; });
+    y+=rowHeight(t);
+  });
+  drawPosterFoot(c,y,W);
+
+  /* supersampled -> exact output width, which is what makes the text crisp */
+  const out=document.createElement("canvas");
+  out.width=Math.round(W); out.height=Math.round(H);
+  const oc=out.getContext("2d");
+  oc.imageSmoothingEnabled=true; oc.imageSmoothingQuality="high";
+  oc.drawImage(cv,0,0,out.width,out.height);
+  return { canvas:out, missing, proxied, total:entries.length, bouts:nBouts };
+}
+function posterFileName(){
+  const base=(CARD.name||"dream-card").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  return (base||"dream-card")+".png";
+}
+async function downloadPosterPNG(btn,note){
+  if(POSTER_BUSY) return;
+  POSTER_BUSY=true;
+  const label=btn.textContent;
+  btn.disabled=true; btn.textContent="Rendering…";
+  if(note) note.textContent="";
+  try{
+    const res=await buildPosterCanvas(msg=>{ btn.textContent=msg; });
+    if(!res){ if(note) note.textContent="Add at least one matchup first."; return; }
+    const blob=await new Promise(r=>res.canvas.toBlob(r,"image/png"));
+    if(!blob) throw new Error("toBlob returned null");
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url; a.download=posterFileName();
+    if(typeof a.download==="undefined") window.open(url,"_blank");
+    else{ document.body.appendChild(a); a.click(); a.remove(); }
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    btn.textContent="Saved ✓";
+    if(note) note.textContent = res.missing
+      ? res.missing+" of "+res.total+" photos couldn't be fetched — the photo host blocks cross-origin reads and the image proxy didn't answer. Initials used instead."
+      : "";
+    if(window.posthog) posthog.capture('button_clicked',
+      { button:'download_card_png', bouts:res.bouts, photos_missing:res.missing, photos_proxied:res.proxied });
+  }catch(err){
+    console.warn("poster export failed:", err);
+    btn.textContent="Export failed";
+    if(note) note.textContent="Couldn't build the image on this browser. Try Chrome, or take a screenshot.";
+  }finally{
+    POSTER_BUSY=false;
+    setTimeout(()=>{ btn.disabled=false; btn.textContent=label; }, 1600);
+  }
 }
 
 /* ---------- tale of the tape modal ---------- */
