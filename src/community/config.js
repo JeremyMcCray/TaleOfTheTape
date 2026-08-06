@@ -10,8 +10,16 @@
    Full console walkthrough: firebase/SETUP.md
 
    None of these values are secrets. A Firebase web config is public by
-   design; what stops abuse is firebase/firestore.rules plus App Check, not
-   hiding the project id. Committing this file is fine and expected.
+   design — it identifies the project, it does not authorise anything. What
+   stops abuse is firebase/firestore.rules plus App Check. Committing this
+   file is fine and expected; the key is also visible to anyone who opens
+   devtools on the deployed site, so there is nowhere to hide it anyway.
+
+   GitHub secret scanning WILL flag the apiKey. Every `AIza…` string looks
+   like a Google API key to it, and it cannot tell a Firebase web key from a
+   billable Maps key. Do NOT rotate or delete it — deleting is permanent and
+   instantly breaks the site. Restrict it instead, and close the alert.
+   firebase/SETUP.md has the steps under "That GitHub secret alert".
    ============================================================ */
 
 /* Firebase console → Project settings → General → Your apps → Web app → Config */
@@ -34,7 +42,7 @@ export const APPCHECK_SITE_KEY = "6LcmingtAAAAAIfcjsMsJgwGahFQpCa8OkMP2y3Y";
    you have opened the gallery — copy it here AND into ownerUid() in
    firebase/firestore.rules, then redeploy the rules. This is what unlocks
    the "Review" tab where held cards wait. */
-export const OWNER_UID = "CCO1su3wTAhyfpruCyrO92xvnSn1";
+export const OWNER_UID = "QRNXd4DYtRQlYZvSqWtTKg0wSF52";
 
 /* Pinned so a future SDK release cannot change behaviour under you.
    Bump deliberately, then re-run the offline harness. */
