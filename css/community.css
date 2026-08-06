@@ -1,0 +1,133 @@
+/* ============================================================
+   COMMUNITY GALLERY
+
+   The overlay itself reuses .cardview / .cvhead / .cvwrap from
+   cardbuilder.css — this file only adds what the gallery has that the
+   builder does not: the tab strip, the tile grid, and the publish modal.
+   Loaded after poster.css and before responsive.css.
+   ============================================================ */
+
+/* The gallery is a column: header, then a growing list, then a footer that
+   sits at the bottom of the viewport even when there are only two cards.
+   .cardview.open sets display:block, so this needs the extra class to win. */
+.cardview.community.open{display:flex;flex-direction:column}
+.community .cvwrap{width:100%;flex:1 0 auto}
+.community .comfoot{margin-top:auto}
+
+/* ---- tab strip in the pinned header ---- */
+.comtabs{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 12px}
+.comtab{
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  background:#12151b;border:1px solid var(--line);border-bottom:2px solid var(--line);
+  color:var(--muted);padding:9px 16px;border-radius:2px;cursor:pointer;transition:.14s;
+}
+.comtab:hover{color:#fff;border-color:#4a5163}
+.comtab:focus-visible{outline:2px solid var(--red-hot);outline-offset:2px}
+.comtab.on{color:#fff;background:#24121a;border-color:#5a1d1d;border-bottom-color:var(--red-hot)}
+/* the owner-only queue reads as a different kind of thing */
+.comtab[data-sort="held"]{border-left:3px solid var(--gold);color:#f4e3ad}
+.comtab[data-sort="held"].on{background:#211b0e;border-color:rgba(212,175,55,.5);border-bottom-color:var(--gold)}
+
+/* ---- status line: empty most of the time, so it collapses when it is ---- */
+.comnote{color:var(--muted);font-size:13px;letter-spacing:.02em;line-height:1.45;text-align:center}
+.comnote:not(:empty){padding:0 16px 11px}
+.comnote.warn{color:#f0b45a}
+.comnote.pad{padding:60px 16px;font-size:14px}
+.pngnote.warn{color:#f0b45a}
+
+/* ---- the grid ---- */
+.cgrid{display:grid;gap:12px}
+@media (min-width:820px){ .cgrid{grid-template-columns:1fr 1fr} }
+
+.ccard{
+  display:grid;grid-template-columns:56px minmax(0,1fr);gap:0;
+  border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0a0c0f);
+  border-radius:2px;overflow:hidden;transition:border-color .14s;
+}
+.ccard:hover{border-color:#3a3f4b}
+.ccard.held{border-left:3px solid var(--gold)}
+
+/* vote gutter */
+.ccvote{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;
+  padding:14px 0;background:#0a0c0f;border-right:1px solid var(--line-soft);
+}
+.ccv{
+  background:none;border:1px solid transparent;color:#4d5462;cursor:pointer;
+  width:34px;height:28px;line-height:1;font-size:13px;border-radius:3px;transition:.12s;
+}
+.ccv:hover{color:#fff;background:#181c23}
+.ccv:focus-visible{outline:2px solid var(--red-hot);outline-offset:1px}
+.ccv:disabled{opacity:.4;cursor:progress}
+.ccv.up.on{color:#fff;background:var(--red);border-color:var(--red)}
+.ccv.down.on{color:#fff;background:var(--blue);border-color:var(--blue)}
+.ccscore{font-family:'Oswald',sans-serif;font-size:15px;color:#c8cedb;letter-spacing:.04em;padding:2px 0}
+/* held cards show their score but cannot be voted on — the rules refuse it */
+.ccvote.quiet{justify-content:center;color:#4d5462}
+.ccvote.quiet .ccscore{color:#5f6675}
+
+/* body */
+.ccmain{padding:13px 14px 4px;min-width:0}
+.ccname{
+  font-family:'Oswald',sans-serif;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff;
+  margin:0;overflow-wrap:anywhere;
+}
+.ccmeta{color:#5f6675;font-size:12px;letter-spacing:.03em;margin-top:4px;overflow-wrap:anywhere}
+.cchold{color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:10.5px}
+.ccbout{
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:10px;
+  font-family:'Barlow Condensed',sans-serif;font-size:17px;color:var(--text);
+}
+.ccbout i{font-family:'Oswald',sans-serif;font-style:normal;font-size:11px;color:#3a3f4b;letter-spacing:.14em}
+.ccbout.empty{color:#4d5462;font-size:14px}
+.ccsub{color:#4d5462;font-size:12px;margin-top:4px}
+
+/* actions sit under the body, spanning past the vote gutter on phones */
+.ccacts{grid-column:2;display:flex;gap:7px;flex-wrap:wrap;padding:10px 14px 13px}
+.ccacts .act.ok:hover{color:#7ee08a;border-color:#2f7a3a}
+
+/* ---- footer: adapter + your uid, for setting OWNER_UID ---- */
+.comfoot{
+  position:sticky;bottom:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;
+  padding:10px 16px;background:rgba(5,6,8,.95);border-top:1px solid var(--line-soft);
+  color:#4d5462;font-size:11.5px;letter-spacing:.04em;
+}
+.comfoot code{color:#8d94a3;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;user-select:all}
+
+/* Publishing is a different kind of action from downloading a PNG — one is
+   private, one is public — so it does not share the red primary. */
+button.big.gold{
+  background:linear-gradient(180deg,#e0bf4a,#b8931f);border-color:#e8cf72;color:#14161a;font-weight:600;
+}
+button.big.gold:hover{background:#f0d264;border-color:#ffe89a}
+
+/* ---- publish modal ---- */
+.pubmodal{
+  position:fixed;inset:0;z-index:95;background:rgba(3,4,6,.8);backdrop-filter:blur(3px);
+  display:none;align-items:flex-start;justify-content:center;padding:8vh 14px;
+}
+.pubmodal.open{display:flex}
+.pubbox{
+  width:min(480px,100%);background:#0b0d11;border:1px solid var(--line);
+  box-shadow:0 30px 70px rgba(0,0,0,.8);
+}
+.pubbody{padding:18px 18px 4px}
+.publbl{
+  display:block;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:#c8cedb;margin:0 0 7px;
+}
+.publbl em{color:#5f6675;font-style:normal;letter-spacing:.08em}
+.pubbody .evname{width:100%;margin:0 0 18px;text-align:left;font-size:16px}
+.puberr{color:#ff8a5c;font-size:13px;line-height:1.4;min-height:18px}
+.pubfine{color:#5f6675;font-size:12.5px;line-height:1.45;padding:2px 0 8px}
+.pubbox .gobar{margin:0;padding:0 18px 18px}
+
+/* ---- phones ---- */
+@media (max-width:620px){
+  .comtabs{gap:5px;padding:0 12px 10px}
+  .comtab{flex:1 1 auto;padding:9px 10px;letter-spacing:.08em}
+  .ccard{grid-template-columns:46px minmax(0,1fr)}
+  .ccv{width:30px}
+  .ccmain{padding:12px 12px 4px}
+  .ccacts{padding:8px 12px 12px}
+}

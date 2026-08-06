@@ -1,0 +1,37 @@
+/* ---------- tabs ---------- */
+.tabhint{
+  display:flex;align-items:center;gap:10px;margin:30px 0 12px;
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+}
+.tabhint::after{content:"";flex:1;height:1px;background:var(--line)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{
+  flex:1 1 0;min-width:150px;
+  font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
+  padding:15px 14px;cursor:pointer;color:#c3cad6;text-align:center;
+  background:var(--panel-2);border:1px solid var(--line);border-bottom:3px solid var(--line);
+  border-radius:3px;transition:.15s;
+}
+.tab:hover{border-color:var(--red);border-bottom-color:var(--red);color:#fff;background:#1c1013}
+.tab:active{transform:translateY(1px)}
+.tab:focus-visible{outline:2px solid var(--red-hot);outline-offset:2px}
+.tab.on{
+  color:#fff;background:#24121a;border-color:#5a1d1d;border-bottom-color:var(--red-hot);
+  box-shadow:0 0 0 1px rgba(255,43,43,.25) inset;
+}
+/* one-time nudge so first-time visitors notice these are buttons */
+.tabs.nudge .tab{animation:tabnudge 2.2s ease-in-out 3}
+.tabs.nudge .tab:nth-child(2){animation-delay:.12s}
+.tabs.nudge .tab:nth-child(3){animation-delay:.24s}
+@keyframes tabnudge{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,43,43,0)}
+  45%{box-shadow:0 0 0 3px rgba(255,43,43,.16)}
+}
+@media (prefers-reduced-motion:reduce){.tabs.nudge .tab{animation:none}}
+/* on phones give each section its own full-width row — no awkward 2+1 wrap */
+@media (max-width:620px){
+  .tabs{flex-direction:column;gap:7px}
+  .tab{flex:1 1 auto;min-width:0;padding:14px 12px}
+}
+.panel{display:none;padding-top:18px}
+.panel.on{display:block}

@@ -1,0 +1,58 @@
+/* ===================== easter egg: the cameo ===================== */
+#dana{
+  position:fixed;inset:0;z-index:9999;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(4,5,7,.86);backdrop-filter:blur(6px);
+  opacity:0;transition:opacity .28s ease;
+}
+#dana.open{display:flex;opacity:1}
+#dana .dbox{
+  position:relative;max-width:520px;width:100%;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--gold);border-radius:4px;
+  box-shadow:0 30px 90px rgba(0,0,0,.8),0 0 0 1px rgba(212,175,55,.15);
+  padding:28px 26px 24px;text-align:center;
+  transform:translateY(14px) scale(.97);transition:transform .32s cubic-bezier(.2,.9,.3,1.2);
+}
+#dana.open .dbox{transform:none}
+#dana .dkicker{
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+}
+#dana .dpic{
+  width:132px;height:132px;margin:0 auto 16px;border-radius:50%;overflow:hidden;
+  border:2px solid var(--gold);background:#0c0e12;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Oswald',sans-serif;font-size:38px;color:#4a505c;
+  box-shadow:0 0 34px rgba(212,175,55,.28);
+}
+#dana .dpic img{width:100%;height:100%;object-fit:cover;object-position:center top}
+#dana .dname{
+  font-family:'Oswald',sans-serif;font-size:30px;letter-spacing:.06em;
+  text-transform:uppercase;line-height:1.05;
+}
+#dana .dtitle{
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-top:4px;
+}
+#dana .dquote{
+  margin:18px auto 0;max-width:420px;font-size:17px;line-height:1.5;
+  color:var(--text);font-style:italic;
+}
+#dana .dquote:before{content:"“"}
+#dana .dquote:after{content:"”"}
+#dana .dfoot{margin-top:18px;font-size:12px;color:#5b6170;letter-spacing:.04em}
+#dana .dclose{
+  position:absolute;top:8px;right:10px;background:none;border:0;cursor:pointer;
+  color:var(--muted);font-size:18px;line-height:1;padding:6px;
+}
+#dana .dclose:hover{color:var(--text)}
+@media (max-width:520px){
+  #dana .dbox{padding:22px 16px 18px}
+  #dana .dpic{width:104px;height:104px}
+  #dana .dname{font-size:23px}
+  #dana .dquote{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  #dana,#dana .dbox{transition:none}
+}

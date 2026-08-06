@@ -1,0 +1,18 @@
+/* ---------- stat table ---------- */
+.statsec{border-top:1px solid var(--line)}
+.sechead{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-align:center;padding:12px 0 10px;background:#0a0c0f;border-bottom:1px solid var(--line-soft)}
+.srow{display:grid;grid-template-columns:1fr 220px 1fr;align-items:center;border-bottom:1px solid var(--line-soft);min-height:44px}
+.srow:nth-child(odd){background:rgba(255,255,255,.012)}
+.sval{font-family:'Oswald',sans-serif;font-size:clamp(15px,1.9vw,20px);padding:9px 18px;letter-spacing:.03em;position:relative}
+.sval.l{text-align:right}
+.sval.r{text-align:left}
+.sval.win{color:#fff}
+.sval.lose{color:#6e7484}
+.sval.tie{color:#c3c8d2}
+.sval.win.l:after{content:'◀';position:absolute;right:-9px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--red-hot)}
+.sval.win.r:before{content:'▶';position:absolute;left:-9px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--blue-hot)}
+.slabel{text-align:center;font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#767d8d;padding:9px 6px;border-left:1px solid var(--line-soft);border-right:1px solid var(--line-soft)}
+.meter{height:4px;background:#1b1e25;margin:0;display:grid;grid-template-columns:1fr 1fr}
+.meter i{display:block;height:100%}
+.meter i.a{background:var(--red);justify-self:end}
+.meter i.b{background:var(--blue)}

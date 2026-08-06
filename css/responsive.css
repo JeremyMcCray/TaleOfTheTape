@@ -1,0 +1,67 @@
+@media (max-width:820px){
+  .szrow{grid-template-columns:1fr;gap:8px}
+  .slot{grid-template-columns:minmax(0,1fr);gap:6px;padding:12px 10px}
+  .slotno{text-align:left;padding-top:0;display:flex;align-items:center;gap:6px;font-size:12px}
+  .slotno b{display:inline;font-size:9.5px}
+  .slotvs{text-align:left;padding-top:0;font-size:12px;color:#4d5462;letter-spacing:.16em}
+  .slotacts{flex-direction:row;justify-content:flex-end;gap:14px;padding-top:0}
+  .fslot input{font-size:15.5px}
+  /* fat-finger sizing on phones */
+  .fslot .fsbtn{width:34px;height:34px;font-size:16px}
+  .fslot .fsbtn.rk{width:auto;height:36px;padding:0 12px;font-size:11px}
+  .buildhint{font-size:13px}
+  .pbrow{grid-template-columns:1fr 46px 1fr;padding:6px 8px 14px}
+  .pface{width:56px;height:56px}
+  .pbout.mainev .pface{width:82px;height:82px}
+  .pside{gap:8px}
+  .pnk{display:none}
+  .tmcards{grid-template-columns:1fr}
+  .tmlast{grid-template-columns:1fr}
+  .tmbox{margin:0}
+  .tmcards .fcard{min-height:auto;padding-bottom:12px}
+  .tmcards .photo{min-height:118px}
+  .tmcards .photo .silh{width:104px;height:124px;font-size:30px}
+  .tmcards .photo img{max-height:190px}
+  .tmcards .vsbar{min-height:46px}
+}
+@media (max-width:620px){
+  .pside,.pside.b{flex-direction:column;align-items:center;text-align:center;gap:6px}
+  .pinfo{text-align:center}
+  .pnm{font-size:13.5px;line-height:1.15}
+  .pbout.mainev .pnm{font-size:18px}
+  .prc{font-size:12px}
+  .pvs{font-size:15px}
+  .pbout.mainev .pvs{font-size:22px}
+  .pbrow{grid-template-columns:1fr 42px 1fr;padding:4px 4px 14px}
+  .cvwrap{padding:16px 8px 80px}
+  .cvtop{padding:10px}
+  .cvtop .cvttl{width:100%;margin-bottom:6px}
+  .cvacts{gap:7px}
+  .cvacts:not(:empty){padding:0 10px 10px}
+  .cvacts button.big{padding:11px 14px;font-size:11.5px;letter-spacing:.1em;flex:1 1 auto;min-width:0}
+}
+
+@media (max-width:820px){
+  .pickers{grid-template-columns:1fr;gap:10px}
+  .vsmini{display:none}
+  .cards{grid-template-columns:1fr 60px 1fr}
+  .vsbar{min-height:40px;border-left:1px solid var(--line);border-right:1px solid var(--line);border-top:none;border-bottom:none}
+  .fcard{padding:12px 10px 10px;min-height:auto}
+  .fcard.blue{text-align:left}
+  .fcard.blue .badges{justify-content:flex-start}
+  .fcard.blue .photo img{transform:none}
+  .corner{font-size:9px}
+  .fname{font-size:clamp(16px,2.5vw,20px)}
+  .fnick{font-size:clamp(12px,1.4vw,14px)}
+  .frec{font-size:clamp(13px,1.6vw,16px)}
+  .photo{min-height:120px;margin-top:4px}
+  .photo img{max-height:150px}
+  .photo .silh{width:80px;height:100px;font-size:24px;gap:6px}
+  .badge{font-size:8px;padding:3px 6px}
+  .srow{grid-template-columns:1fr 120px 1fr}
+  .slabel{font-size:9px;letter-spacing:.1em}
+  .hist,.bd{grid-template-columns:1fr}
+  .co{grid-template-columns:1fr 96px 1fr}
+  .rkrow{grid-template-columns:24px 34px 1fr auto;gap:8px}
+  .rkmeta{display:none}
+}

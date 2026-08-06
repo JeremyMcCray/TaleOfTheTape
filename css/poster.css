@@ -1,0 +1,43 @@
+/* ---- the finished card (poster) ---- */
+.poster{border:1px solid #23262e;background:linear-gradient(180deg,#0d0f13,#08090b 60%);padding:0 0 8px}
+.pbanner{text-align:center;padding:26px 18px 20px;border-bottom:1px solid #1b1e25;background:linear-gradient(180deg,rgba(210,10,10,.18),transparent)}
+.pbanner .plabel{font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.4em;color:#ff6a6a;text-transform:uppercase}
+.pbanner h2{font-size:clamp(26px,5.6vw,54px);letter-spacing:.06em;line-height:1;margin-top:8px}
+.pbanner .pmeta{color:#6b7280;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;margin-top:10px;font-family:'Oswald',sans-serif}
+.psec{margin-top:2px}
+.psechdr{display:flex;align-items:center;gap:12px;padding:14px 18px 10px}
+.psechdr:before,.psechdr:after{content:'';height:1px;background:var(--line);flex:1}
+.psechdr span{font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#8d94a3;white-space:nowrap}
+.pbout{border-bottom:1px solid #14171d;cursor:pointer;transition:background .16s;position:relative}
+.pbout:hover{background:rgba(255,255,255,.028)}
+.pbout:last-child{border-bottom:none}
+.pbtag{text-align:center;font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:#5f6675;padding:10px 10px 0}
+.pbtag b{color:var(--gold);font-weight:500}
+.pbtag i{color:#ff6a6a;font-style:normal}
+.pbrow{display:grid;grid-template-columns:1fr 74px 1fr;align-items:center;padding:8px 14px 16px}
+.pside{display:flex;align-items:center;gap:12px;min-width:0}
+.pside.b{flex-direction:row-reverse;text-align:right}
+.pface{width:72px;height:72px;border-radius:50%;overflow:hidden;flex:none;background:#0c0e12;border:1px solid #262a33;
+  display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:17px;color:#454b57;transition:.18s}
+.pface img{width:100%;height:100%;object-fit:cover;object-position:top}
+.pside.a .pface{box-shadow:0 0 0 2px rgba(210,10,10,.45)}
+.pside.b .pface{box-shadow:0 0 0 2px rgba(21,103,211,.45)}
+.pbout:hover .pface{transform:scale(1.06)}
+.pinfo{min-width:0;display:block}
+.pnm,.pnk,.prc{display:block}
+.pnm{font-family:'Oswald',sans-serif;font-weight:600;font-size:clamp(15px,2.3vw,21px);text-transform:uppercase;line-height:1.1;letter-spacing:.02em;overflow-wrap:anywhere}
+.pnk{color:var(--gold);font-style:italic;font-size:13px;line-height:1.3}
+.prc{color:#7b8291;font-size:13px;font-family:'Oswald',sans-serif;letter-spacing:.06em;margin-top:2px}
+.prk{display:inline-block;font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.12em;border:1px solid #3c4250;color:#aeb5c3;padding:2px 5px;border-radius:2px;margin-top:4px}
+.prk.champ{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,.08)}
+.pvs{font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;color:#4a5060;text-align:center}
+.pbout.mainev .pbrow{padding:10px 14px 22px}
+.pbout.mainev .pface{width:120px;height:120px;box-shadow:0 0 0 3px rgba(210,10,10,.55),0 16px 34px rgba(0,0,0,.6)}
+.pbout.mainev .pside.b .pface{box-shadow:0 0 0 3px rgba(21,103,211,.55),0 16px 34px rgba(0,0,0,.6)}
+.pbout.mainev .pnm{font-size:clamp(20px,4vw,36px)}
+.pbout.mainev .pvs{font-size:30px;color:#fff;text-shadow:0 0 20px rgba(255,43,43,.75)}
+.pbout.mainev{background:radial-gradient(560px 200px at 50% 40%, rgba(210,10,10,.12), transparent 70%)}
+.pbout.tbd{opacity:.5;cursor:default}
+.pbout.tbd:hover{background:none}
+.pbout.tbd:hover .pface{transform:none}
+.pfoot{text-align:center;color:#4f5563;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-family:'Oswald',sans-serif;padding:18px 14px 6px}

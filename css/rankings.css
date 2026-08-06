@@ -1,0 +1,40 @@
+/* ---------- rankings browser ---------- */
+.rankwrap{margin-top:26px;border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0b0d10)}
+.rankhead{
+  width:100%;padding:16px 18px;border:none;border-bottom:1px solid var(--line-soft);
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:none;color:var(--text);cursor:pointer;text-align:left;font-family:inherit;
+}
+.rankhead:hover{background:#12151b}
+.rankhead-txt h2{font-size:20px;letter-spacing:.06em}
+.rankhead-txt p{margin:4px 0 0;color:var(--muted);font-size:13px;letter-spacing:.03em}
+.rankchev{font-size:18px;color:var(--muted);flex:none;transition:transform .25s}
+.rankwrap.open .rankchev{transform:rotate(180deg)}
+.rankwrap.open .rankhead{border-bottom-color:var(--line-soft)}
+.rankwrap:not(.open) .rankhead{border-bottom:none}
+.rankbody{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.rankinner{overflow:hidden;min-height:0}
+.rankwrap.open .rankbody{grid-template-rows:1fr}
+.divpills{display:flex;gap:6px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line-soft)}
+.divpill{font-family:'Oswald',sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:#12151b;border:1px solid var(--line);color:var(--muted);padding:7px 12px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap}
+.divpill:hover{color:#fff;border-color:#3a3f4b}
+.divpill.on{background:var(--red);border-color:var(--red);color:#fff}
+.divpill.on.p4p{background:var(--gold);border-color:var(--gold);color:#1a1400}
+.ranklist{padding:6px 10px}
+.rkrow{display:grid;grid-template-columns:30px 38px 1fr auto;gap:12px;align-items:center;padding:8px 8px;border-bottom:1px solid var(--line-soft);border-radius:2px;cursor:pointer}
+.rkrow:hover{background:#171a20}
+.rkrow.sel-a{box-shadow:inset 3px 0 0 var(--red-hot);background:rgba(210,10,10,.07)}
+.rkrow.sel-b{box-shadow:inset 3px 0 0 var(--blue-hot);background:rgba(21,103,211,.07)}
+.rkrow.sel-a.sel-b{background:linear-gradient(90deg,rgba(210,10,10,.08),rgba(21,103,211,.08))}
+.rkpos{font-family:'Oswald',sans-serif;font-weight:700;font-size:14.5px;color:#6e7484;text-align:center}
+.rkpos.champ{color:var(--gold)}
+.rkimg{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#0c0e12;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-size:12px;color:#4a505c;flex:none}
+.rkimg img{width:100%;height:100%;object-fit:cover;object-position:top}
+.rkname{font-size:16.5px;font-weight:600;line-height:1.2}
+.rkname .rknick{color:var(--gold);font-style:italic;font-size:13px;font-weight:400;margin-left:6px}
+.rkmeta{color:var(--muted);font-size:12.5px;display:block;margin-top:1px;letter-spacing:.02em}
+.rkbtns{display:flex;gap:6px}
+.rkbtn{width:29px;height:29px;border-radius:50%;border:1px solid var(--line);background:#12151b;color:var(--muted);font-family:'Oswald',sans-serif;font-weight:700;font-size:11.5px;cursor:pointer;transition:.15s}
+.rkbtn.red:hover,.rkbtn.red.active{background:var(--red);border-color:var(--red);color:#fff}
+.rkbtn.blue:hover,.rkbtn.blue.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.rankfoot{padding:10px 18px;color:#5b6272;font-size:12.5px;border-top:1px solid var(--line-soft)}

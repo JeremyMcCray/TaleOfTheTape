@@ -1,0 +1,22 @@
+/* ---- tape modal ---- */
+.tapemodal{position:fixed;inset:0;z-index:100;background:rgba(3,4,6,.86);backdrop-filter:blur(4px);display:none;overflow-y:auto}
+.tapemodal.open{display:block}
+.tmbox{max-width:940px;margin:3vh auto;background:linear-gradient(180deg,#101216,#0a0c0f);border:1px solid var(--line);box-shadow:0 40px 90px rgba(0,0,0,.85)}
+.tmtop{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(10,12,15,.96);border-bottom:1px solid var(--line-soft)}
+.tmtop .tmlbl{font-family:'Oswald',sans-serif;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:#8d94a3;margin-right:auto}
+.tmnav{background:#12151b;border:1px solid var(--line);color:var(--muted);font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.1em;
+  padding:7px 12px;border-radius:2px;cursor:pointer}
+.tmnav:hover:not(:disabled){color:#fff;border-color:#4a5163}
+.tmnav:disabled{opacity:.35;cursor:not-allowed}
+.tmclose{background:none;border:none;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;padding:0 4px}
+.tmclose:hover{color:#fff}
+.tmcards{display:grid;grid-template-columns:1fr 82px 1fr;align-items:stretch;border-bottom:1px solid var(--line)}
+.tmnote{padding:12px 18px;background:#0d0f13;border-bottom:1px solid var(--line-soft);color:#c8cedb;font-size:14.5px;line-height:1.6;text-align:center}
+.tmnote b{color:#fff;font-weight:600}
+.tmnote:empty{display:none}
+.tmsub{padding:16px 18px 26px}
+.tmsub h4{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px;border-bottom:1px solid var(--line-soft);padding-bottom:7px}
+.tmlast{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tmlast .col h5{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.08em;color:#c8cedb;margin:0 0 4px}
+.tmh2h{border:1px solid var(--gold);background:rgba(212,175,55,.07);padding:12px 14px;font-size:15px;line-height:1.6}
+.tmh2h.none{border-color:var(--line);background:var(--panel);color:var(--muted)}

@@ -1,0 +1,464 @@
+[
+ {
+  "id": "pound-for-pound",
+  "categoryName": "Men's Pound-for-Pound Top Rank",
+  "champion": {
+   "championName": "Islam Makhachev",
+   "id": "islam-makhachev"
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alex Pereira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Merab Dvalishvili"
+   }
+  ]
+ },
+ {
+  "id": "womens-pound-for-pound",
+  "categoryName": "Women's Pound-for-Pound Top Rank",
+  "champion": {
+   "championName": "Zhang Weili",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Zhang Weili"
+   },
+   {
+    "id": "",
+    "name": "Valentina Shevchenko"
+   },
+   {
+    "id": "",
+    "name": "Kayla Harrison"
+   }
+  ]
+ },
+ {
+  "id": "lightweight",
+  "categoryName": "Lightweight",
+  "champion": {
+   "championName": "Islam Makhachev",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Conor McGregor"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   },
+   {
+    "id": "",
+    "name": "Alex Pereira"
+   },
+   {
+    "id": "",
+    "name": "Magomed Ankalaev"
+   }
+  ]
+ },
+ {
+  "id": "featherweight",
+  "categoryName": "Featherweight",
+  "champion": {
+   "championName": "Ilia Topuria",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   },
+   {
+    "id": "",
+    "name": "Alex Pereira"
+   },
+   {
+    "id": "",
+    "name": "Magomed Ankalaev"
+   }
+  ]
+ },
+ {
+  "id": "heavyweight",
+  "categoryName": "Heavyweight",
+  "champion": {
+   "championName": "Jon Jones",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Alex Pereira"
+   },
+   {
+    "id": "",
+    "name": "Magomed Ankalaev"
+   }
+  ]
+ },
+ {
+  "id": "light-heavyweight",
+  "categoryName": "Light Heavyweight",
+  "champion": {
+   "championName": "Alex Pereira",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Magomed Ankalaev"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "middleweight",
+  "categoryName": "Middleweight",
+  "champion": {
+   "championName": "Dricus Du Plessis",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Sean Strickland"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "welterweight",
+  "categoryName": "Welterweight",
+  "champion": {
+   "championName": "Belal Muhammad",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Shavkat Rakhmonov"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "bantamweight",
+  "categoryName": "Bantamweight",
+  "champion": {
+   "championName": "Merab Dvalishvili",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Sean O'Malley"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "flyweight",
+  "categoryName": "Flyweight",
+  "champion": {
+   "championName": "Alexandre Pantoja",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "womens-strawweight",
+  "categoryName": "Women's Strawweight",
+  "champion": {
+   "championName": "Zhang Weili",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "womens-flyweight",
+  "categoryName": "Women's Flyweight",
+  "champion": {
+   "championName": "Valentina Shevchenko",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ },
+ {
+  "id": "womens-bantamweight",
+  "categoryName": "Women's Bantamweight",
+  "champion": {
+   "championName": "Julianna Pena",
+   "id": ""
+  },
+  "fighters": [
+   {
+    "id": "",
+    "name": "Kayla Harrison"
+   },
+   {
+    "id": "",
+    "name": "Islam Makhachev"
+   },
+   {
+    "id": "",
+    "name": "Ilia Topuria"
+   },
+   {
+    "id": "",
+    "name": "Alexander Volkanovski"
+   },
+   {
+    "id": "",
+    "name": "Charles Oliveira"
+   },
+   {
+    "id": "",
+    "name": "Jon Jones"
+   },
+   {
+    "id": "",
+    "name": "Tom Aspinall"
+   }
+  ]
+ }
+]
