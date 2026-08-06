@@ -529,6 +529,65 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
   .rkrow{grid-template-columns:24px 34px 1fr auto;gap:8px}
   .rkmeta{display:none}
 }
+
+/* ===================== easter egg: the cameo ===================== */
+#dana{
+  position:fixed;inset:0;z-index:9999;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(4,5,7,.86);backdrop-filter:blur(6px);
+  opacity:0;transition:opacity .28s ease;
+}
+#dana.open{display:flex;opacity:1}
+#dana .dbox{
+  position:relative;max-width:520px;width:100%;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));
+  border:1px solid var(--gold);border-radius:4px;
+  box-shadow:0 30px 90px rgba(0,0,0,.8),0 0 0 1px rgba(212,175,55,.15);
+  padding:28px 26px 24px;text-align:center;
+  transform:translateY(14px) scale(.97);transition:transform .32s cubic-bezier(.2,.9,.3,1.2);
+}
+#dana.open .dbox{transform:none}
+#dana .dkicker{
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:14px;
+}
+#dana .dpic{
+  width:132px;height:132px;margin:0 auto 16px;border-radius:50%;overflow:hidden;
+  border:2px solid var(--gold);background:#0c0e12;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Oswald',sans-serif;font-size:38px;color:#4a505c;
+  box-shadow:0 0 34px rgba(212,175,55,.28);
+}
+#dana .dpic img{width:100%;height:100%;object-fit:cover;object-position:center top}
+#dana .dname{
+  font-family:'Oswald',sans-serif;font-size:30px;letter-spacing:.06em;
+  text-transform:uppercase;line-height:1.05;
+}
+#dana .dtitle{
+  font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-top:4px;
+}
+#dana .dquote{
+  margin:18px auto 0;max-width:420px;font-size:17px;line-height:1.5;
+  color:var(--text);font-style:italic;
+}
+#dana .dquote:before{content:"“"}
+#dana .dquote:after{content:"”"}
+#dana .dfoot{margin-top:18px;font-size:12px;color:#5b6170;letter-spacing:.04em}
+#dana .dclose{
+  position:absolute;top:8px;right:10px;background:none;border:0;cursor:pointer;
+  color:var(--muted);font-size:18px;line-height:1;padding:6px;
+}
+#dana .dclose:hover{color:var(--text)}
+@media (max-width:520px){
+  #dana .dbox{padding:22px 16px 18px}
+  #dana .dpic{width:104px;height:104px}
+  #dana .dname{font-size:23px}
+  #dana .dquote{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  #dana,#dana .dbox{transition:none}
+}
 </style>
 </head>
 <body>
@@ -662,6 +721,19 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
   </div>
 </div>
 
+<!-- ===================== easter egg cameo ===================== -->
+<div id="dana" role="dialog" aria-modal="true" aria-labelledby="danaName">
+  <div class="dbox">
+    <button class="dclose" id="danaClose" aria-label="Close">✕</button>
+    <div class="dkicker">Unsanctioned Bout</div>
+    <div class="dpic" id="danaPic">DW</div>
+    <div class="dname" id="danaName">Dana White</div>
+    <div class="dtitle">President · UFC</div>
+    <div class="dquote" id="danaQuote"></div>
+    <div class="dfoot">Loading him into the corner anyway.</div>
+  </div>
+</div>
+
 <footer>
   Fight history &amp; physicals from <a href="http://ufcstats.com" target="_blank" rel="noopener">UFCStats</a> ·
   Photos, bios &amp; divisional rankings from the UFC athlete roster.<br>
@@ -683,6 +755,8 @@ const SRC = {
 
 /* ---- UFC photo paths, harvested from ufc.com athlete pages ---- */
 const UFC_IMG = "https://ufc.com/images/styles/athlete_bio_full_body/s3/";
+/* older fighters only exist under the headshot style — see the hand-added block below */
+const UFC_HEAD = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/";
 /* PHOTOS-BEGIN (regenerate to refresh) */
 const PHOTOS = {
 adrianyanez:"2024-12/YANEZ_ADRIAN_L_12-14.png",alexandervolkov:"2025-10/VOLKOV_ALEXANDER_L_10-25.png",alexpereira:"2025-03/PEREIRA_ALEX_L.png",
@@ -805,6 +879,42 @@ yairrodriguez:"2025-04/RODRIGUEZ_YAIR_L_04-12.png",yanasantos:"2025-05/SANTOS_YA
 yoelromero:"2019-08/ROMERO_YOEL_L.png",youssefzalal:"2024-08/ZALAL_YOUSSEF_L_08-10.png",zhangmingyang:"2026-05/MINGYANG_ZHANG_L_05-30.png"
 };
 /* PHOTOS-END */
+
+/* ---- hand-added legends ----------------------------------------------
+   These fighters are retired / off the active roster, so the octagon-api
+   roster feed carries no photo for them and the auto-generated block above
+   never picks them up. Paths harvested from their ufc.com athlete pages
+   (query strings stripped). Kept OUTSIDE the PHOTOS-BEGIN/END markers so a
+   regeneration of that block doesn't wipe them.                          */
+Object.assign(PHOTOS, {
+  jonjones:         "2025-10/JONES_JON_L.png",
+  bjpenn:           "2020-03/PENN_BJ_L.png",
+  francisngannou:   "2023-01/NGANNOU_FRANCIS_L_03-27.png",
+  juniordossantos:  "2020-08/DOS_SANTOS_JUNIOR_L_03-09.png",
+  vitorbelfort:     "2022-03/eea6bb31-42c1-4fde-b13c-27a18a9c26d5%252FVitor-Belfort_19_LeftFullBodyImage.png",
+  wanderleisilva:   "image/fighter_images/Wanderlei_Silva/Wanderlei-Silva-020.png",
+  danhenderson:     "image/ufc-fighter-container/67711/profile-galery/fullbodyleft-picture/Dan-Henderson_63_LeftFullBodyImage.png",
+  rorymacdonald:    "2022-03/5fdd0ddb-100b-4664-b283-5f3fb6e401b0%252FRory-MacDonald_1143_LeftFullBodyImage.png",
+  roycegracie:      "2022-10/GRACIE_ROYCE_R.png",
+  kenshamrock:      "2022-10/SHAMROCK_KEN_R.png",
+  frankmir:         "2022-03/4db23501-da10-4288-a34f-89b0af05a5f3%252FFrank-Mir_251_LeftFullBodyImage.png",
+  mauriciorua:      "2018-10/RUA_SHOGUN_L_0.png",
+  melvinguillard:   "2022-03/c92feaa3-fb96-41e1-8378-15bfdbc55840%252FMelvin-Guillard_722_LeftFullBodyImage.png",
+  /* Pre-2010 era: ufc.com never made a full-body render for these seven, so
+     the only image they have is the legacy 500x325 headshot — and it is only
+     served under the event_results_athlete_headshot style (asking for it
+     under athlete_bio_full_body returns 403). Absolute URLs, which photoPath
+     passes through untouched. Squarer than the cutouts, but it beats a blank
+     silhouette. NB: "Forest_Griffin" is misspelled on UFC's side. */
+  chuckliddell:   UFC_HEAD + "image/fighter_images/Chuck_Lidell/Chuck_Lidell_500x325.png",
+  randycouture:   UFC_HEAD + "image/fighter_images/Randy_Couture/randy_couture_500x325_ufc.png",
+  matthughes:     UFC_HEAD + "image/fighter_images/Matt_Hughes/matt_hughes_500x325_ufc.png",
+  titoortiz:      UFC_HEAD + "image/fighter_images/Tito_Ortiz/TitoOrtiz_Headshot2012.png",
+  forrestgriffin: UFC_HEAD + "image/fighter_images/Forest_Griffin/ForrestGriffin_Headshot2012.png",
+  richfranklin:   UFC_HEAD + "image/fighter_images/Rich_Franklin/RichFranklin_Headshot.png",
+  mattserra:      UFC_HEAD + "image/fighter_images/Matt_Serra/Matt_Serra_500x325.png"
+});
+
 /* fighters the historical CSVs know under a former name */
 Object.assign(PHOTOS, {
   michellewaterson:  PHOTOS.michellewatersongomez,
@@ -812,7 +922,9 @@ Object.assign(PHOTOS, {
   teciapennington:   PHOTOS.teciatorres,
   jacaresouza:       PHOTOS.ronaldosouza,
   rampagejackson:    PHOTOS.quintonjackson,
-  cowboycerrone:     PHOTOS.donaldcerrone
+  cowboycerrone:     PHOTOS.donaldcerrone,
+  shogunrua:         PHOTOS.mauriciorua,
+  jonnybones:        PHOTOS.jonjones
 });
 
 /* ============================ helpers ============================ */
@@ -910,7 +1022,10 @@ function photoPath(name){
     tries.push(norm(toks.slice(0,-1).concat(b).join(" ")));
   }
   if(toks.length>2) tries.push(norm(toks[0]+" "+last));
-  for(const t of tries){ if(t && PHOTOS[t]) return UFC_IMG + PHOTOS[t]; }
+  for(const t of tries){
+    const p = t && PHOTOS[t];
+    if(p) return /^https?:\/\//.test(p) ? p : UFC_IMG + p;   /* absolute entries pass through */
+  }
   return null;
 }
 
@@ -1225,6 +1340,149 @@ function tally(fights){
            streak, streakKind:sk, total:fights.length };
 }
 
+/* ============================================================
+   EASTER EGG — Dana White
+   Hidden "fighter" who never appears in DB.list (so he can't be
+   drawn by Random Matchup, the dream-card shuffle or the default
+   dropdown). He only surfaces when you actually type his name into
+   a corner search box. Picking him plays a cameo, then loads him
+   into the corner with a full joke tale of the tape.
+   ============================================================ */
+const DANA_KEY = "danawhite";
+const DANA_QUOTES = [
+  "Do you wanna be a f***ing fighter?!",
+  "This is the biggest fight in the history of our sport.",
+  "I'm the guy who says yes. Everybody else says no.",
+  "Nobody wants to see that fight. Next question.",
+  "That fight makes sense. Let's make it. Done.",
+  "Best card we've ever put together. And I mean that.",
+  "I've been doing this a long time and I've never seen anything like it.",
+  "We'll do it in a backyard. I don't care.",
+  "Real recognize real."
+];
+/* fallback if Wikipedia's API is unreachable (offline / blocked).
+   Special:FilePath redirects to the current upload, so it survives re-uploads. */
+const DANA_IMG_FALLBACK =
+  "https://commons.wikimedia.org/wiki/Special:FilePath/Dana%20White%20-%202015%20(cropped).jpg?width=480";
+
+function danaFight(o){
+  return Object.assign({
+    oppKey: norm(o.opp), loc:"Las Vegas, Nevada, USA",
+    weightclass:"Catchweight", title:false, detail:"", url:"",
+    secs: fightSeconds(o.round, o.time)
+  }, o, { mclass: methodClass(o.method), date: parseDate(o.date) });
+}
+
+/* built once, lazily — parseDate/methodClass must already be defined */
+let DANA = null;
+function buildDana(){
+  if(DANA) return DANA;
+  const f = {
+    key: DANA_KEY,
+    name: "Dana White",
+    nickname: "The Baldfather",
+    img: "",
+    division: "Front Office",
+    status: "President",
+    height: 68, weight: 195, reach: 70, legReach: null,
+    stance: "Orthodox (Cageside)",
+    dob: "Jul 28, 1969",
+    age: ageFrom("Jul 28, 1969"),
+    born: "Manchester, Connecticut, USA",
+    style: "Boxing / Matchmaking",
+    debut: "Jan. 11, 2001",
+    rank: "",
+    pro: null,
+    _egg: true,
+    fights: [
+      { opp:"Power Slap Critics",     res:"W", method:"KO/TKO",        round:"1", time:"0:09",
+        event:"Power Slap 1",              date:"Jan 18, 2023" },
+      { opp:"WME-IMG's Checkbook",    res:"W", method:"Decision - Unanimous", round:"3", time:"5:00",
+        event:"The $4 Billion Sale",       date:"Jul 11, 2016", title:true },
+      { opp:"Ariel Helwani",          res:"W", method:"Submission",    round:"1", time:"0:04",
+        event:"UFC 199: Credential Revocation", date:"Jun 5, 2016" },
+      { opp:"The Blackjack Table",    res:"W", method:"Submission",    round:"1", time:"4:44",
+        event:"The Palms · Banned For Life", date:"Feb 8, 2014" },
+      { opp:"Tito Ortiz",             res:"N", method:"Could Not Continue", round:"1", time:"0:00",
+        event:"The Boxing Match That Never Happened", date:"Aug 2, 2008" },
+      { opp:"Fighter Pay Questions",  res:"W", method:"Decision - Split", round:"3", time:"5:00",
+        event:"Every Post-Fight Presser",  date:"Nov 12, 2005" },
+      { opp:"The Fertittas' $2M",     res:"W", method:"KO/TKO",        round:"1", time:"1:11",
+        event:"Zuffa LLC Formation",       date:"Jan 11, 2001", title:true }
+    ].map(danaFight)
+  };
+  f.rec = tally(f.fights);
+  f.searchable = norm(f.name) + " " + norm(f.nickname) + " uncledana president baldfather";
+  f.sortName = "white";
+  DANA = f;
+  DB.byKey.set(DANA_KEY, f);      /* reachable by #red=danawhite / findpic, but NOT in DB.list */
+  loadDanaPhoto();
+  return f;
+}
+
+/* pull his photo off Wikipedia with the same CORS-friendly call the
+   "Find photo" button uses; fall back to a Commons FilePath redirect */
+let danaPhotoTried = false;
+async function loadDanaPhoto(){
+  if(danaPhotoTried) return;
+  danaPhotoTried = true;
+  let url = null;
+  try{
+    const api = "https://en.wikipedia.org/w/api.php?";
+    const q = new URLSearchParams({
+      action:"query", format:"json", origin:"*", titles:"Dana White",
+      prop:"pageimages", piprop:"original|thumbnail", pithumbsize:"480"
+    });
+    const r = await fetch(api + q.toString());
+    if(r.ok){
+      const j = await r.json();
+      const p = j && j.query && j.query.pages ? Object.values(j.query.pages)[0] : null;
+      if(p) url = (p.thumbnail && p.thumbnail.source) || (p.original && p.original.source) || null;
+    }
+  }catch(e){ console.warn("dana photo lookup failed:", e); }
+  if(!url){ try{ url = await wikiPhoto("Dana White"); }catch(e){ /* offline */ } }
+  if(!url) url = DANA_IMG_FALLBACK;
+  if(DANA) DANA.img = url;
+  const pic = $("#danaPic");
+  if(pic && !pic.querySelector("img")){
+    pic.innerHTML = '<img src="'+esc(url)+'" alt="Dana White" '+
+      'onerror="this.parentElement.textContent=\'DW\'">';
+  }
+  if(typeof SEL!=="undefined" && (SEL.a===DANA || SEL.b===DANA)) renderAll();
+}
+
+/* does this search query summon him? */
+function danaMatch(nq){
+  if(!nq || nq.length < 4) return false;
+  if("danawhite".indexOf(nq) === 0) return true;                 // dana, danaw, danawhite…
+  return /^(baldfather|uncledana|thebaldfather|danafuckingwhite)/.test(nq);
+}
+
+let danaOpenedAt = 0;
+function showDanaCameo(){
+  const box = $("#dana");
+  if(!box) return;
+  $("#danaQuote").textContent = DANA_QUOTES[Math.floor(Math.random()*DANA_QUOTES.length)];
+  box.classList.add("open");
+  danaOpenedAt = Date.now();
+  if(window.posthog) posthog.capture('easter_egg', { egg:'dana_white' });
+}
+function hideDanaCameo(){
+  const box = $("#dana");
+  if(box) box.classList.remove("open");
+}
+document.addEventListener("click", e=>{
+  const box = $("#dana");
+  if(!box || !box.classList.contains("open")) return;
+  /* the result row is picked on mousedown, so the click that selected him
+     still bubbles up here — ignore it or the cameo closes instantly */
+  if(Date.now() - danaOpenedAt < 350) return;
+  if(e.target.closest("#danaClose") || !e.target.closest(".dbox")) hideDanaCameo();
+});
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape") hideDanaCameo();
+});
+
 /* ============================ search UI ============================ */
 const SEL = { a:null, b:null };
 
@@ -1236,6 +1494,7 @@ function makePicker(side){
     const nq=norm(q);
     if(!nq) return DB.list.slice(0,40);
     const starts=[], contains=[];
+    if(danaMatch(nq)) starts.push(buildDana());   /* easter egg — only ever by name */
     for(const f of DB.list){
       const p = f.searchable.indexOf(nq);
       if(p===0 || norm(f.name.split(/\s+/).slice(-1)[0]).indexOf(nq)===0) starts.push(f);
@@ -1263,6 +1522,7 @@ function makePicker(side){
   function choose(f){
     SEL[side]=f; LAST_CORNER=side; input.value=f.name; box.classList.remove("open"); input.blur();
     renderAll(); syncHash();
+    if(f && f._egg) showDanaCameo();
     // Track fighter selection
     if(window.posthog) posthog.capture('fighter_selected', {
       fighter_name: f.name,
@@ -1717,6 +1977,7 @@ function syncHash(){
 function fromHash(){
   const p=new URLSearchParams(location.hash.replace(/^#/,""));
   const ra=p.get("red"), rb=p.get("blue");
+  if(ra===DANA_KEY || rb===DANA_KEY) buildDana();   /* shared easter-egg links still resolve */
   if(ra && DB.byKey.has(ra)) PA.set(DB.byKey.get(ra));
   if(rb && DB.byKey.has(rb)) PB.set(DB.byKey.get(rb));
 }
@@ -1973,6 +2234,7 @@ function fsearch(q){
   const nq=norm(q);
   if(!nq) return DB.list.slice(0,40);
   const starts=[], contains=[];
+  if(danaMatch(nq)) starts.push(buildDana());   /* he can headline a fantasy card too */
   for(const f of DB.list){
     const p=f.searchable.indexOf(nq);
     if(p===0 || norm(f.name.split(/\s+/).slice(-1)[0]).indexOf(nq)===0) starts.push(f);
@@ -2157,7 +2419,10 @@ function fighterSlot(bout, side){
     });
     box.classList.add("open");
   }
-  function pick(fx){ bout[side]=fx; bout.titleTouched=bout.titleTouched||false; renderCardView(); }
+  function pick(fx){
+    bout[side]=fx; bout.titleTouched=bout.titleTouched||false; renderCardView();
+    if(fx && fx._egg) showDanaCameo();
+  }
 
   input.addEventListener("focus", ()=> render(fsearch(input.value)));
   input.addEventListener("input", ()=> render(fsearch(input.value)));
