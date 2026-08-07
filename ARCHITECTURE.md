@@ -89,7 +89,12 @@ view.js  ── openCardView / renderCardView: dispatches on CARD_STEP
              └─ step-poster.js   the finished card (tape-modal.js, poster/)
 index.js ── initCardBuilder: buttons, Escape, deep links
 share.js ── the #card=… URL hash
+draft.js ── the same encoding in localStorage, so a refresh is not a reset
 ```
+
+`draft.js` saves on every `renderCardView()` and restores in `initCardBuilder`,
+*after* a `#card=` hash has had its chance — a card in the URL is someone
+handing you theirs, and outranks your own unfinished one.
 
 ### `src/poster/` — the PNG export
 Pure canvas, no DOM. Split so each part is independently readable:

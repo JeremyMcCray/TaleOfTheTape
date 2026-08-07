@@ -32,6 +32,9 @@
     ["cards", "votes", "rate", "handle", "localuid"].forEach(function (k) {
       localStorage.removeItem("tott.community." + k);
     });
+    /* The builder now restores its last card on load. Drop it too, or the run
+       reopens the previous run's card instead of starting at the setup step. */
+    localStorage.removeItem("tott.card.draft");
   } catch (e) {}
 
   window.addEventListener("load", function () { setTimeout(run, 500); });
@@ -57,6 +60,46 @@
     $("#setupRandom").click();
     await waitFor(function () { return n(".pbout") > 0; }, 15000, "poster");
     say("poster: bouts=" + n(".pbout") + " filled=" + n(".pbout:not(.tbd)") + " sections=" + n(".psec"));
+
+    /* The draft is what makes a refresh non-destructive. A reload would end
+       this run, so assert on what a reload would read back instead. */
+    say("draft: " + (function () {
+      try {
+        var d = JSON.parse(localStorage.getItem("tott.card.draft"));
+        if (!d) return "MISSING";
+        /* norm() strips non-alphanumerics from fighter keys, so the only
+           hyphens in the encoding are the one per bout that joins a corner
+           to b corner */
+        return "step=" + d.step + " open=" + d.open +
+               " bouts=" + ((d.card || "").match(/-/g) || []).length +
+               " setup=" + JSON.stringify(d.setup);
+      } catch (e) { return "ERR " + e.message; }
+    })());
+
+    /* ---- the poster credit: build step field -> PNG signature ---- */
+    $("#cvEdit").click();
+    await waitFor(function () { return !!$("#cardCredit"); }, 5000, "credit field");
+    var cred = $("#cardCredit");
+    if (cred) {
+      var fire = function (v) { cred.value = v; cred.dispatchEvent(new Event("input", { bubbles: true })); };
+      fire("Drive Tester");
+      var stored = "", draftCred = "";
+      try { stored = localStorage.getItem("tott.community.handle") || ""; } catch (e) {}
+      try { draftCred = (JSON.parse(localStorage.getItem("tott.card.draft")) || {}).credit; } catch (e) {}
+      say("credit: handle=" + JSON.stringify(stored) + " draft=" + JSON.stringify(draftCred));
+
+      /* A URL is a mistake, not an attack: inline error, nothing stored. */
+      fire("https://spam.example");
+      var after = "";
+      try { after = localStorage.getItem("tott.community.handle") || ""; } catch (e) {}
+      say("credit reject: err=" + JSON.stringify(((($(".crediterr") || {}).textContent) || "").slice(0, 34)) +
+          " kept=" + JSON.stringify(after));
+
+      fire("Drive Tester");
+      $("#buildGo").click();
+      await waitFor(function () { return !!$(".pcredit"); }, 8000, "poster credit line");
+      say("poster credit: " + JSON.stringify((($(".pcredit") || {}).textContent || "")));
+    } else say("credit: FIELD MISSING");
 
     var b = document.querySelector(".pbout:not(.tbd)");
     if (b) {

@@ -41,3 +41,6 @@
 .pbout.tbd:hover{background:none}
 .pbout.tbd:hover .pface{transform:none}
 .pfoot{text-align:center;color:#4f5563;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;font-family:'Oswald',sans-serif;padding:18px 14px 6px}
+/* the on-screen echo of the PNG's signature line */
+.pcredit{text-align:center;color:var(--gold);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;
+  font-family:'Oswald',sans-serif;opacity:.75;padding:0 14px 16px}

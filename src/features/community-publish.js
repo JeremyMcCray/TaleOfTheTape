@@ -44,7 +44,7 @@ export function openPublish(){
     return;
   }
   $("#pubName").value = CARD.name || "";
-  $("#pubWho").value  = getHandle();
+  $("#pubWho").value  = CARD.credit || getHandle();
   $("#puberr").textContent = "";
   $("#pubfine").textContent = isLocalOnly()
     ? "No backend is configured, so this card stays in your browser — nobody else will see it."
@@ -84,6 +84,10 @@ async function submit(){
   $("#pubGo").textContent = "Publishing…";
 
   CARD.name = name.value;
+  /* Keep the poster's "Built by" line and the gallery's attribution the same
+     name — publishing under a different one and leaving the PNG signed with
+     the old is just a bug you only notice after you have shared both. */
+  CARD.credit = who.value;
   const res = await community.publish({ payload: cardToPayload(), name: name.value, author, hold });
 
   busy = false;

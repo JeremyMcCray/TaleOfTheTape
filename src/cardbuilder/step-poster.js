@@ -64,6 +64,9 @@ export function renderPoster(host){
     poster.appendChild(block);
   });
   poster.appendChild(el("div","pfoot", filled.length? "Tap any matchup for the tale of the tape" : "Fill in some matchups to see the tape"));
+  /* mirrors the PNG's signature line, so what you see here is what downloads */
+  const credit=(CARD.credit||"").trim();
+  if(credit) poster.appendChild(el("div","pcredit","Built by "+esc(credit)));
   host.appendChild(poster);
 
   const bar=el("div","gobar");

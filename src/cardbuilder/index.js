@@ -1,3 +1,4 @@
+import { restoreDraft } from "./draft.js";
 import { closeRankPick } from "./rank-pick.js";
 import { decodeCard } from "./share.js";
 import { shuffleEmpty } from "./shuffle.js";
@@ -45,5 +46,10 @@ export function initCardBuilder(initialHash){
       if(e.key==="ArrowLeft")  stepTape(-1);
     }
   });
-  if(decodeCard(initialHash||"")) openCardView("poster");
+  /* A card in the URL wins — it is someone handing you their card, not your
+     own unfinished one. Otherwise pick up wherever the last visit stopped;
+     the overlay only reopens by itself if that is where the user was. */
+  if(decodeCard(initialHash||"")) return openCardView("poster");
+  const draft = restoreDraft();
+  if(draft && draft.open && !/^#?community$/.test(initialHash||"")) openCardView(draft.step);
 }

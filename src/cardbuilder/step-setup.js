@@ -1,3 +1,4 @@
+import { saveDraft } from "./draft.js";
 import { shuffleEmpty } from "./shuffle.js";
 import { CARD, SEC_DEFS, SETUP, blankBout, setCardStep } from "./state.js";
 import { renderCardView } from "./view.js";
@@ -29,9 +30,10 @@ export function renderSetup(host){
       SETUP[b.dataset.sec]=+b.dataset.n;
       box.querySelectorAll('.szopt[data-sec="'+b.dataset.sec+'"]').forEach(x=>x.classList.remove("on"));
       b.classList.add("on");
+      saveDraft();   /* the setup step never repaints, so it saves for itself */
     };
   });
-  $("#setupName").oninput=e=>{ CARD.name=e.target.value; };
+  $("#setupName").oninput=e=>{ CARD.name=e.target.value; saveDraft(); };
   $("#setupGo").onclick=()=>{ applySetup(); setCardStep("build"); renderCardView(); window.scrollTo(0,0); };
   $("#setupRandom").onclick=()=>{ applySetup(); shuffleEmpty(true); setCardStep("poster"); renderCardView(); window.scrollTo(0,0); };
 }

@@ -151,7 +151,11 @@ export function drawPosterFoot(c,y,W){
   c.font="400 16px "+F_OSW; c.fillStyle=PX.dim;
   let host="";
   try{ host = location.protocol==="file:" ? "" : location.host.replace(/^www\./,""); }catch(e){}
-  drawTracked(c,(host||"Fantasy matchmaker")+"  ·  Built by you",cx,y+82,3,"center");
+  /* Signed by whoever built it, falling back to the old wording when nobody
+     put a name in. MAX.HANDLE caps the credit at 24 characters, so this line
+     cannot outgrow the footer's width. */
+  const credit=(CARD.credit||"").trim();
+  drawTracked(c,(host||"Fantasy matchmaker")+"  ·  Built by "+(credit||"you"),cx,y+82,3,"center");
 }
 
 /* ---- orchestration ---- */

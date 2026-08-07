@@ -108,6 +108,19 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 .buildhint .kbd{display:inline-flex;align-items:center;gap:4px;color:#f4e3ad;font-family:'Oswald',sans-serif;
   font-weight:600;font-size:10.5px;letter-spacing:.12em;border:1px solid rgba(212,175,55,.5);
   background:rgba(212,175,55,.14);border-radius:3px;padding:3px 7px;white-space:nowrap}
+/* "Built by ___". Sits with the hint rather than inside a section block —
+   it is a card-level detail, not a matchup. */
+.creditrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 20px;padding:12px 14px;
+  border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0a0c0f)}
+.creditrow label{font-family:'Oswald',sans-serif;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#c8cedb}
+.creditrow label em{display:block;color:#5f6675;font-size:11px;letter-spacing:.06em;text-transform:none;font-style:normal;
+  font-family:'Barlow Condensed',sans-serif;margin-top:2px}
+.creditrow input{flex:1 1 200px;min-width:0;background:#0b0d11;border:1px solid var(--line);color:var(--text);
+  padding:10px 12px;font-family:'Barlow Condensed',sans-serif;font-size:16px;border-radius:2px;outline:none}
+.creditrow input:focus{border-color:var(--gold)}
+.creditrow input::placeholder{color:#4d5462}
+.crediterr{color:#ff8a5c;font-size:12.5px;letter-spacing:.03em}
+.crediterr:not(:empty){flex:1 1 100%}
 .slotacts{display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:10px}
 .slotdel{background:none;border:none;color:#3f4553;cursor:pointer;font-size:15px;line-height:1;padding:2px}
 .slotdel:hover{color:#ff6b6b}
@@ -120,6 +133,16 @@ button.big:disabled{opacity:.4;cursor:not-allowed}
 .pngnote:not(:empty){padding:0 16px 11px}
 .slotres{position:absolute;z-index:40;top:100%;left:0;right:0;background:#0d0f13;border:1px solid var(--line);max-height:280px;overflow-y:auto;display:none;box-shadow:0 18px 40px rgba(0,0,0,.7)}
 .slotres.open{display:block}
+/* Same markup as the comparison pickers' .results list, but it lives in a bout
+   slot, so it needs its own rules — it inherited none, which left the rows as
+   bare divs a few pixels tall. 44px floor: these get tapped, not clicked. */
+.slotres .row{display:flex;align-items:center;gap:10px;min-height:44px;padding:9px 12px;cursor:pointer;border-bottom:1px solid var(--line-soft)}
+.slotres .row:last-child{border-bottom:none}
+.slotres .row:hover,.slotres .row.active{background:#1a1d23}
+.slotres .row .nm{font-weight:600;font-size:16px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slotres .row .nk{color:var(--gold);font-size:13px;font-style:italic;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slotres .row .meta{margin-left:auto;color:var(--muted);font-size:12.5px;text-align:right;letter-spacing:.04em;white-space:nowrap;flex:none}
+.slotres .empty{padding:14px;color:var(--muted);font-size:15px}
 
 /* ---- rankings picker modal ---- */
 .rankpick{position:fixed;inset:0;z-index:95;background:rgba(3,4,6,.8);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:5vh 14px}

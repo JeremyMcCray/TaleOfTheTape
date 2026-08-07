@@ -114,6 +114,8 @@ matchup, shuffle) — structural counts (bouts, slots, stat rows) should not.
 | The exported PNG | `src/poster/` |
 | Colours, spacing | `css/tokens.css` |
 | Share link (`#card=`) | `src/cardbuilder/share.js` |
+| Surviving a refresh | `src/cardbuilder/draft.js` |
+| Who the poster is signed by | `CARD.credit` — set in `step-build.js`, drawn in `src/poster/draw.js` |
 | Community backend | `src/community/`, `firebase/firestore.rules` |
 | Community UI | `src/features/community-gallery.js`, `src/features/community-publish.js` |
 | The blocklist | `src/community/wordlist.js` |
@@ -132,6 +134,12 @@ is the console checklist.
   so `firebase/firestore.rules` is where one-vote-per-user, the publish rate
   limit and the charset caps actually live. Changing the shape of a card
   document means changing that file too, or the write is simply refused.
+- **The poster credit shares the community handle.** The "Your name" field on
+  the build step writes through `identity.js`, so it is the same value the
+  publish dialog offers. It follows the same shadow-hold rule as the dialog:
+  length/charset/link mistakes get an inline error, a blocklisted name is
+  accepted in silence. Publishing already drops a held handle from the shared
+  card — do not add an error path here, or the field becomes a blocklist oracle.
 - **A blocked card is held, not rejected** — it publishes, stays visible to
   its author, and waits in the owner's Review tab. If you touch the publish
   dialog, keep the held and public paths producing *identical* feedback.

@@ -7,7 +7,11 @@ export const SEC_DEFS = [
   { id:"early",  label:"Early Prelims", note:"optional · 2–4 bouts",      min:2, max:4, allowZero:true,  def:0 }
 ];
 export const SETUP = { main:5, prelim:5, early:0 };
-export const CARD  = { name:"", sections:[] };   // sections: {id,label,bouts:[{a,b,title,titleTouched}]}
+/* `credit` is whose name the poster is signed with — the community handle by
+   default, or the original author when someone else's card is opened from the
+   gallery. It is display-only and never part of the wire payload; the
+   community stores its own `author` on the card document. */
+export const CARD  = { name:"", credit:"", sections:[] };   // sections: {id,label,bouts:[{a,b,title,titleTouched}]}
 export let CARD_STEP = "setup";
 export let CARD_OPEN = false;
 

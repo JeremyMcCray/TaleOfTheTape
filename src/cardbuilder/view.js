@@ -1,4 +1,5 @@
 import { syncHash } from "../app/router.js";
+import { saveDraft } from "./draft.js";
 import { CARD, CARD_STEP, setCardOpen, setCardStep } from "./state.js";
 import { renderBuild } from "./step-build.js";
 import { renderPoster } from "./step-poster.js";
@@ -17,6 +18,7 @@ export function closeCardView(){
   setCardOpen(false);
   $("#cardview").classList.remove("open");
   document.body.classList.remove("locked");
+  saveDraft();          // keep the card, but do not reopen the overlay on reload
   syncHash();
 }
 
@@ -32,6 +34,9 @@ export function renderCardView(){
   if(CARD_STEP==="setup")  renderSetup(host);
   if(CARD_STEP==="build")  renderBuild(host);
   if(CARD_STEP==="poster") renderPoster(host);
+  /* every mutation in the builder ends in a repaint, so this one call is the
+     whole save path for the build and poster steps */
+  saveDraft();
 }
 
 /* ---------- step 1: setup ---------- */

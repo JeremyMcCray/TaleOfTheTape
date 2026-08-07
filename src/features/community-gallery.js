@@ -12,6 +12,7 @@
    looks published, because from your side it is. Review only appears for
    the owner uid and is where held cards actually wait.
    ============================================================ */
+import { CARD } from "../cardbuilder/state.js";
 import { openCardView } from "../cardbuilder/view.js";
 import { community, communityAdapterName, isLocalOnly } from "../community/client.js";
 import { ANON } from "../community/identity.js";
@@ -248,6 +249,10 @@ function doOpen(card){
     $("#comnote").classList.add("warn");
     return;
   }
+  /* Sign the poster with whoever actually built it, not with the handle of
+     whoever is looking at it — otherwise exporting someone else's card as a
+     PNG quietly puts your name on their work. */
+  CARD.credit = displaySafe(c.author, MAX.HANDLE) || "";
   closeCommunity();
   openCardView("poster");
   if(window.posthog) posthog.capture("community_card_opened", { id: c.id });

@@ -1,7 +1,10 @@
+import { saveDraft } from "./draft.js";
 import { RP_USED, openRankPick, ranksReady } from "./rank-pick.js";
 import { fsearch, resultRowHTML } from "./search.js";
 import { CARD, SETUP, allBouts, autoTitle, blankBout, boutLabel, secDef, setCardStep, usedKeys } from "./state.js";
 import { renderCardView } from "./view.js";
+import { getHandle, setHandle } from "../community/identity.js";
+import { MAX } from "../community/moderation.js";
 import { primaryRank } from "../data/rankings.js";
 import { DB, recStr } from "../data/store.js";
 import { showDanaCameo } from "../features/easter-egg.js";
@@ -17,6 +20,7 @@ export function renderBuild(host){
       '<span>to pick straight from the official top 15.</span>';
     host.appendChild(hint);
   }
+  host.appendChild(creditField());
   CARD.sections.forEach(sec=>{
     const def=secDef(sec.id);
     const block=el("div","secblock");
@@ -69,6 +73,36 @@ export function renderBuild(host){
   $("#buildGo").disabled = filled===0;
   $("#buildGo").onclick=()=>{ setCardStep("poster"); renderCardView(); window.scrollTo(0,0); };
   $("#buildBack").onclick=()=>{ setCardStep("setup"); renderCardView(); window.scrollTo(0,0); };
+}
+
+/* Who the poster gets signed by — the "Built by ___" line on the exported PNG.
+   It shares the community handle, so a name typed here is the one the publish
+   dialog offers later and vice versa; type it once. */
+function creditField(){
+  if(!CARD.credit) CARD.credit = getHandle();
+  const wrap=el("div","creditrow");
+  wrap.innerHTML=
+    '<label for="cardCredit">Your name<em>optional · printed on the poster</em></label>'+
+    '<input id="cardCredit" type="text" maxlength="'+MAX.HANDLE+'" autocomplete="off" spellcheck="false" '+
+      'placeholder="anonymous" value="'+esc(CARD.credit)+'">'+
+    '<div class="crediterr"></div>';
+  const input=wrap.querySelector("input");
+  const err=wrap.querySelector(".crediterr");
+  input.addEventListener("input", ()=>{
+    /* setHandle validates and persists in one go. Only outright mistakes —
+       too long, wrong charset, a URL — are surfaced. A blocklisted name comes
+       back ok:true with hold:true and is accepted in silence, the same rule
+       the publish dialog follows: publish already drops a held handle from the
+       shared card, and what someone signs their own download with is their
+       own business. Saying "that name is blocked" here would just hand over
+       the wordlist one guess at a time. */
+    const v=setHandle(input.value);
+    err.textContent = v.ok ? "" : v.error;
+    if(!v.ok) return;
+    CARD.credit = v.value;
+    saveDraft();
+  });
+  return wrap;
 }
 
 /* one corner of one bout: avatar + search input + rankings shortcut */
