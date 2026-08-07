@@ -112,11 +112,19 @@
     } else say("tapemodal: SKIPPED (no filled bout)");
 
     $("#postPng").click();
+    /* Watch the button, not just the note: a clean export writes "Saved ✓" to
+       the button and leaves #pngnote empty, so a note-only check waited out the
+       full timeout on exactly the runs that worked. */
+    var pngOut = "";
     await waitFor(function () {
       var t = ($("#pngnote") || {}).textContent || "";
-      return /saved|failed|ready|done|error|couldn/i.test(t) || window.__PNG_DONE;
+      var btn = ($("#postPng") || {}).textContent || "";
+      if (/saved|failed|error/i.test(btn)) { pngOut = btn; return true; }
+      if (/saved|failed|ready|done|error|couldn/i.test(t)) { pngOut = t; return true; }
+      return window.__PNG_DONE;
     }, 60000, "png export");
-    say("png export: note=" + JSON.stringify((($("#pngnote") || {}).textContent || "").slice(0, 120)));
+    say("png export: btn=" + JSON.stringify(pngOut.slice(0, 40)) +
+        " note=" + JSON.stringify((($("#pngnote") || {}).textContent || "").slice(0, 120)));
 
     /* ---- community: publish the card we just built, then vote on it ---- */
     $("#postPublish").click();
